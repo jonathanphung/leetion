@@ -133,7 +133,7 @@ leetion/
 
 ## Contributing
 
-Contributions are welcome! Feel free to open issues or submit pull requests.
+I am currently finding it difficult to handle Leetion. A maintainer or anyone interested in helping is greatly appreciated! Feel free to open issues or submit pull requests.
 
 By submitting a contribution, you agree to transfer all rights to your contribution to the copyright holder.
 
