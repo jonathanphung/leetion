@@ -41,3 +41,10 @@ tmp/
 temp/
 content/
 *.bak
+# super-board machine-local state
+.claude/super-board/active
+.claude/super-board/inflight/
+.worktrees/
+
+# claude local permission grants
+.claude/settings.local.json

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "description": "Leetion extension build",
+  "project": { "owner": "jonathanphung", "title": "leetion", "number": 9 },
+  "variant": "full",
+  "worker_backend": "workflow",
+  "model_tier": "medium",
+  "target": { "type": "repo" },
+  "repo": { "path": ".", "remote": "https://github.com/jonathanphung/leetion" },
+  "base_branch": "main",
+  "columns": ["Ready", "Building", "QA", "Review", "Done", "Blocked", "Skipped"],
+  "paths": {
+    "project_md": "docs/super-board/PROJECT.md",
+    "pre_flight_md": "docs/super-board/pre-flight.md",
+    "runs_dir": "docs/super-board/runs"
+  },
+  "human_approves_merge": true,
+  "reviewer_command": null,
+  "i_confirm_main_does_not_autodeploy": false,
+  "truth_gate": "non-trivial",
+  "truth_threshold": 70,
+  "rebuild_cap": 2,
+  "block_rate_alert_pct": 30,
+  "max_workers": 3,
+  "notifications": { "channel": "none", "chat_id": null, "bot_identity": "jonathanphung" }
+}
