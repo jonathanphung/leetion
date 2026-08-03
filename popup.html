@@ -342,38 +342,6 @@
             <h2 id="problem-title" class="problem-title">Loading problem...</h2>
             <!-- Problem Stats -->
             <div id="problem-stats" class="problem-stats hidden">
-              <span class="stat" id="stat-acceptance" title="Acceptance Rate">
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <polyline points="20,6 9,17 4,12" />
-                </svg>
-                <span>--</span>
-              </span>
-              <span
-                class="stat"
-                id="stat-submissions"
-                title="Total Submissions"
-              >
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                  <circle cx="8.5" cy="7" r="4" />
-                  <path d="M20 8v6M23 11h-6" />
-                </svg>
-                <span>--</span>
-              </span>
               <span class="stat" id="stat-attempts" title="Your Attempts">
                 <svg
                   width="12"
@@ -387,8 +355,17 @@
                     d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"
                   />
                 </svg>
+                <span class="stat-label">Attempts:</span>
                 <span>--</span>
               </span>
+              <button
+                type="button"
+                id="btn-attempt-plus"
+                class="attempt-plus-btn"
+                title="Add one attempt (updates Attempts only — review date untouched)"
+              >
+                +1
+              </button>
             </div>
           </article>
 

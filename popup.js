@@ -68,8 +68,6 @@ let problemData = {
   language: null,
   url: null,
   scrapedTags: [],
-  acceptanceRate: null,
-  totalSubmissions: null,
   userAttempts: null,
   questionContent: null,
   examples: [],
@@ -93,6 +91,14 @@ let previousView = "not-leetcode";
 
 /** @type {number} User's attempt count for this problem */
 let userAttemptCount = 0;
+
+/**
+ * @type {boolean} Whether this popup session already incremented Attempts.
+ * "Update in Notion" adds +1 once per popup session — repeat updates in the
+ * same session (e.g. fixing a typo in notes) must not add more. The manual
+ * "+1" button is independent of this flag (intentional extra attempts).
+ */
+let attemptSessionIncremented = false;
 
 // DOM ELEMENT REFERENCES
 
@@ -127,9 +133,8 @@ const DOM = {
     refreshBtn: document.getElementById("btn-refresh-code"),
     questionPreview: document.getElementById("question-preview"),
     statsContainer: document.getElementById("problem-stats"),
-    statAcceptance: document.getElementById("stat-acceptance"),
-    statSubmissions: document.getElementById("stat-submissions"),
     statAttempts: document.getElementById("stat-attempts"),
+    attemptPlusBtn: document.getElementById("btn-attempt-plus"),
     // Empty/filled state containers
     codeEmpty: document.getElementById("code-empty"),
     codeFilled: document.getElementById("code-filled"),
@@ -863,8 +868,8 @@ async function checkExistingEntry() {
 
       if (response.attempts) {
         userAttemptCount = response.attempts;
-        updateAttemptDisplay();
       }
+      updateProblemStats();
 
       if (!hasLocalState) {
         if (response.timeComplexity && DOM.complexity.time) {
@@ -937,12 +942,18 @@ async function saveToNotion() {
       description = description.substring(0, descEnd).trim();
     }
 
+    // Increment Attempts once per popup session on updates of an existing
+    // entry. The actual value is computed server-fresh in the background.
+    const shouldIncrementAttempts =
+      !!existingPageId && !attemptSessionIncremented;
+
     const response = await chrome.runtime.sendMessage({
       action: "saveToNotion",
       data: {
         apiKey: settings.notionApiKey,
         databaseId: settings.notionDatabaseId,
         existingPageId,
+        incrementAttempts: shouldIncrementAttempts,
         spacedRepetitionDays: spacedRepDays,
         problem: {
           number: problemData.number,
@@ -959,7 +970,6 @@ async function saveToNotion() {
           done: DOM.form.done.checked,
           timeComplexity: DOM.complexity.time?.value || "",
           spaceComplexity: DOM.complexity.space?.value || "",
-          attempts: userAttemptCount || 1,
           snapshots: snapshotsToSave,
           saveQuestion: DOM.problem.saveQuestionToggle?.checked || false,
           questionContent: {
@@ -987,11 +997,23 @@ async function saveToNotion() {
 
       await clearPersistedFormState(problemData.number);
 
+      const wasFirstSave = !existingPageId;
       if (!existingPageId && response.pageId) {
         existingPageId = response.pageId;
         updateSaveButton(true);
         DOM.quickActions.card?.classList.remove("hidden");
       }
+
+      // Per-popup-session attempt accounting: a first save wrote
+      // Attempts = 1 (this session's attempt); an update incremented
+      // server-fresh only on the session's first update.
+      if (typeof response.attempts === "number") {
+        userAttemptCount = response.attempts;
+      }
+      if (wasFirstSave || shouldIncrementAttempts) {
+        attemptSessionIncremented = true;
+      }
+      updateProblemStats();
     } else {
       showStatus(DOM.save.status, response.error || "Failed", "error");
     }
@@ -1113,6 +1135,9 @@ function setupEventListeners() {
   // Quick Actions
   DOM.quickActions.markReview?.addEventListener("click", markForReviewTomorrow);
   DOM.quickActions.revisit?.addEventListener("click", revisitProblem);
+
+  // Manual +1 attempt (stats row, existing entries only)
+  DOM.problem.attemptPlusBtn?.addEventListener("click", addManualAttempt);
 
   // Complexity - auto-suggest and persist
   DOM.complexity.time?.addEventListener("change", () => {
@@ -1369,6 +1394,66 @@ async function revisitProblem() {
 }
 
 /**
+ * Manually adds one attempt (the "+1" control in the stats row).
+ * Updates ONLY the "Attempts" property via the lightweight background
+ * `updateAttempts` action — the "Spaced Repetition" date is untouched.
+ * The count is bumped optimistically and rolled back on failure
+ * (parity with revisitProblem's rollback).
+ */
+async function addManualAttempt() {
+  if (!existingPageId) return;
+
+  const settings = await chrome.storage.sync.get(["notionApiKey"]);
+  if (!settings.notionApiKey) {
+    showStatus(DOM.save.status, "Configure API key first", "error");
+    return;
+  }
+
+  const btn = DOM.problem.attemptPlusBtn;
+  const previousCount = userAttemptCount;
+
+  userAttemptCount++;
+  updateAttemptDisplay();
+
+  try {
+    if (btn) btn.disabled = true;
+
+    const response = await chrome.runtime.sendMessage({
+      action: "updateAttempts",
+      data: {
+        apiKey: settings.notionApiKey,
+        pageId: existingPageId,
+      },
+    });
+
+    if (response?.success) {
+      // Trust the server-fresh value (may differ from the optimistic bump
+      // if the page was edited in Notion meanwhile).
+      if (typeof response.attempts === "number") {
+        userAttemptCount = response.attempts;
+      }
+      updateAttemptDisplay();
+      showStatus(DOM.save.status, `Attempts: ${userAttemptCount}`, "success");
+    } else {
+      userAttemptCount = previousCount;
+      updateAttemptDisplay();
+      showStatus(
+        DOM.save.status,
+        response?.error || "Failed to update attempts",
+        "error",
+      );
+    }
+  } catch (error) {
+    console.error("Leetion: Error adding attempt:", error);
+    userAttemptCount = previousCount;
+    updateAttemptDisplay();
+    showStatus(DOM.save.status, "Failed to update attempts", "error");
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+/**
  * Updates the attempt count display.
  */
 function updateAttemptDisplay() {
@@ -1419,37 +1504,19 @@ function suggestComplexity() {
 }
 
 /**
- * Updates problem stats display.
+ * Updates the problem stats row.
+ * Attempts is the only live stat — the acceptance-rate / total-submissions
+ * extractors never fire in the popup's scraper, so those spans were removed.
+ * The row (count + manual "+1" control) is shown only for existing entries.
  */
 function updateProblemStats() {
-  if (problemData.acceptanceRate || problemData.totalSubmissions) {
-    DOM.problem.statsContainer?.classList.remove("hidden");
-
-    if (problemData.acceptanceRate) {
-      const accSpan =
-        DOM.problem.statAcceptance?.querySelector("span:last-child");
-      if (accSpan) accSpan.textContent = problemData.acceptanceRate;
-    }
-
-    if (problemData.totalSubmissions) {
-      const subSpan =
-        DOM.problem.statSubmissions?.querySelector("span:last-child");
-      if (subSpan)
-        subSpan.textContent = formatNumber(problemData.totalSubmissions);
-    }
-
-    const attSpan = DOM.problem.statAttempts?.querySelector("span:last-child");
-    if (attSpan) attSpan.textContent = userAttemptCount.toString();
+  if (!existingPageId) {
+    DOM.problem.statsContainer?.classList.add("hidden");
+    return;
   }
-}
 
-/**
- * Formats large numbers with K/M suffix.
- */
-function formatNumber(num) {
-  if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
-  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
-  return num.toString();
+  DOM.problem.statsContainer?.classList.remove("hidden");
+  updateAttemptDisplay();
 }
 
 // CODE SNAPSHOTS
