@@ -1,0 +1,12 @@
+$ node --check popup.js background.js content.js onboarding.js
+  OK  popup.js
+  OK  background.js
+  OK  content.js
+  OK  onboarding.js
+
+$ bash build.sh
+Done! Created leetion.zip
+
+$ node docs/super-board/runs/issue-3-build-v1/verify-intervals.mjs  (Builder harness, re-run by QA)
+
+30 passed, 0 failed (30 assertions)
