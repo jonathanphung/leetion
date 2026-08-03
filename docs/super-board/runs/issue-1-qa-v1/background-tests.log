@@ -1,0 +1,42 @@
+
+AC2: update with incrementAttempts=true reads server value and writes read+1
+  ok   - PATCH carries Attempts = server 7 + 1 = 8
+  ok   - a GET pages/{id} precedes the PATCH (server-fresh read)
+  ok   - GET is IMMEDIATELY before the PATCH (no calls between)
+  ok   - response.success && response.attempts === 8
+  ok   - Notion page now has Attempts 8
+
+AC2b: direct Notion edit (7 → 41) made before save is preserved +1, not stale-overwritten
+  ok   - write is 42 (fresh 41 + 1), not a stale popup value
+
+AC1-backend: update with incrementAttempts=false omits Attempts from the PATCH
+  ok   - PATCH body has NO Attempts key
+  ok   - no GET pages/{id} read is wasted when not incrementing
+  ok   - Notion Attempts unchanged at 8
+  ok   - response carries no attempts field (popup keeps its display value)
+
+AC3: first-time save (no existingPageId) creates the page with Attempts = 1
+  ok   - POST pages body has Attempts = 1
+  ok   - response.success, pageId set, attempts === 1
+
+AC4: updateAttempts action → GET then PATCH of ONLY the Attempts property
+  ok   - exactly one GET + one PATCH on the page, GET first
+  ok   - PATCH body property keys === [Attempts] only
+  ok   - Attempts written as server-fresh 3 + 1 = 4
+  ok   - Spaced Repetition byte-identical before/after
+  ok   - response {success:true, attempts:4}
+
+AC6: updateSpacedRepetition with attempts (Revisit) vs without (Tomorrow)
+  ok   - Revisit: PATCH sets BOTH Spaced Repetition and Attempts=5
+  ok   - Tomorrow: PATCH sets Spaced Repetition only — NO Attempts key
+  ok   - Attempts still 5 after Tomorrow
+
+AC7-backend: updateAttempts returns {success:false, error} on Notion failure
+  ok   - response is {success:false, error:...}
+  ok   - Notion Attempts unchanged at 9 after failed PATCH
+
+Regression: unknown action still rejects via the wrapper
+  ok   - unknown action → {success:false, error mentions action}
+
+============================================================
+background.js layer: 23 passed, 0 failed
