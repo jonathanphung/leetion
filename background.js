@@ -37,6 +37,34 @@ const LANGUAGE_MAP = {
   React: "javascript",
 };
 
+/**
+ * Preferred display language for each Notion code-block language.
+ * Used when hydrating snapshots from an existing Notion page and the
+ * block's caption (which stores the exact display language on save)
+ * is missing.
+ */
+const NOTION_LANG_TO_DISPLAY = {
+  python: "Python3",
+  javascript: "JavaScript",
+  typescript: "TypeScript",
+  java: "Java",
+  "c++": "C++",
+  c: "C",
+  "c#": "C#",
+  ruby: "Ruby",
+  swift: "Swift",
+  go: "Go",
+  kotlin: "Kotlin",
+  rust: "Rust",
+  scala: "Scala",
+  php: "PHP",
+  dart: "Dart",
+  racket: "Racket",
+  erlang: "Erlang",
+  elixir: "Elixir",
+  sql: "MySQL",
+};
+
 const NOTION_API_VERSION = "2022-06-28";
 const NOTION_TEXT_LIMIT = 1900;
 const NOTION_RICH_TEXT_LIMIT = 2000; // Notion's limit for rich_text property content
@@ -306,17 +334,27 @@ async function checkExistingProblem(data) {
 
     // Get existing page content
     const existingContent = await getPageContent(apiKey, page.id);
+    const lastEdited = Date.parse(page.last_edited_time) || null;
 
     return {
       exists: true,
       pageId: page.id,
+      lastEdited,
       tags: extractMultiSelect(props["Tag"]),
       expertise: props["My Expertise"]?.select?.name || null,
       remark: extractRichText(props["Remark"]),
       altMethods: extractMultiSelect(props["Alternative Method Tags"]),
       done: props["Done"]?.checkbox || false,
       notes: existingContent.notes,
-      existingCode: existingContent.code,
+      // Fixed key mismatch: getPageContent returns `codeBlocks`, not `code`
+      // (the old `existingCode: existingContent.code` was always undefined).
+      codeBlocks: existingContent.codeBlocks,
+      // Snapshot objects reconstructed from the page's "Solution(s)" section,
+      // ready for the popup to hydrate its local snapshot list from.
+      remoteSnapshots: solutionGroupsToSnapshots(
+        existingContent.solutionGroups,
+        lastEdited,
+      ),
       timeComplexity: props["Time Complexity"]?.select?.name || "",
       spaceComplexity: props["Space Complexity"]?.select?.name || "",
       attempts: props["Attempts"]?.number || 1,
@@ -329,56 +367,101 @@ async function checkExistingProblem(data) {
 }
 
 /**
- * Gets existing page content (notes and code blocks by language).
+ * Fetches ALL child blocks of a page, following pagination.
+ * (The old single-request fetch silently truncated pages over 100 blocks.)
+ */
+async function fetchAllBlocks(apiKey, pageId) {
+  const allBlocks = [];
+  let cursor;
+  do {
+    const url = cursor
+      ? `blocks/${pageId}/children?page_size=100&start_cursor=${cursor}`
+      : `blocks/${pageId}/children?page_size=100`;
+    const response = await notionRequest(url, apiKey, "GET");
+    allBlocks.push(...(response.results || []));
+    cursor = response.has_more ? response.next_cursor : undefined;
+  } while (cursor);
+  return allBlocks;
+}
+
+/**
+ * Gets existing page content (notes, code blocks, and solution groups).
  */
 async function getPageContent(apiKey, pageId) {
+  try {
+    const allBlocks = await fetchAllBlocks(apiKey, pageId);
+    return parsePageBlocks(allBlocks);
+  } catch (error) {
+    console.error("Leetion: Error getting page content:", error);
+    return { notes: "", codeBlocks: [], solutionGroups: [], hasQuestion: false };
+  }
+}
+
+/**
+ * Pure parser: turns a page's block list into structured content.
+ *
+ * `solutionGroups` reconstructs the logical solutions of the "Solution(s)"
+ * section: each H3 subheading ("<Language> - Solution N (<date>)") starts a
+ * group, and consecutive code blocks inside a group are chunks of one
+ * solution (long code is chunk-split on save). Code blocks with no owning
+ * subheading (legacy pages) are grouped by consecutive same language+caption.
+ */
+function parsePageBlocks(blocks) {
   const content = {
     notes: "",
-    codeBlocks: [], // Array of { language, code } objects
+    codeBlocks: [], // Array of { language, caption, code } objects
+    solutionGroups: [], // Array of { heading, language, caption, chunks }
     hasQuestion: false,
   };
 
-  try {
-    const response = await notionRequest(
-      `blocks/${pageId}/children?page_size=100`,
-      apiKey,
-      "GET",
-    );
+  let currentSection = "";
+  let currentGroup = null;
 
-    let currentSection = "";
+  for (const block of blocks || []) {
+    if (block.type === "heading_2") {
+      const heading = block.heading_2?.rich_text?.[0]?.plain_text || "";
+      currentSection = heading.toLowerCase();
+      currentGroup = null;
 
-    for (const block of response.results || []) {
-      if (block.type === "heading_2") {
-        const heading = block.heading_2?.rich_text?.[0]?.plain_text || "";
-        currentSection = heading.toLowerCase();
+      if (heading === "Question") {
+        content.hasQuestion = true;
+      }
+      continue;
+    }
 
-        if (heading === "Question") {
-          content.hasQuestion = true;
-        }
+    if (currentSection === "notes") {
+      if (block.type === "paragraph") {
+        const text =
+          block.paragraph?.rich_text?.map((t) => t.plain_text).join("") || "";
+        if (text) content.notes += (content.notes ? "\n" : "") + text;
+      } else if (block.type === "bulleted_list_item") {
+        const text =
+          block.bulleted_list_item?.rich_text
+            ?.map((t) => t.plain_text)
+            .join("") || "";
+        if (text) content.notes += (content.notes ? "\n" : "") + "- " + text;
+      } else if (block.type === "numbered_list_item") {
+        const text =
+          block.numbered_list_item?.rich_text
+            ?.map((t) => t.plain_text)
+            .join("") || "";
+        if (text) content.notes += (content.notes ? "\n" : "") + "1. " + text;
+      }
+    }
+
+    if (currentSection === "solution(s)") {
+      if (block.type === "heading_3") {
+        currentGroup = {
+          heading: block.heading_3?.rich_text?.[0]?.plain_text || "",
+          language: null,
+          caption: "",
+          chunks: [],
+        };
+        content.solutionGroups.push(currentGroup);
         continue;
       }
 
-      if (currentSection === "notes") {
-        if (block.type === "paragraph") {
-          const text =
-            block.paragraph?.rich_text?.map((t) => t.plain_text).join("") || "";
-          if (text) content.notes += (content.notes ? "\n" : "") + text;
-        } else if (block.type === "bulleted_list_item") {
-          const text =
-            block.bulleted_list_item?.rich_text
-              ?.map((t) => t.plain_text)
-              .join("") || "";
-          if (text) content.notes += (content.notes ? "\n" : "") + "- " + text;
-        } else if (block.type === "numbered_list_item") {
-          const text =
-            block.numbered_list_item?.rich_text
-              ?.map((t) => t.plain_text)
-              .join("") || "";
-          if (text) content.notes += (content.notes ? "\n" : "") + "1. " + text;
-        }
-      }
-
-      if (currentSection === "solution(s)" && block.type === "code") {
+      if (block.type === "code") {
         const codeText =
           block.code?.rich_text?.map((t) => t.plain_text).join("") || "";
         let codeLang = block.code?.language || "plain text";
@@ -392,15 +475,89 @@ async function getPageContent(apiKey, pageId) {
             caption: caption,
             code: codeText,
           });
+
+          const canJoin =
+            currentGroup &&
+            (currentGroup.language === null ||
+              (currentGroup.language === codeLang &&
+                currentGroup.caption === caption));
+          if (!canJoin) {
+            currentGroup = {
+              heading: null,
+              language: null,
+              caption: "",
+              chunks: [],
+            };
+            content.solutionGroups.push(currentGroup);
+          }
+          if (currentGroup.language === null) {
+            currentGroup.language = codeLang;
+            currentGroup.caption = caption;
+          }
+          currentGroup.chunks.push(codeText);
+        }
+      }
+    }
+  }
+
+  return content;
+}
+
+/**
+ * Reconstructs snapshot objects from parsed "Solution(s)" groups so a machine
+ * with no local snapshots can hydrate from Notion.
+ *
+ * Metadata policy (snapshot label/language/timestamp are not natively
+ * representable in Notion code blocks): the display language comes from the
+ * block caption when present (save writes it there), else from the
+ * "<Language> - Solution N (<date>)" subheading, else from the reverse
+ * language map; the timestamp comes from the subheading date when parseable,
+ * else the page's last_edited_time, else now; labels are regenerated
+ * positionally on save (existing behavior).
+ */
+function solutionGroupsToSnapshots(groups, fallbackTimestampMs) {
+  const snapshots = [];
+
+  for (const group of groups || []) {
+    if (!group.chunks || group.chunks.length === 0) continue;
+
+    let displayLanguage = group.caption || null;
+    let timestamp = null;
+    let label = null;
+
+    if (group.heading) {
+      const m = group.heading.match(
+        /^(.+?)\s*-\s*(Solution\s*\d+)\s*(?:\((.+)\))?\s*$/i,
+      );
+      if (m) {
+        if (!displayLanguage) displayLanguage = m[1].trim();
+        label = m[2].trim();
+        if (m[3]) {
+          const parsed = Date.parse(m[3]);
+          if (!Number.isNaN(parsed)) timestamp = parsed;
         }
       }
     }
 
-    return content;
-  } catch (error) {
-    console.error("Leetion: Error getting page content:", error);
-    return content;
+    if (!displayLanguage) {
+      displayLanguage = NOTION_LANG_TO_DISPLAY[group.language] || "Plain Text";
+    }
+    if (timestamp === null) {
+      timestamp = fallbackTimestampMs || Date.now();
+    }
+
+    snapshots.push({
+      id: `notion_${snapshots.length}_${timestamp}`,
+      code: group.chunks.join("\n"),
+      language: displayLanguage,
+      timestamp,
+      label: label || `Solution ${snapshots.length + 1}`,
+      synced: true,
+      source: "notion",
+    });
   }
+
+  return snapshots;
 }
 
 // NOTION API - MUTATIONS
@@ -482,51 +639,81 @@ async function updatePageContent(
 
     // Handle Content Updates
     // We rebuild the content. If user has 'saveQuestion' true, we usually want to ensure Question is at top.
-    const hasSnapshots = problem.snapshots && problem.snapshots.length > 0;
+    // Only solution-type snapshots count as content: a lone question-type
+    // snapshot must not trigger a rebuild that wipes the Solution(s) section.
+    const snapshots = problem.snapshots || [];
+    const localSolutionSnapshots = snapshots.filter(
+      (s) => s.type !== "question",
+    );
     const hasNotes = !!problem.notes;
-    const hasNewContent = hasSnapshots || hasNotes || problem.saveQuestion;
+    const hasNewContent =
+      localSolutionSnapshots.length > 0 || hasNotes || problem.saveQuestion;
 
-    if (hasNewContent) {
-      // Build the FULL intended content structure
-      const intendedChildren = buildPageContent({
-        ...problem,
-        code: cleanedCode,
-      });
-
-      // Smart Overwrite:
-      // 1. Fetch existing blocks
-      // 2. Identify if "Question" section exists
-      // 3. If "Question" exists and we are saving question -> Skip deleting it, Skip creating it
-
-      const { blocksToDelete, blocksToCreate } = await prepareSmartUpdate(
-        apiKey,
-        existingPageId,
-        intendedChildren,
-        problem.saveQuestion,
-      );
-
-      if (blocksToDelete.length > 0) {
-        await deleteBlocksList(apiKey, blocksToDelete);
-      }
-
-      if (blocksToCreate.length > 0) {
-        await appendBlocksInBatches(apiKey, existingPageId, blocksToCreate);
-      }
-
-      console.log(
-        `Leetion: Updated page. Deleted ${blocksToDelete.length}, Created ${blocksToCreate.length}`,
-      );
-    } else {
+    if (!hasNewContent) {
       console.log(
         "Leetion: No snapshots/notes, preserved existing page content",
       );
+      return { success: true, pageId, updated: true, contentUpdated: false };
     }
+
+    // Fetch the page once — used by both the clobber guard and the smart update.
+    const allBlocks = await fetchAllBlocks(apiKey, existingPageId);
+    const existingContent = parsePageBlocks(allBlocks);
+
+    // Clobber guard: if this device has no solution snapshots but the Notion
+    // page already has solutions (fresh machine, or popup hydration failed),
+    // rebuild the Solution(s) section from the page's own content instead of
+    // wiping it or replacing it with the current editor preview. Notion is
+    // the source of truth for solutions the device doesn't know about.
+    let effectiveSnapshots = snapshots;
+    if (
+      localSolutionSnapshots.length === 0 &&
+      existingContent.solutionGroups.length > 0
+    ) {
+      effectiveSnapshots = [
+        ...snapshots,
+        ...solutionGroupsToSnapshots(existingContent.solutionGroups, Date.now()),
+      ];
+      console.log(
+        `Leetion: Preserving ${existingContent.solutionGroups.length} existing Notion solution(s) — no local snapshots on this device`,
+      );
+    }
+
+    // Build the FULL intended content structure
+    const intendedChildren = buildPageContent({
+      ...problem,
+      code: cleanedCode,
+      snapshots: effectiveSnapshots,
+    });
+
+    // Smart Overwrite:
+    // 1. Use the fetched blocks
+    // 2. Identify if "Question" section exists
+    // 3. If "Question" exists and we are saving question -> Skip deleting it, Skip creating it
+
+    const { blocksToDelete, blocksToCreate } = prepareSmartUpdate(
+      allBlocks,
+      intendedChildren,
+      problem.saveQuestion,
+    );
+
+    if (blocksToDelete.length > 0) {
+      await deleteBlocksList(apiKey, blocksToDelete);
+    }
+
+    if (blocksToCreate.length > 0) {
+      await appendBlocksInBatches(apiKey, existingPageId, blocksToCreate);
+    }
+
+    console.log(
+      `Leetion: Updated page. Deleted ${blocksToDelete.length}, Created ${blocksToCreate.length}`,
+    );
 
     return {
       success: true,
       pageId,
       updated: true,
-      contentUpdated: hasNewContent,
+      contentUpdated: true,
     };
   } catch (error) {
     console.error("Leetion: Save error:", error);
@@ -559,25 +746,8 @@ async function createPage(apiKey, databaseId, properties, children) {
   return pageId;
 }
 
-async function prepareSmartUpdate(
-  apiKey,
-  pageId,
-  intendedChildren,
-  saveQuestion,
-) {
+function prepareSmartUpdate(allBlocks, intendedChildren, saveQuestion) {
   try {
-    // Get all blocks
-    let allBlocks = [];
-    let cursor = undefined;
-    do {
-      const url = cursor
-        ? `blocks/${pageId}/children?page_size=100&start_cursor=${cursor}`
-        : `blocks/${pageId}/children?page_size=100`;
-      const response = await notionRequest(url, apiKey, "GET");
-      allBlocks = allBlocks.concat(response.results || []);
-      cursor = response.has_more ? response.next_cursor : undefined;
-    } while (cursor);
-
     // Find Headers
     // Notion API returns block objects. We check type and content.
     // Heading 2 is "heading_2". Content is in "rich_text".
@@ -940,18 +1110,19 @@ function buildPageContent(problem) {
   }
 
   // 2. Solutions Section
-  const hasSnapshots = problem.snapshots && problem.snapshots.length > 0;
+  // Question-type snapshots are excluded: they must not create an empty
+  // Solution(s) heading, and numbering runs over real solutions only.
+  const solutionSnapshots = (problem.snapshots || []).filter(
+    (s) => s.type !== "question",
+  );
 
   // Only save snapshots - the "current code" is just a preview
   // Users must click "Save Snapshot" to add code to their Notion page
-  if (hasSnapshots) {
+  if (solutionSnapshots.length > 0) {
     blocks.push(createHeading("Solution(s)"));
 
-    for (let i = 0; i < problem.snapshots.length; i++) {
-      const snapshot = problem.snapshots[i];
-      // Skip question snapshots if we are using the new toggle method
-      if (snapshot.type === "question") continue;
-
+    for (let i = 0; i < solutionSnapshots.length; i++) {
+      const snapshot = solutionSnapshots[i];
       const snapshotLang = LANGUAGE_MAP[snapshot.language] || "plain text";
       const date = new Date(snapshot.timestamp);
       const dateStr = date.toLocaleDateString([], {
