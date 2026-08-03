@@ -1,0 +1,41 @@
+Issue #3 — per-expertise spaced-repetition intervals
+
+popup.js — resolveReviewIntervals (storage shape + migration)
+  PASS  fresh profile falls back to 1/3/7 defaults
+  PASS  legacy scalar (30) seeds all three levels
+  PASS  legacy scalar 0 (reviews disabled) stays disabled on all levels
+  PASS  new object wins over a leftover legacy scalar
+  PASS  partial object: missing level falls back to legacy scalar
+  PASS  partial object with no legacy: missing levels fall back to defaults
+  PASS  garbage values are sanitized (negative/NaN -> fallback, >365 clamped)
+  PASS  explicit per-level 0 is preserved (not treated as missing)
+
+popup.js — intervalForExpertise (AC2 / AC3 resolution)
+  PASS  Low -> 1
+  PASS  Medium -> 3
+  PASS  High -> 7
+  PASS  unknown expertise falls back to Medium
+  PASS  null expertise falls back to Medium
+  PASS  custom intervals are honoured
+
+background.js — buildProperties (save path writes the right date)
+  PASS  Low save (+1d) writes Spaced Repetition = 2026-08-04
+  PASS  Low save still writes My Expertise
+  PASS  Medium save (+3d) writes Spaced Repetition = 2026-08-06
+  PASS  Medium save still writes My Expertise
+  PASS  High save (+7d) writes Spaced Repetition = 2026-08-10
+  PASS  High save still writes My Expertise
+  PASS  interval 0 writes no Spaced Repetition property (AC5)
+
+background.js — updateSpacedRepetition (Revisit / Tomorrow path)
+  PASS  Revisit (High, 7d) succeeds
+  PASS  Revisit (High, 7d) writes today+7
+  PASS  Revisit still writes Attempts
+  PASS  Tomorrow (days: 1) still writes today+1 regardless of expertise (AC4)
+  PASS  Tomorrow leaves Attempts untouched
+  PASS  Revisit on a 0-day level writes no review date (AC5)
+  PASS  Revisit on a 0-day level still logs the attempt
+  PASS  0 days + no attempts sends no Notion request
+  PASS  0 days + no attempts reports skipped
+
+30 passed, 0 failed (30 assertions)

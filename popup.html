@@ -183,23 +183,55 @@
             <p class="form-hint">From database URL after notion.so/username/</p>
           </div>
 
-          <!-- Spaced Repetition Setting -->
+          <!-- Spaced Repetition Settings (per expertise level) -->
           <div class="form-group">
-            <label for="input-spaced-rep" class="form-label"
-              >Spaced Repetition (days)</label
-            >
-            <input
-              type="number"
-              id="input-spaced-rep"
-              class="form-input"
-              placeholder="30"
-              min="0"
-              max="365"
-              value="30"
-            />
+            <label class="form-label">Review Intervals (days)</label>
+            <div class="interval-row">
+              <div class="interval-field">
+                <label for="input-interval-low" class="form-label-sm">Low</label>
+                <input
+                  type="number"
+                  id="input-interval-low"
+                  class="form-input"
+                  placeholder="1"
+                  min="0"
+                  max="365"
+                  value="1"
+                />
+              </div>
+              <div class="interval-field">
+                <label for="input-interval-medium" class="form-label-sm"
+                  >Medium</label
+                >
+                <input
+                  type="number"
+                  id="input-interval-medium"
+                  class="form-input"
+                  placeholder="3"
+                  min="0"
+                  max="365"
+                  value="3"
+                />
+              </div>
+              <div class="interval-field">
+                <label for="input-interval-high" class="form-label-sm"
+                  >High</label
+                >
+                <input
+                  type="number"
+                  id="input-interval-high"
+                  class="form-input"
+                  placeholder="7"
+                  min="0"
+                  max="365"
+                  value="7"
+                />
+              </div>
+            </div>
             <p class="form-hint">
-              Review date will be set this many days from save. Set to 0 to
-              disable.
+              Review date is set this many days from save, using the interval
+              for the problem's expertise level. Set a level to 0 to disable
+              reviews for that level.
             </p>
           </div>
 

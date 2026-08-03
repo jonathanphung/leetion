@@ -691,6 +691,16 @@ body {
   flex-shrink: 0;
 }
 
+.interval-row {
+  display: flex;
+  gap: 8px;
+}
+
+.interval-field {
+  flex: 1;
+  min-width: 0;
+}
+
 .complexity-row {
   display: flex;
   gap: 12px;
