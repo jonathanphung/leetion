@@ -60,25 +60,41 @@ Save your LeetCode solutions directly to Notion with one click.
 
 ### 2. Create Your Notion Database
 
-Create a new database in Notion with these properties:
+Create a new database in Notion. You do not need to add columns by hand:
+when you first save a problem, Leetion shows you the list of columns it
+needs and adds the missing ones after you confirm. It never renames or
+deletes columns you created.
 
-| Property            | Type                      | Required |
-| ------------------- | ------------------------- | -------- |
-| Name                | Title                     | Yes      |
-| Number              | Number                    | Yes      |
-| Difficulty          | Select (Easy/Medium/Hard) | Yes      |
-| Tags                | Multi-select              | Yes      |
-| Status              | Checkbox                  | Yes      |
-| Expertise           | Select (Low/Medium/High)  | Yes      |
-| Time Complexity     | Rich Text                 | Optional |
-| Space Complexity    | Rich Text                 | Optional |
-| Attempts            | Number                    | Optional |
-| Notes               | Rich Text                 | Optional |
-| Remark              | Rich Text                 | Optional |
-| Alternative Methods | Rich Text                 | Optional |
-| Date                | Date                      | Optional |
-| Review              | Date                      | Optional |
-| URL                 | URL                       | Optional |
+These are the exact column names and types Leetion uses:
+
+| Property                | Type                      |
+| ----------------------- | ------------------------- |
+| Question                | Title                     |
+| S No.                   | Number                    |
+| Level                   | Select (Easy/Medium/Hard) |
+| Tag                     | Multi-select              |
+| My Expertise            | Select (Low/Medium/High)  |
+| Done                    | Checkbox                  |
+| Date (of first attempt) | Date                      |
+| Question Link           | URL                       |
+| Remark                  | Rich text                 |
+| Alternative Method Tags | Multi-select              |
+| Spaced Repetition       | Date                      |
+| Time Complexity         | Select                    |
+| Space Complexity        | Select                    |
+| Attempts                | Number                    |
+
+If you add these yourself, the names must match exactly — a column with a
+different name (even the same type) is treated as a separate column. The
+title column is the one exception: Leetion writes the problem title to your
+database's existing title column, whatever it is named.
+
+> **Upgrading from an older setup?** Earlier versions of this README listed
+> different column names (for example a "Date" date column instead of
+> "Date (of first attempt)", or "Review" instead of "Spaced Repetition").
+> If your database has both an old-name column and its Leetion-created
+> counterpart, the old one is an unused duplicate. Leetion never deletes
+> columns, so merge or remove the leftover columns manually in Notion.
 
 ### 3. Connect the Database
 

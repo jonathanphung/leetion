@@ -546,6 +546,57 @@ body {
   color: var(--error);
 }
 
+/* Schema confirmation (shown before Leetion adds missing Notion columns) */
+.schema-confirm {
+  margin-top: 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+  border: 1px solid rgba(255, 149, 0, 0.4);
+  font-size: 12.5px;
+  text-align: left;
+  max-height: 220px;
+  overflow-y: auto;
+}
+.schema-confirm-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.schema-confirm-list {
+  margin: 0 0 8px 18px;
+}
+.schema-confirm-list li {
+  margin-bottom: 2px;
+}
+.schema-confirm-similar {
+  color: var(--text-secondary);
+}
+.schema-confirm-note {
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+.schema-confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+.schema-confirm-actions .btn-primary {
+  flex: 2;
+}
+.schema-confirm-cancel {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.schema-confirm-cancel:hover {
+  background: var(--bg-elevated);
+}
+
 .empty-state {
   flex: 1;
   display: flex;
