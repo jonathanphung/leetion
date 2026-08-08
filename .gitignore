@@ -18,6 +18,7 @@ Thumbs.db
 raw-screenshots/
 *.log
 npm-debug.log*
+leetion-dev-1.1.5.xpi
 
 # Build artifacts
 dist/
