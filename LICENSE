@@ -1,13 +1,39 @@
 Copyright (c) 2026 Neel Bansal. All Rights Reserved.
 
-This software and its source code are proprietary. You may NOT:
+Leetion is source-available, not open source. The source is published so it can
+be read, audited, and improved by contributors. Publishing it here does not
+place it in the public domain and grants no right to redistribute it.
 
-- Copy, redistribute, or republish this software
-- Use this code to create derivative works
-- Submit this software to any app store or extension marketplace
+You MAY:
 
-Contributions are welcome via pull request. By submitting a contribution,
-you agree to transfer all rights to your contribution to the copyright holder.
+- Read, study, and audit the source code
+- Install and run Leetion for your own personal use, including loading it as an
+  unpacked extension built from this repository
+- Fork this repository for the sole purpose of preparing a pull request to it
+- Quote short excerpts of the code, with attribution, when reporting a bug or
+  discussing the project
+
+You MAY NOT:
+
+- Copy, redistribute, or republish this software or its source code
+- Use this code to create derivative works or competing products
+- Submit this software, or anything substantially derived from it, to any app
+  store or extension marketplace
+- Remove or alter this notice or the copyright and attribution notices in the
+  source files
+- Use the Leetion name, icon, or branding for your own project
+
+A fork created under the pull request exception may not be published, packaged,
+listed, or distributed as a standalone product, whether or not the pull request
+is merged.
+
+CONTRIBUTIONS
+
+Contributions are welcome via pull request. By submitting a contribution you
+agree to the Contributor License Agreement in CONTRIBUTING.md, under which you
+assign all rights in that contribution to the copyright holder.
+
+WARRANTY
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

@@ -133,18 +133,23 @@ leetion/
 
 ## Contributing
 
-I am currently finding it difficult to handle Leetion. A maintainer or anyone interested in helping is greatly appreciated! Feel free to open issues or submit pull requests.
+I am currently finding it difficult to handle Leetion on my own. A maintainer, or anyone interested in helping, is greatly appreciated! Feel free to open issues or submit pull requests.
 
-By submitting a contribution, you agree to transfer all rights to your contribution to the copyright holder.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before you start — it covers local setup, code style, and the Contributor License Agreement.
+
+**Please keep pull requests small and focused.** One PR should do one thing, ideally under ~150 lines across a few files. Large mixed-purpose PRs are hard to review safely and usually get declined — if the work is big, open an issue first and we'll break it into reviewable pieces. This matters more than usual here, since review time is the bottleneck.
+
+By submitting a pull request you agree to assign all rights in your contribution to the copyright holder.
 
 ## License
 
 Copyright (c) 2026 Neel Bansal. All Rights Reserved.
 
-This software and its source code are proprietary. You may NOT:
+Leetion is **source-available, not open source**. You may read the code, run it for personal use, and fork it to prepare a pull request. You may NOT:
 
 - Copy, redistribute, or republish this software
-- Use this code to create derivative works
+- Use this code to create derivative works or competing products
 - Submit this software to any app store or extension marketplace
+- Use the Leetion name, icon, or branding for your own project
 
 See the [LICENSE](LICENSE) file for full details.
