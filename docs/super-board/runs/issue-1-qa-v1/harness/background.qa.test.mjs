@@ -251,8 +251,48 @@ async function main() {
       res?.success === true && !!res?.pageId && res?.attempts === 1, JSON.stringify(res));
   }
 
-  // ==== AC4 — updateAttempts PATCHes ONLY Attempts; Spaced Repetition untouched
-  console.log("\nAC4: updateAttempts action → GET then PATCH of ONLY the Attempts property");
+  // ===== AC4 — a staged count is written verbatim and suppresses the increment
+  console.log("\nAC4: save with an explicit staged `attempts` sets that exact value, no +1 on top");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: { Attempts: { number: 3 } } });
+    const res = await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: false, attempts: 5,
+      spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    const patches = patchOf(state.log, "page-1");
+    check("Attempts written as the staged 5 — NOT 5+1 and NOT 3+1",
+      patches[0]?.body?.properties?.Attempts?.number === 5,
+      JSON.stringify(patches[0]?.body?.properties?.Attempts));
+    check("no server-fresh GET is issued for an explicit value",
+      getOf(state.log, "page-1").length === 0,
+      `log: ${state.log.map((r) => `${r.method} ${r.endpoint}`).join(" → ")}`);
+    check("Notion Attempts is exactly 5",
+      state.pages.get("page-1").properties.Attempts.number === 5);
+    check("response reports the staged value so the popup can clear it",
+      res?.success === true && res?.attempts === 5, JSON.stringify(res));
+  }
+
+  // ---- AC4b — an explicit count wins even if the caller also asks to increment
+  console.log("\nAC4b: explicit `attempts` takes priority over incrementAttempts (no double-count)");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: { Attempts: { number: 3 } } });
+    await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: true, attempts: 5,
+      spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    check("staged 5 wins over the increment path — result is 5, not 4 or 6",
+      state.pages.get("page-1").properties.Attempts.number === 5,
+      String(state.pages.get("page-1").properties.Attempts.number));
+  }
+
+  // ---------------- AC4c — a staged count leaves Spaced Repetition alone
+  console.log("\nAC4c: staging a count does not disturb an existing Spaced Repetition date");
   {
     const { state, fakeFetch } = makeFakeNotion();
     const send = loadBackground(fakeFetch);
@@ -260,25 +300,34 @@ async function main() {
     state.pages.set("page-1", { properties: {
       Attempts: { number: 3 },
       "Spaced Repetition": JSON.parse(dateBefore),
-      Status: { select: { name: "Done" } },
     }});
-    const res = await send({ action: "updateAttempts", data: { apiKey: "qa-key", pageId: "page-1" } });
-    const patches = patchOf(state.log, "page-1");
-    const gets = getOf(state.log, "page-1");
-    check("exactly one GET + one PATCH on the page, GET first",
-      gets.length === 1 && patches.length === 1 &&
-      state.log.indexOf(gets[0]) < state.log.indexOf(patches[0]),
-      `log: ${state.log.map((r) => `${r.method} ${r.endpoint}`).join(" → ")}`);
-    check("PATCH body property keys === [Attempts] only",
-      JSON.stringify(Object.keys(patches[0]?.body?.properties || {})) === JSON.stringify(["Attempts"]),
-      `keys: ${Object.keys(patches[0]?.body?.properties || {}).join(", ")}`);
-    check("Attempts written as server-fresh 3 + 1 = 4",
-      patches[0]?.body?.properties?.Attempts?.number === 4);
+    // spacedRepetitionDays omitted → buildProperties writes no review date,
+    // which is the "update an existing entry" shape.
+    await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: false, attempts: 9, problem: PROBLEM,
+    }});
     check("Spaced Repetition byte-identical before/after",
       JSON.stringify(state.pages.get("page-1").properties["Spaced Repetition"]) === dateBefore,
       JSON.stringify(state.pages.get("page-1").properties["Spaced Repetition"]));
-    check("response {success:true, attempts:4}",
-      res?.success === true && res?.attempts === 4, JSON.stringify(res));
+    check("Attempts still landed on the staged 9",
+      state.pages.get("page-1").properties.Attempts.number === 9);
+  }
+
+  // ------------------------- AC4d — a staged 0 is honored, not treated as unset
+  console.log("\nAC4d: a staged 0 is written (falsy, but a real value)");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: { Attempts: { number: 7 } } });
+    await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: false, attempts: 0,
+      spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    check("Attempts written as 0, not skipped as falsy",
+      state.pages.get("page-1").properties.Attempts.number === 0,
+      String(state.pages.get("page-1").properties.Attempts.number));
   }
 
   // ============ AC6 — Revisit increments via updateSpacedRepetition; Tomorrow doesn't
@@ -316,18 +365,24 @@ async function main() {
   }
 
   // ============================ AC7 (backend half) — failed write reports error
-  console.log("\nAC7-backend: updateAttempts returns {success:false, error} on Notion failure");
+  console.log("\nAC7-backend: a failed save of a staged count reports {success:false, error}");
   {
     const { state, fakeFetch } = makeFakeNotion();
     const send = loadBackground(fakeFetch);
     state.pages.set("page-1", { properties: { Attempts: { number: 9 } } });
     state.failNext = { match: /^PATCH pages\/page-1$/, status: 500, message: "Notion exploded (QA forced)" };
-    const res = await send({ action: "updateAttempts", data: { apiKey: "qa-key", pageId: "page-1" } });
+    const res = await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: false, attempts: 12,
+      spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
     check("response is {success:false, error:...}",
       res?.success === false && typeof res?.error === "string" && res.error.includes("QA forced"),
       JSON.stringify(res));
     check("Notion Attempts unchanged at 9 after failed PATCH",
       state.pages.get("page-1").properties.Attempts.number === 9);
+    check("no attempts echoed back, so the popup keeps the edit staged for retry",
+      !("attempts" in (res || {})), JSON.stringify(res));
   }
 
   // ---- unknown action still errors cleanly (guard for the new switch case)

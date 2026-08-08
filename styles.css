@@ -682,6 +682,17 @@ body {
   border-color: var(--accent);
 }
 
+/* Staged but not yet written: the value only reaches Notion on "Update in
+   Notion", so the field reads as pending rather than as stored state. */
+.attempts-input.is-staged {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.attempts-control.is-staged .attempts-label {
+  color: var(--accent);
+}
+
 .attempts-input:disabled {
   opacity: 0.6;
   cursor: not-allowed;

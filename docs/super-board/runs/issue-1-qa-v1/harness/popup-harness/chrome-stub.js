@@ -4,15 +4,17 @@
  * Injected BEFORE the real popup.js. Provides a faithful `chrome.*` stub plus
  * a fake background whose message contract mirrors the REAL background.js
  * behavior verified by the Node layer (background.qa.test.mjs):
- *   - saveToNotion: existing page + incrementAttempts → attempts+1 returned;
- *     incrementAttempts=false → no attempts key in response; create → attempts 1.
- *   - updateAttempts: attempts+1, Spaced Repetition untouched.
+ *   - saveToNotion: existing page + explicit `attempts` → that exact value;
+ *     else + incrementAttempts → attempts+1 returned; neither → no attempts
+ *     key in the response (property untouched); create → attempts 1.
  *   - updateSpacedRepetition: sets date; sets attempts only when provided.
+ *
+ * Attempts are staged popup-side and only ever reach here via saveToNotion —
+ * there is no standalone attempts action.
  *
  * Test hooks on window.__qa:
  *   messages                — ordered log of every runtime.sendMessage payload
  *   notion                  — fake server-side state {attempts, spacedRepDate,...}
- *   failNextUpdateAttempts  — one-shot: next updateAttempts → {success:false}
  *   failNextSave            — one-shot: next saveToNotion → {success:false}
  *
  * Query params: ?new=1 → problem does not exist yet (first-save scenario).
@@ -91,8 +93,14 @@
         }
         if (d.existingPageId) {
           const res = { success: true, pageId: d.existingPageId, updated: true, contentUpdated: true };
-          if (d.incrementAttempts) {
-            setAttempts(qa.notion.attempts + 1); // server-fresh read+1 (mirrors verified backend)
+          // Mirrors background.js updatePageContent: an explicit staged
+          // `attempts` wins outright, else a server-fresh read+1, else the
+          // property is left alone.
+          if (typeof d.attempts === "number") {
+            setAttempts(Math.max(0, Math.floor(d.attempts)));
+            res.attempts = qa.notion.attempts;
+          } else if (d.incrementAttempts) {
+            setAttempts(qa.notion.attempts + 1);
             res.attempts = qa.notion.attempts;
           }
           return res;
@@ -101,20 +109,6 @@
         qa.notion.pageId = "qa-page-new";
         setAttempts(1);
         return { success: true, pageId: "qa-page-new", updated: false, contentUpdated: true, attempts: 1 };
-      }
-      case "updateAttempts": {
-        if (qa.failNextUpdateAttempts) {
-          qa.failNextUpdateAttempts = false;
-          return { success: false, error: "QA forced +1 failure (Notion 500)" };
-        }
-        // Mirrors background.js: an explicit `attempts` sets that exact value
-        // (hand-typed), omitting it increments. spacedRepDate NOT touched.
-        setAttempts(
-          typeof d.attempts === "number"
-            ? Math.max(0, Math.floor(d.attempts))
-            : qa.notion.attempts + 1,
-        );
-        return { success: true, attempts: qa.notion.attempts };
       }
       case "updateSpacedRepetition": {
         const date = new Date();

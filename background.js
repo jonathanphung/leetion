@@ -181,8 +181,6 @@ async function handleMessage(request) {
         request.data,
       );
       return await updateSpacedRepetition(request.data);
-    case "updateAttempts":
-      return await updateAttempts(request.data);
     default:
       throw new Error(`Unknown action: ${request.action}`);
   }
@@ -420,6 +418,7 @@ async function saveToNotion(data) {
     existingPageId,
     spacedRepetitionDays,
     incrementAttempts,
+    attempts,
   } = data;
 
   // Ensure all required columns exist (auto-create if missing)
@@ -446,6 +445,7 @@ async function saveToNotion(data) {
         problem,
         spacedRepetitionDays,
         incrementAttempts,
+        attempts,
       );
       pageId = updateResult.pageId;
       return updateResult;
@@ -475,6 +475,7 @@ async function updatePageContent(
   problem,
   spacedRepetitionDays,
   incrementAttempts,
+  attempts,
 ) {
   try {
     const cleanedCode = cleanCode(problem.code);
@@ -484,13 +485,22 @@ async function updatePageContent(
       spacedRepetitionDays,
     );
 
-    // Server-fresh attempt increment: read the current value from Notion
-    // immediately before the PATCH so an edit made directly in Notion is
-    // preserved +1 instead of being overwritten with a stale popup value.
-    // When not incrementing (repeat update in the same popup session),
-    // Attempts is omitted from the PATCH so Notion keeps its value.
+    // Attempts resolution, in priority order:
+    //
+    // 1. An explicit count staged in the popup wins outright. The user typed
+    //    (or "+"-ed) a value meaning "make it this", so it is written as-is
+    //    with no read-back, and no increment is applied on top — the popup
+    //    sends incrementAttempts: false alongside it.
+    // 2. Otherwise a server-fresh increment: read the current value from
+    //    Notion immediately before the PATCH so an edit made directly in
+    //    Notion is preserved +1 instead of overwritten with a stale value.
+    // 3. Otherwise (repeat update in the same popup session) Attempts is
+    //    omitted from the PATCH entirely so Notion keeps its value.
     let newAttempts;
-    if (incrementAttempts) {
+    if (typeof attempts === "number" && Number.isFinite(attempts)) {
+      newAttempts = Math.max(0, Math.floor(attempts));
+      properties["Attempts"] = { number: newAttempts };
+    } else if (incrementAttempts) {
       const currentAttempts = await fetchCurrentAttempts(
         apiKey,
         existingPageId,
@@ -851,9 +861,9 @@ function buildProperties(problem, existingPageId, spacedRepetitionDays) {
     };
   }
 
-  // Attempts: a first-time save always starts at 1. For existing pages the
-  // caller manages the increment server-fresh (see updatePageContent /
-  // updateAttempts) so a stale popup value never overwrites Notion.
+  // Attempts: a first-time save always starts at 1. For existing pages
+  // updatePageContent resolves the value — an explicit staged count, or a
+  // server-fresh increment so a stale popup value never overwrites Notion.
   if (!existingPageId) {
     properties["Attempts"] = { number: 1 };
   }
@@ -884,39 +894,6 @@ function buildProperties(problem, existingPageId, spacedRepetitionDays) {
 async function fetchCurrentAttempts(apiKey, pageId) {
   const page = await notionRequest(`pages/${pageId}`, apiKey, "GET");
   return page?.properties?.["Attempts"]?.number ?? 0;
-}
-
-/**
- * Writes only the "Attempts" property for a page, touching nothing else —
- * the "Spaced Repetition" date is left exactly as it is.
- *
- * `data.attempts` omitted → increment: reads the current value server-fresh
- * and writes read-value + 1, so a concurrent edit in Notion is preserved.
- * `data.attempts` given   → set that exact value (hand-typed by the user,
- * which is an explicit override, so no read-back is wanted).
- */
-async function updateAttempts(data) {
-  const { apiKey, pageId } = data;
-  const explicit = data.attempts;
-
-  try {
-    let attempts;
-    if (typeof explicit === "number" && Number.isFinite(explicit)) {
-      attempts = Math.max(0, Math.floor(explicit));
-    } else {
-      attempts = (await fetchCurrentAttempts(apiKey, pageId)) + 1;
-    }
-
-    await notionRequest(`pages/${pageId}`, apiKey, "PATCH", {
-      properties: { Attempts: { number: attempts } },
-    });
-
-    console.log("Leetion: Attempts updated to:", attempts);
-    return { success: true, attempts };
-  } catch (error) {
-    console.error("Leetion: Failed to update attempts:", error);
-    return { success: false, error: error.message };
-  }
 }
 
 /**

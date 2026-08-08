@@ -89,14 +89,25 @@ let currentView = "not-leetcode";
 /** @type {string} Previous view for back navigation */
 let previousView = "not-leetcode";
 
-/** @type {number} User's attempt count for this problem */
+/** Upper bound for a hand-entered attempt count; matches the input's max. */
+const ATTEMPTS_MAX = 9999;
+
+/** @type {number} Attempt count as last known from Notion */
 let userAttemptCount = 0;
+
+/**
+ * @type {number|null} Attempt count staged by the user, or null if untouched.
+ * Both the editable field and the "+" button write here only — nothing about
+ * Attempts reaches Notion until "Update in Notion" is pressed. On save this
+ * value is sent verbatim and the automatic increment is suppressed, so a
+ * staged edit can never be double-counted.
+ */
+let pendingAttempts = null;
 
 /**
  * @type {boolean} Whether this popup session already incremented Attempts.
  * "Update in Notion" adds +1 once per popup session — repeat updates in the
- * same session (e.g. fixing a typo in notes) must not add more. The manual
- * "+1" button is independent of this flag (intentional extra attempts).
+ * same session (e.g. fixing a typo in notes) must not add more.
  */
 let attemptSessionIncremented = false;
 
@@ -949,10 +960,14 @@ async function saveToNotion() {
       description = description.substring(0, descEnd).trim();
     }
 
-    // Increment Attempts once per popup session on updates of an existing
-    // entry. The actual value is computed server-fresh in the background.
+    // A staged count is an explicit "make it this", so it is sent as-is and
+    // the automatic increment is suppressed — otherwise typing 5 and pressing
+    // Update in Notion would land on 6. With nothing staged, Attempts is
+    // incremented once per popup session, computed server-fresh in the
+    // background.
+    const stagedAttempts = pendingAttempts;
     const shouldIncrementAttempts =
-      !!existingPageId && !attemptSessionIncremented;
+      !!existingPageId && !attemptSessionIncremented && stagedAttempts === null;
 
     const response = await chrome.runtime.sendMessage({
       action: "saveToNotion",
@@ -961,6 +976,7 @@ async function saveToNotion() {
         databaseId: settings.notionDatabaseId,
         existingPageId,
         incrementAttempts: shouldIncrementAttempts,
+        ...(stagedAttempts !== null ? { attempts: stagedAttempts } : {}),
         spacedRepetitionDays: spacedRepDays,
         problem: {
           number: problemData.number,
@@ -1016,6 +1032,11 @@ async function saveToNotion() {
       // server-fresh only on the session's first update.
       if (typeof response.attempts === "number") {
         userAttemptCount = response.attempts;
+      }
+      // The staged edit has landed, so the field is no longer unsaved. Cleared
+      // only on success — a failed save leaves it staged to retry.
+      if (stagedAttempts !== null && response.attempts === stagedAttempts) {
+        pendingAttempts = null;
       }
       if (wasFirstSave || shouldIncrementAttempts) {
         attemptSessionIncremented = true;
@@ -1418,71 +1439,6 @@ async function revisitProblem() {
 }
 
 /**
- * Writes the "Attempts" property via the lightweight background
- * `updateAttempts` action — the "Spaced Repetition" date is untouched.
- *
- * `explicitCount` omitted → server-fresh increment (the "+" button).
- * `explicitCount` given   → set that exact value (typed into the field).
- *
- * The displayed count moves optimistically and rolls back on failure
- * (parity with revisitProblem's rollback).
- */
-async function writeAttempts(explicitCount) {
-  if (!existingPageId) return;
-
-  const settings = await chrome.storage.sync.get(["notionApiKey"]);
-  if (!settings.notionApiKey) {
-    showStatus(DOM.save.status, "Configure API key first", "error");
-    updateAttemptDisplay();
-    return;
-  }
-
-  const isSet = typeof explicitCount === "number";
-  const previousCount = userAttemptCount;
-
-  userAttemptCount = isSet ? explicitCount : userAttemptCount + 1;
-  updateAttemptDisplay();
-
-  try {
-    setAttemptsBusy(true);
-
-    const response = await chrome.runtime.sendMessage({
-      action: "updateAttempts",
-      data: {
-        apiKey: settings.notionApiKey,
-        pageId: existingPageId,
-        ...(isSet ? { attempts: explicitCount } : {}),
-      },
-    });
-
-    if (response?.success) {
-      // Trust the server value (an increment may differ from the optimistic
-      // bump if the page was edited in Notion meanwhile).
-      if (typeof response.attempts === "number") {
-        userAttemptCount = response.attempts;
-      }
-      updateAttemptDisplay();
-      showStatus(DOM.save.status, `Attempts: ${userAttemptCount}`, "success");
-    } else {
-      userAttemptCount = previousCount;
-      updateAttemptDisplay();
-      showStatus(
-        DOM.save.status,
-        response?.error || "Failed to update attempts",
-        "error",
-      );
-    }
-  } catch (error) {
-    console.error("Leetion: Error updating attempts:", error);
-    userAttemptCount = previousCount;
-    updateAttemptDisplay();
-    showStatus(DOM.save.status, "Failed to update attempts", "error");
-  } finally {
-    setAttemptsBusy(false);
-  }
-}
-
-/**
  * Reveals the Attempts control and syncs it to the current count. Gated on an
  * existing Notion entry — before the first save there is no page to write to.
  */
@@ -1493,16 +1449,35 @@ function showAttemptsControl() {
 }
 
 /**
- * Manually adds one attempt (the "+" button beside the count).
+ * The count the field is showing: the staged edit if there is one, otherwise
+ * the value last read from Notion.
  */
-function addManualAttempt() {
-  return writeAttempts();
+function effectiveAttemptCount() {
+  return pendingAttempts ?? userAttemptCount;
 }
 
 /**
- * Commits a hand-typed count. Called on Enter and on blur; a value equal to
- * the current count (or an empty/garbage field) writes nothing and just
- * restores the display, so tabbing through the field is not a Notion write.
+ * Stages a count. Nothing is sent to Notion here — `saveToNotion` picks the
+ * staged value up on the next "Update in Notion". Staging back to the stored
+ * value clears the pending state rather than queuing a no-op write.
+ */
+function stageAttempts(count) {
+  pendingAttempts = count === userAttemptCount ? null : count;
+  updateAttemptDisplay();
+}
+
+/**
+ * Adds one attempt (the "+" button beside the count). Stages only — it bumps
+ * whatever the field is currently showing.
+ */
+function addManualAttempt() {
+  if (!existingPageId) return;
+  stageAttempts(Math.min(effectiveAttemptCount() + 1, ATTEMPTS_MAX));
+}
+
+/**
+ * Reads the hand-typed count out of the field and stages it. Called on Enter
+ * and on blur; an empty or invalid field just restores the display.
  */
 function commitAttemptEdit() {
   const raw = DOM.attempts.input?.value ?? "";
@@ -1518,33 +1493,28 @@ function commitAttemptEdit() {
     return;
   }
 
-  const next = Math.min(parsed, 9999);
-  if (next === userAttemptCount) {
-    updateAttemptDisplay();
-    return;
-  }
-
-  return writeAttempts(next);
+  stageAttempts(Math.min(parsed, ATTEMPTS_MAX));
 }
 
 /**
- * Disables the attempts field and "+" during an in-flight write, so a
- * double-click or a blur-into-click can't queue a second conflicting write.
- */
-function setAttemptsBusy(busy) {
-  if (DOM.attempts.input) DOM.attempts.input.disabled = busy;
-  if (DOM.attempts.plus) DOM.attempts.plus.disabled = busy;
-}
-
-/**
- * Updates the attempt count display.
+ * Updates the attempt count display, flagging the field as unsaved while an
+ * edit is staged so the deferred write is visible rather than implied.
  */
 function updateAttemptDisplay() {
+  const count = effectiveAttemptCount();
+  const staged = pendingAttempts !== null;
+
   if (DOM.attempts.input) {
-    DOM.attempts.input.value = userAttemptCount.toString();
+    DOM.attempts.input.value = count.toString();
+    DOM.attempts.input.classList.toggle("is-staged", staged);
+    DOM.attempts.input.title = staged
+      ? "Unsaved — press Update in Notion to apply"
+      : "Type a new count and press Enter";
   }
+  DOM.attempts.control?.classList.toggle("is-staged", staged);
+
   const attSpan = DOM.problem.statAttempts?.querySelector("span:last-child");
-  if (attSpan) attSpan.textContent = userAttemptCount.toString();
+  if (attSpan) attSpan.textContent = count.toString();
 }
 
 // COMPLEXITY SUGGESTIONS
