@@ -13,7 +13,6 @@ const INTEGRATIONS_URL = "https://www.notion.so/my-integrations";
 let currentStep = 1;
 let apiKey = "";
 let databaseId = "";
-let isDetecting = false;
 
 // DOM Elements
 const elements = {
@@ -108,13 +107,6 @@ function setupEventListeners() {
 
   // Success
   elements.btnStart?.addEventListener("click", startUsingExtension);
-
-  // Listen for database ID detection from background
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === "databaseDetected" && message.databaseId) {
-      handleDatabaseDetected(message.databaseId);
-    }
-  });
 }
 
 /**
@@ -230,35 +222,6 @@ function validateApiKey() {
  */
 function openTemplate() {
   chrome.tabs.create({ url: TEMPLATE_URL });
-}
-
-/**
- * Start listening for database duplication
- */
-function startDatabaseDetection() {
-  isDetecting = true;
-  elements.detectionWaiting?.classList.remove("hidden");
-  elements.detectionSuccess?.classList.add("hidden");
-
-  // Tell background script to start listening
-  chrome.runtime.sendMessage({ action: "startDatabaseDetection" });
-}
-
-/**
- * Handle detected database ID
- */
-function handleDatabaseDetected(id) {
-  if (!isDetecting) return;
-
-  isDetecting = false;
-  databaseId = id;
-
-  // Update UI
-  elements.detectionWaiting?.classList.add("hidden");
-  elements.detectionSuccess?.classList.remove("hidden");
-  elements.detectedDbId.textContent = formatDatabaseId(id);
-  elements.inputDatabaseId.value = id;
-  elements.btnNext2.disabled = false;
 }
 
 /**

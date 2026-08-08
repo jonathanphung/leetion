@@ -40,8 +40,6 @@ const LANGUAGE_MAP = {
 const NOTION_API_VERSION = "2022-06-28";
 const NOTION_TEXT_LIMIT = 1900;
 const NOTION_RICH_TEXT_LIMIT = 2000; // Notion's limit for rich_text property content
-let isDetectingDatabase = false;
-const TEMPLATE_ORIGIN = "neelbansal.notion.site";
 
 /**
  * Required database schema - will auto-create missing columns
@@ -127,40 +125,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   return true;
 });
 
-// Listen for tab URL changes to detect database duplication
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (!isDetectingDatabase) return;
-  if (!changeInfo.url) return;
-
-  const url = changeInfo.url;
-
-  // Check if URL is a Notion page (not the template)
-  if (url.includes("notion.so") && !url.includes(TEMPLATE_ORIGIN)) {
-    // Extract database ID from URL
-    const patterns = [
-      /notion\.so\/[^/]+\/[^/]+-([a-f0-9]{32})/i,
-      /notion\.so\/[^/]+\/([a-f0-9]{32})/i,
-      /notion\.so\/([a-f0-9]{32})/i,
-    ];
-
-    for (const pattern of patterns) {
-      const match = url.match(pattern);
-      if (match && match[1]) {
-        const databaseId = match[1];
-
-        // Send to onboarding page
-        chrome.runtime.sendMessage({
-          action: "databaseDetected",
-          databaseId: databaseId,
-        });
-
-        isDetectingDatabase = false;
-        break;
-      }
-    }
-  }
-});
-
 async function handleMessage(request) {
   console.log("Leetion Background: Handling action:", request.action);
   switch (request.action) {
@@ -170,9 +134,6 @@ async function handleMessage(request) {
       return await checkExistingProblem(request.data);
     case "getStats":
       return await handleGetStats(request.data);
-    case "startDatabaseDetection":
-      isDetectingDatabase = true;
-      return { success: true };
     case "verifyConnection":
       return await handleVerifyConnection(request.data);
     case "updateSpacedRepetition":
