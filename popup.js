@@ -56,6 +56,27 @@ const TAG_MAPPING = {
   matrix: "Matrix",
 };
 
+/**
+ * Expertise levels that own their own spaced-repetition interval.
+ * Order matters: it drives the settings inputs and the storage object.
+ */
+const EXPERTISE_LEVELS = ["Low", "Medium", "High"];
+
+/**
+ * Default review interval (in days) per expertise level.
+ * Lower expertise => sooner review.
+ */
+const DEFAULT_REVIEW_INTERVALS = { Low: 1, Medium: 3, High: 7 };
+
+/** Storage key holding the per-expertise intervals object. */
+const INTERVALS_KEY = "spacedRepetitionIntervals";
+
+/** Legacy storage key: a single flat interval used before per-expertise intervals. */
+const LEGACY_INTERVAL_KEY = "spacedRepetitionDays";
+
+/** Upper bound for a stored interval, mirrors the settings inputs' max. */
+const MAX_INTERVAL_DAYS = 365;
+
 // APPLICATION STATE
 
 /** @type {Object} Current problem data from LeetCode */
@@ -122,7 +143,11 @@ const DOM = {
   settings: {
     apiKeyInput: document.getElementById("input-api-key"),
     databaseIdInput: document.getElementById("input-database-id"),
-    spacedRepInput: document.getElementById("input-spaced-rep"),
+    intervalInputs: {
+      Low: document.getElementById("input-interval-low"),
+      Medium: document.getElementById("input-interval-medium"),
+      High: document.getElementById("input-interval-high"),
+    },
     toggleApiKeyBtn: document.getElementById("btn-toggle-api-key"),
     toggleDbIdBtn: document.getElementById("btn-toggle-db-id"),
     saveBtn: document.getElementById("btn-save-settings"),
@@ -191,6 +216,10 @@ const DOM = {
   save: {
     btn: document.getElementById("btn-save"),
     status: document.getElementById("save-status"),
+    schemaConfirm: document.getElementById("schema-confirm"),
+    schemaList: document.getElementById("schema-confirm-list"),
+    schemaCreateBtn: document.getElementById("btn-schema-create"),
+    schemaCancelBtn: document.getElementById("btn-schema-cancel"),
   },
   stats: {
     modal: document.getElementById("stats-modal"),
@@ -243,6 +272,67 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupEventListeners();
 });
 
+// SPACED REPETITION INTERVALS
+
+/**
+ * Coerces a stored or user-entered interval into a whole number of days.
+ * @param {*} value - Raw value from storage or an input element
+ * @returns {number|null} Sanitized day count, or null when unusable
+ */
+function sanitizeInterval(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const days = Math.floor(Number(value));
+  if (!Number.isFinite(days) || days < 0) return null;
+  return Math.min(days, MAX_INTERVAL_DAYS);
+}
+
+/**
+ * Resolves the per-expertise review intervals from a settings object.
+ *
+ * Migration rule: a profile that only carries the legacy flat
+ * `spacedRepetitionDays` scalar seeds ALL THREE levels with that scalar, so an
+ * upgrade never silently changes an existing user's cadence — including the
+ * deliberate "0 = disabled" case. Fresh profiles get the 1/3/7 defaults.
+ *
+ * @param {Object} [settings] - Result of chrome.storage.sync.get
+ * @returns {{Low: number, Medium: number, High: number}} Intervals in days
+ */
+function resolveReviewIntervals(settings = {}) {
+  const stored = settings[INTERVALS_KEY];
+  const legacy = sanitizeInterval(settings[LEGACY_INTERVAL_KEY]);
+  const intervals = {};
+
+  EXPERTISE_LEVELS.forEach((level) => {
+    const storedDays =
+      stored && typeof stored === "object"
+        ? sanitizeInterval(stored[level])
+        : null;
+
+    if (storedDays !== null) {
+      intervals[level] = storedDays;
+    } else if (legacy !== null) {
+      intervals[level] = legacy;
+    } else {
+      intervals[level] = DEFAULT_REVIEW_INTERVALS[level];
+    }
+  });
+
+  return intervals;
+}
+
+/**
+ * Picks the review interval for an expertise level.
+ * Unknown levels fall back to Medium so a save never loses its review date.
+ * @param {Object} intervals - Map returned by resolveReviewIntervals
+ * @param {string} expertise - "Low" | "Medium" | "High"
+ * @returns {number} Days until the next review (0 = disabled for this level)
+ */
+function intervalForExpertise(intervals, expertise) {
+  const days = sanitizeInterval(intervals?.[expertise]);
+  if (days !== null) return days;
+  return sanitizeInterval(intervals?.Medium) ?? DEFAULT_REVIEW_INTERVALS.Medium;
+}
+
 /**
  * Loads saved settings from Chrome storage.
  */
@@ -251,13 +341,19 @@ async function loadSettings() {
     const result = await chrome.storage.sync.get([
       "notionApiKey",
       "notionDatabaseId",
-      "spacedRepetitionDays",
+      INTERVALS_KEY,
+      LEGACY_INTERVAL_KEY,
     ]);
     if (result.notionApiKey)
       DOM.settings.apiKeyInput.value = result.notionApiKey;
     if (result.notionDatabaseId)
       DOM.settings.databaseIdInput.value = result.notionDatabaseId;
-    DOM.settings.spacedRepInput.value = result.spacedRepetitionDays ?? 30;
+
+    const intervals = resolveReviewIntervals(result);
+    EXPERTISE_LEVELS.forEach((level) => {
+      const input = DOM.settings.intervalInputs[level];
+      if (input) input.value = intervals[level];
+    });
   } catch (error) {
     console.error("Error loading settings:", error);
   }
@@ -841,6 +937,22 @@ function populateExistingData(data) {
   DOM.form.done.checked = data.done || false;
 }
 
+/**
+ * Clears the Notion-synced form fields before repopulating from Notion.
+ * Used when the Notion page is newer than a stale local draft, so values
+ * deleted remotely (e.g. cleared notes) don't linger from the draft.
+ * Tags stay additive (scraped tags were auto-selected) and expertise is
+ * overwritten by populateExistingData when Notion has a value.
+ */
+function resetSyncedFormFields() {
+  if (DOM.form.notes) DOM.form.notes.value = "";
+  if (DOM.form.remark) DOM.form.remark.value = "";
+  if (DOM.form.altMethods) DOM.form.altMethods.value = "";
+  if (DOM.complexity.time) DOM.complexity.time.value = "";
+  if (DOM.complexity.space) DOM.complexity.space.value = "";
+  if (DOM.form.done) DOM.form.done.checked = false;
+}
+
 // NOTION INTEGRATION
 
 /**
@@ -871,11 +983,31 @@ async function checkExistingEntry() {
     if (response?.exists) {
       existingPageId = response.pageId;
 
+      // Hydrate/reconcile the snapshot list from the Notion page so every
+      // machine sees the same solutions (Notion is the source of truth).
+      await reconcileSnapshots(response.remoteSnapshots || []);
+
       const formStateKey = `form_state_${problemData.number}`;
       const localState = await chrome.storage.local.get([formStateKey]);
-      const hasLocalState = !!localState[formStateKey];
+      const draft = localState[formStateKey];
 
-      if (!hasLocalState) {
+      // Freshness gate: a local form draft only wins while it is newer than
+      // the Notion page. If the page was edited after the draft was written
+      // (e.g. saved from another machine), Notion data populates the form.
+      const notionIsNewer =
+        !!draft &&
+        typeof response.lastEdited === "number" &&
+        response.lastEdited > (draft.timestamp || 0);
+      const useNotionData = !draft || notionIsNewer;
+
+      if (useNotionData) {
+        if (notionIsNewer) {
+          console.log(
+            "Leetion: Notion page is newer than the local draft - using Notion data",
+          );
+          resetSyncedFormFields();
+          await clearPersistedFormState(problemData.number);
+        }
         populateExistingData(response);
       }
 
@@ -889,7 +1021,7 @@ async function checkExistingEntry() {
       updateProblemStats();
       showAttemptsControl();
 
-      if (!hasLocalState) {
+      if (useNotionData) {
         if (response.timeComplexity && DOM.complexity.time) {
           DOM.complexity.time.value = response.timeComplexity;
         }
@@ -907,7 +1039,7 @@ async function checkExistingEntry() {
         if (
           response.hasQuestion &&
           DOM.problem.saveQuestionToggle &&
-          !localState[formStateKey].hasOwnProperty("saveQuestion")
+          !draft.hasOwnProperty("saveQuestion")
         ) {
           DOM.problem.saveQuestionToggle.checked = true;
         }
@@ -915,7 +1047,9 @@ async function checkExistingEntry() {
 
       showStatus(
         DOM.save.status,
-        "Found existing entry - will update on save",
+        notionIsNewer
+          ? "Loaded latest data from Notion (newer than local draft)"
+          : "Found existing entry - will update on save",
         "success",
       );
     }
@@ -926,12 +1060,17 @@ async function checkExistingEntry() {
 
 /**
  * Saves problem to Notion.
+ * @param {boolean} confirmSchemaChanges - True only when the user has just
+ *   confirmed the missing-columns warning; lets the background create them.
  */
-async function saveToNotion() {
+async function saveToNotion(confirmSchemaChanges = false) {
+  hideSchemaConfirmation();
+
   const settings = await chrome.storage.sync.get([
     "notionApiKey",
     "notionDatabaseId",
-    "spacedRepetitionDays",
+    INTERVALS_KEY,
+    LEGACY_INTERVAL_KEY,
   ]);
 
   if (!settings.notionApiKey || !settings.notionDatabaseId) {
@@ -949,8 +1088,14 @@ async function saveToNotion() {
 
   try {
     const cleanedCode = cleanCodeString(problemData.code);
-    const spacedRepDays = settings.spacedRepetitionDays ?? 30;
-    console.log("Leetion: Sending spacedRepetitionDays:", spacedRepDays);
+    const spacedRepDays = intervalForExpertise(
+      resolveReviewIntervals(settings),
+      selectedExpertise,
+    );
+    console.log(
+      `Leetion: Sending spacedRepetitionDays for ${selectedExpertise} expertise:`,
+      spacedRepDays,
+    );
 
     const snapshotsToSave = getSnapshotsForSave();
 
@@ -978,6 +1123,7 @@ async function saveToNotion() {
         incrementAttempts: shouldIncrementAttempts,
         ...(stagedAttempts !== null ? { attempts: stagedAttempts } : {}),
         spacedRepetitionDays: spacedRepDays,
+        confirmSchemaChanges: confirmSchemaChanges === true,
         problem: {
           number: problemData.number,
           title: problemData.title,
@@ -1016,11 +1162,35 @@ async function saveToNotion() {
       } else {
         message = "Saved to Notion!";
       }
+      if (response.schemaCreated?.length > 0) {
+        message += ` Added ${response.schemaCreated.length} column${
+          response.schemaCreated.length === 1 ? "" : "s"
+        }: ${response.schemaCreated.join(", ")}`;
+      }
+      if (response.schemaWarning) {
+        console.warn("Leetion: Schema warning:", response.schemaWarning);
+        message += " (column check warning — see extension console)";
+      }
       showStatus(DOM.save.status, message, "success");
 
       await clearPersistedFormState(problemData.number);
 
       const wasFirstSave = !existingPageId;
+
+      // The saved state is now the reconciled baseline: mark every snapshot
+      // as synced and persist, so a stale pre-hydration snapshot list can
+      // never resurrect solutions that were deleted on another machine.
+      codeSnapshots = codeSnapshots.map((s) =>
+        s.synced ? s : { ...s, synced: true },
+      );
+      try {
+        await chrome.storage.local.set({
+          [`snapshots_${problemData.number}`]: codeSnapshots,
+        });
+      } catch (persistError) {
+        console.error("Error persisting synced snapshots:", persistError);
+      }
+
       if (!existingPageId && response.pageId) {
         existingPageId = response.pageId;
         updateSaveButton(true);
@@ -1043,6 +1213,8 @@ async function saveToNotion() {
       }
       updateProblemStats();
       showAttemptsControl();
+    } else if (response.needsSchemaConfirmation) {
+      showSchemaConfirmation(response.missingColumns || []);
     } else {
       showStatus(DOM.save.status, response.error || "Failed", "error");
     }
@@ -1068,6 +1240,39 @@ function showStatus(el, msg, type) {
   el.classList.add(`status-${type}`);
   el.textContent = msg;
   setTimeout(() => el.classList.add("hidden"), 4000);
+}
+
+/**
+ * Shows the one-time warning listing the Notion columns Leetion is about to
+ * create, before creating them. Columns are only created after the user
+ * clicks "Add columns & save".
+ * @param {Array<{name: string, type: string, similarExisting: string[]}>} columns
+ */
+function showSchemaConfirmation(columns) {
+  if (!DOM.save.schemaConfirm || !DOM.save.schemaList) return;
+
+  // Built with textContent (not innerHTML): names come from the user's
+  // Notion database and must be treated as plain text.
+  DOM.save.schemaList.replaceChildren();
+  for (const col of columns) {
+    const li = document.createElement("li");
+    li.textContent = `${col.name} (${col.type.replace(/_/g, " ")})`;
+    if (col.similarExisting?.length > 0) {
+      const hint = document.createElement("span");
+      hint.className = "schema-confirm-similar";
+      hint.textContent = ` — existing ${col.type.replace(/_/g, " ")} column${
+        col.similarExisting.length === 1 ? "" : "s"
+      }: ${col.similarExisting.join(", ")}`;
+      li.appendChild(hint);
+    }
+    DOM.save.schemaList.appendChild(li);
+  }
+
+  DOM.save.schemaConfirm.classList.remove("hidden");
+}
+
+function hideSchemaConfirmation() {
+  DOM.save.schemaConfirm?.classList.add("hidden");
 }
 
 /**
@@ -1206,8 +1411,21 @@ function setupEventListeners() {
   DOM.form.altMethods?.addEventListener("blur", persistFormState);
   DOM.form.done?.addEventListener("change", persistFormState);
 
-  // Save
-  DOM.save.btn?.addEventListener("click", saveToNotion);
+  // Save (wrapped so the click event isn't passed as confirmSchemaChanges)
+  DOM.save.btn?.addEventListener("click", () => saveToNotion());
+
+  // Schema confirmation (missing Notion columns warning)
+  DOM.save.schemaCreateBtn?.addEventListener("click", () =>
+    saveToNotion(true),
+  );
+  DOM.save.schemaCancelBtn?.addEventListener("click", () => {
+    hideSchemaConfirmation();
+    showStatus(
+      DOM.save.status,
+      "Save canceled — no columns were added",
+      "error",
+    );
+  });
 
   // Stats modal
   DOM.stats.openBtn?.addEventListener("click", openStatsModal);
@@ -1254,14 +1472,35 @@ function toggleInputVisibility(input, btn) {
 async function saveSettings() {
   const apiKey = DOM.settings.apiKeyInput.value.trim();
   const dbId = DOM.settings.databaseIdInput.value.trim();
-  const spacedRep = parseInt(DOM.settings.spacedRepInput.value) || 0;
 
-  const toSave = { spacedRepetitionDays: spacedRep };
+  const intervals = {};
+  EXPERTISE_LEVELS.forEach((level) => {
+    const input = DOM.settings.intervalInputs[level];
+    intervals[level] =
+      sanitizeInterval(input?.value) ?? DEFAULT_REVIEW_INTERVALS[level];
+  });
+
+  const toSave = { [INTERVALS_KEY]: intervals };
   if (apiKey) toSave.notionApiKey = apiKey;
   if (dbId) toSave.notionDatabaseId = dbId;
 
-  await chrome.storage.sync.set(toSave);
-  showStatus(DOM.settings.status, "Settings saved!", "success");
+  try {
+    await chrome.storage.sync.set(toSave);
+    // The legacy flat interval has been migrated into the object above; drop it
+    // so it can never be re-read as a stale fallback.
+    await chrome.storage.sync.remove(LEGACY_INTERVAL_KEY);
+
+    // Reflect the sanitized values back into the inputs.
+    EXPERTISE_LEVELS.forEach((level) => {
+      const input = DOM.settings.intervalInputs[level];
+      if (input) input.value = intervals[level];
+    });
+
+    showStatus(DOM.settings.status, "Settings saved!", "success");
+  } catch (error) {
+    console.error("Error saving settings:", error);
+    showStatus(DOM.settings.status, "Failed to save settings", "error");
+  }
 }
 
 /**
@@ -1373,21 +1612,25 @@ async function markForReviewTomorrow() {
 }
 
 /**
- * Resets spaced repetition to configured days from now.
+ * Resets spaced repetition using the interval for this entry's expertise.
  */
 async function revisitProblem() {
   if (!existingPageId) return;
 
   const settings = await chrome.storage.sync.get([
     "notionApiKey",
-    "spacedRepetitionDays",
+    INTERVALS_KEY,
+    LEGACY_INTERVAL_KEY,
   ]);
   if (!settings.notionApiKey) {
     showStatus(DOM.save.status, "Configure API key first", "error");
     return;
   }
 
-  const days = settings.spacedRepetitionDays ?? 30;
+  const days = intervalForExpertise(
+    resolveReviewIntervals(settings),
+    selectedExpertise,
+  );
 
   try {
     DOM.quickActions.revisit.disabled = true;
@@ -1411,7 +1654,9 @@ async function revisitProblem() {
       updateAttemptDisplay();
       showStatus(
         DOM.save.status,
-        `Reset! Next review in ${days} days`,
+        days > 0
+          ? `Reset! Next review in ${days} day${days === 1 ? "" : "s"}`
+          : `Attempt logged — reviews are off for ${selectedExpertise} expertise`,
         "success",
       );
     } else {
@@ -1599,6 +1844,45 @@ async function loadSnapshots(problemNumber) {
     console.error("Error loading snapshots:", error);
     codeSnapshots = [];
   }
+}
+
+/**
+ * Reconciles the local snapshot list with the solutions on the Notion page.
+ * Notion is the source of truth for solutions that have been saved:
+ * - Remote solutions replace their local (synced) copies, so an empty local
+ *   list hydrates fully from Notion and remote deletions propagate here.
+ * - Local snapshots never marked `synced` (not yet saved to Notion, and not
+ *   matching any remote code) are kept and appended after the remote ones.
+ * - Question-type snapshots are local-only and kept as-is.
+ * The reconciled list is persisted immediately so a stale pre-hydration
+ * `snapshots_<n>` cannot be used by a later save.
+ * @param {Array} remoteSnapshots - Snapshots reconstructed from the Notion page
+ */
+async function reconcileSnapshots(remoteSnapshots) {
+  if (!problemData.number) return;
+
+  const remoteSolutions = (remoteSnapshots || []).filter(
+    (s) => s.type !== "question",
+  );
+  const localQuestions = codeSnapshots.filter((s) => s.type === "question");
+  const remoteCodes = new Set(remoteSolutions.map((s) => (s.code || "").trim()));
+  const localUnsynced = codeSnapshots.filter(
+    (s) =>
+      s.type !== "question" &&
+      !s.synced &&
+      !remoteCodes.has((s.code || "").trim()),
+  );
+
+  codeSnapshots = [...localQuestions, ...remoteSolutions, ...localUnsynced];
+
+  try {
+    const key = `snapshots_${problemData.number}`;
+    await chrome.storage.local.set({ [key]: codeSnapshots });
+  } catch (error) {
+    console.error("Error persisting reconciled snapshots:", error);
+  }
+
+  renderSnapshots();
 }
 
 /**
@@ -1877,22 +2161,6 @@ function renderSnapshots() {
  */
 function getSnapshotsForSave() {
   return codeSnapshots;
-}
-
-/**
- * Loads the amount of reviews due.
- */
-async function loadDueReviewCount() {
-  const { dueReviewCount } = await chrome.storage.local.get(["dueReviewCount"]);
-  if (dueReviewCount > 0) {
-    const reviewBadge = document.getElementById("review-badge");
-    if (reviewBadge) {
-      reviewBadge.textContent = `🔔 ${dueReviewCount} problem${
-        dueReviewCount > 1 ? "s" : ""
-      } due for review`;
-      reviewBadge.classList.remove("hidden");
-    }
-  }
 }
 
 /**

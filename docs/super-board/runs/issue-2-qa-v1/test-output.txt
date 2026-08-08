@@ -1,0 +1,106 @@
+
+=== S0 environment sanity ===
+  PASS  background.js registered exactly one onMessage listener
+
+=== S1 Profile A: save 2 snapshots + notes + expertise (create path) ===
+  PASS  A: problem scraped (number 1)
+  PASS  A: no existing page found on empty DB
+  PASS  A: snapshot list renders empty
+  PASS  A: two snapshots captured locally
+  PASS  A: Notion page created
+  PASS  A: page has exactly 2 solutions
+  PASS  A: solution 1 code round-trips
+  PASS  A: solution 2 code round-trips
+  PASS  A: code block caption stores display language
+  PASS  A: H3 subheadings carry language+label
+  PASS  A: notes saved to page
+  PASS  A: title + S No. + expertise + attempts properties saved
+  PASS  A: local snapshots persisted with synced flag after save (AC4 baseline)
+  PASS  A: form draft cleared after save
+  PASS  A: popup adopted new pageId
+  PASS  A: save status shows created
+
+=== S2 Profile B (fresh): popup open hydrates from Notion (AC1, AC7) ===
+  PASS  B: snapshot list hydrated with 2 solutions (AC1)
+  PASS  B: hydrated codes match machine A exactly (AC7)
+  PASS  B: hydrated snapshots marked synced + source notion
+  PASS  B: hydrated language from caption
+  PASS  B: hydrated labels from subheadings
+  PASS  B: reconciled list persisted to storage.local on open (AC4 persistence)
+  PASS  B: snapshot UI rendered (count=2, list shows solutions)
+  PASS  B: notes hydrated (AC7)
+  PASS  B: remark hydrated
+  PASS  B: expertise hydrated (AC7)
+  PASS  B: complexity hydrated
+  PASS  B: attempts hydrated from Notion (AC5)
+  PASS  B: status message announces existing entry
+  PASS  checkExisting returns codeBlocks (key mismatch fixed)
+  PASS  checkExisting no longer exposes dead existingCode key
+  PASS  checkExisting returns remoteSnapshots + lastEdited
+
+=== S3 Profile B presses "Update in Notion" (AC2 regression) ===
+  PASS  B update: page still contains BOTH solutions (no clobber)
+  PASS  B update: notes preserved
+  PASS  B update: solutions not duplicated
+
+=== S4 Update with zero local snapshots (hydration-failure guard, AC2) ===
+  PASS  no-content update: contentUpdated=false, page untouched
+  PASS  notes-only update from snapshot-less device keeps both solutions (clobber guard)
+  PASS  editor preview code was NOT written as a solution
+  PASS  notes still update through the guard
+
+=== S5 Draft-vs-Notion freshness gate (AC3) ===
+  PASS  stale draft: Notion notes win
+  PASS  stale draft: Notion remark wins
+  PASS  stale draft: Notion expertise wins
+  PASS  stale draft: done reset to Notion value
+  PASS  stale draft: complexity reset then repopulated from Notion
+  PASS  stale draft: cleared from storage
+  PASS  stale draft: status announces Notion data used
+  PASS  fresh draft: draft notes win
+  PASS  fresh draft: draft expertise wins
+  PASS  fresh draft: draft complexity wins
+  PASS  fresh draft: draft kept in storage
+  PASS  fresh draft: snapshots still hydrate regardless of draft
+  PASS  fresh draft: status is the normal existing-entry message
+
+=== S6 Attempts Notion-backed across machines (AC5) ===
+  PASS  updateSpacedRepetition writes attempts
+  PASS  page Attempts property is 5
+  PASS  two fresh machines both read attempts=5 from Notion
+
+=== S7 Remote deletion propagates; stale snapshots cannot resurrect (AC4) ===
+  PASS  B4: booted with 2 snapshots
+  PASS  B4: local delete leaves 1 snapshot
+  PASS  B4: page now has only solution 1
+  PASS  A: stale local list still has 2 snapshots before boot
+  PASS  A4: popup open drops the remotely-deleted snapshot (deletion propagates)
+  PASS  A4: reconciled (post-deletion) state persisted locally
+  PASS  A4: save does NOT resurrect the deleted solution (AC4)
+
+=== S8 Unsynced local snapshots survive reconcile (no user code lost) ===
+  PASS  C: reconcile = [question, remote solution, unsynced local]
+  PASS  C: unsynced local snapshot NOT dropped
+  PASS  C: save appends the local WIP after the remote solution
+  PASS  C: question snapshot did not become a Solution(s) entry
+  PASS  C: local snapshots all flagged synced after save
+
+=== S9 Lone question-type snapshot cannot wipe Solution(s) ===
+  PASS  question-only update: no content rebuild, page untouched
+  PASS  question+notes update: solutions preserved via guard
+  PASS  exactly one Solution(s) heading, no empty duplicate
+
+=== S10 Pagination: >100-block page hydrates fully ===
+  PASS  60-snapshot page created with >100 blocks
+  PASS  all 60 solutions hydrate (old code truncated at 100 blocks)
+  PASS  block fetch followed pagination cursor (2 GET pages)
+  PASS  first/last hydrated codes intact
+
+=== S11 storage.sync quota audit (AC6) ===
+  PASS  zero storage.sync writes across every scenario
+  PASS  any sync writes stay within allowed keys and 8KB quota
+  PASS  no storage.sync.set call involves snapshots or form drafts (static audit)
+  PASS  snapshot persistence goes through storage.local only
+
+=== Summary ===
+  79 passed, 0 failed

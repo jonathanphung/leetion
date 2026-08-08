@@ -70,17 +70,15 @@ function makeFakeNotion() {
       state.pages.set(id, { properties: JSON.parse(JSON.stringify(body.properties || {})) });
       return respond(200, { object: "page", id });
     }
-    // GET databases/{id} — report full schema so ensureDatabaseSchema is a no-op
+    // GET databases/{id} — report a fully-provisioned, correctly-typed schema
+    // so the schema inspector finds nothing missing and nothing mismatched.
     m = endpoint.match(/^databases\/([^/?]+)$/);
     if (m && method === "GET") {
-      const allProps = {};
-      for (const name of [
-        "Problem", "Problem Name", "Difficulty", "Tags", "Status", "Done",
-        "Expertise", "Remark", "Alternative Methods", "URL", "Language",
-        "Time Complexity", "Space Complexity", "Spaced Repetition", "Attempts",
-        "Notes", "Date Solved", "Created", "Last Edited",
-      ]) allProps[name] = { id: name, name };
-      return respond(200, { object: "database", id: m[1], properties: allProps });
+      return respond(200, {
+        object: "database",
+        id: m[1],
+        properties: fakeDatabaseProperties(),
+      });
     }
     if (m && method === "PATCH") return respond(200, { object: "database", id: m[1] });
     // POST databases/{id}/query
@@ -103,6 +101,35 @@ function makeFakeNotion() {
   }
 
   return { state, fakeFetch };
+}
+
+// The fake database must mirror the REAL `DATABASE_SCHEMA` in background.js,
+// column names AND Notion types. Since #4 landed, `inspectDatabaseSchema`
+// fails a save fast when a required column has the wrong type — a fake that
+// omits `type` reads as "every column mismatched" and every save errors out.
+// Reading the constant out of the loaded module keeps the fake honest if the
+// schema changes again.
+let cachedDatabaseProperties = null;
+function fakeDatabaseProperties() {
+  if (cachedDatabaseProperties) return cachedDatabaseProperties;
+
+  const probeFetch = async () => ({
+    ok: true, status: 200, headers: { get: () => null }, json: async () => ({}),
+  });
+  const schema = vm.runInContext(
+    "DATABASE_SCHEMA",
+    loadBackground(probeFetch).context,
+  );
+
+  const props = {};
+  for (const [name, config] of Object.entries(schema)) {
+    props[name] = { id: name, name, type: config.type, [config.type]: {} };
+  }
+  // A couple of user-owned extras so the fake isn't a Leetion-only database.
+  props["Notes"] = { id: "Notes", name: "Notes", type: "rich_text", rich_text: {} };
+
+  cachedDatabaseProperties = props;
+  return props;
 }
 
 // ------------------------------------------------------------- chrome + load
@@ -133,11 +160,14 @@ function loadBackground(fakeFetch) {
   });
   new vm.Script(backgroundSrc, { filename: "background.js" }).runInContext(context);
   if (!messageListener) throw new Error("background.js did not register an onMessage listener");
-  return function sendMessage(request) {
+  const sendMessage = function sendMessage(request) {
     return new Promise((resolve) => {
       messageListener(request, { id: "qa-harness" }, resolve);
     });
   };
+  // Exposed so the fake database can read the real DATABASE_SCHEMA back out.
+  sendMessage.context = context;
+  return sendMessage;
 }
 
 // ------------------------------------------------------------------ helpers

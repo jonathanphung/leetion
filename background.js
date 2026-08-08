@@ -37,6 +37,34 @@ const LANGUAGE_MAP = {
   React: "javascript",
 };
 
+/**
+ * Preferred display language for each Notion code-block language.
+ * Used when hydrating snapshots from an existing Notion page and the
+ * block's caption (which stores the exact display language on save)
+ * is missing.
+ */
+const NOTION_LANG_TO_DISPLAY = {
+  python: "Python3",
+  javascript: "JavaScript",
+  typescript: "TypeScript",
+  java: "Java",
+  "c++": "C++",
+  c: "C",
+  "c#": "C#",
+  ruby: "Ruby",
+  swift: "Swift",
+  go: "Go",
+  kotlin: "Kotlin",
+  rust: "Rust",
+  scala: "Scala",
+  php: "PHP",
+  dart: "Dart",
+  racket: "Racket",
+  erlang: "Erlang",
+  elixir: "Elixir",
+  sql: "MySQL",
+};
+
 const NOTION_API_VERSION = "2022-06-28";
 const NOTION_TEXT_LIMIT = 1900;
 const NOTION_RICH_TEXT_LIMIT = 2000; // Notion's limit for rich_text property content
@@ -246,42 +274,92 @@ async function handleVerifyConnection(data) {
 // NOTION API - QUERIES
 
 /**
- * Ensures all required database columns exist, creating missing ones.
+ * Inspects the database schema against DATABASE_SCHEMA. Read-only: never
+ * modifies the database.
+ *
+ * The title column is special: every Notion database has exactly one title
+ * property and a second one can never be created, so instead of requiring the
+ * name "Question" we map to whatever the database's title column is named
+ * (e.g. "Name" in databases created from older setup instructions).
+ *
+ * Returns:
+ *   ok: false + error          — schema could not be read
+ *   ok: true +
+ *     titlePropertyName        — actual name of the database's title column
+ *     missing                  — { name: config } columns absent by name
+ *     mismatches               — [{ name, expected, actual }] present by name
+ *                                but with the wrong Notion type
+ *     similarExisting          — { missingName: [existing same-type column
+ *                                names] } possible duplicates to warn about
  */
-async function ensureDatabaseSchema(apiKey, databaseId) {
+async function inspectDatabaseSchema(apiKey, databaseId) {
   try {
-    // Get current database schema
     const db = await notionRequest(`databases/${databaseId}`, apiKey, "GET");
     const existingProps = db.properties || {};
 
-    // Find missing properties
-    const missingProps = {};
-    for (const [name, config] of Object.entries(DATABASE_SCHEMA)) {
-      if (!existingProps[name]) {
-        missingProps[name] = config;
-        console.log(`Leetion: Will create missing column: ${name}`);
+    let titlePropertyName = "Question";
+    for (const [name, prop] of Object.entries(existingProps)) {
+      if (prop.type === "title") {
+        titlePropertyName = name;
+        break;
       }
     }
 
-    // Create missing properties if any
-    if (Object.keys(missingProps).length > 0) {
-      console.log(
-        `Leetion: Creating ${
-          Object.keys(missingProps).length
-        } missing columns...`,
-      );
-      await notionRequest(`databases/${databaseId}`, apiKey, "PATCH", {
-        properties: missingProps,
-      });
-      console.log("Leetion: Database schema updated successfully");
+    const schemaNames = new Set(Object.keys(DATABASE_SCHEMA));
+    const missing = {};
+    const mismatches = [];
+    const similarExisting = {};
+
+    for (const [name, config] of Object.entries(DATABASE_SCHEMA)) {
+      if (config.type === "title") continue; // mapped via titlePropertyName
+
+      const existing = existingProps[name];
+      if (!existing) {
+        missing[name] = config;
+        // Existing columns of the same type that Leetion does not own —
+        // likely duplicates from manually-created schemas (e.g. a "Date"
+        // date column vs Leetion's "Date (of first attempt)").
+        const similar = Object.entries(existingProps)
+          .filter(
+            ([propName, prop]) =>
+              prop.type === config.type &&
+              !schemaNames.has(propName) &&
+              propName !== titlePropertyName,
+          )
+          .map(([propName]) => propName);
+        if (similar.length > 0) similarExisting[name] = similar;
+      } else if (existing.type !== config.type) {
+        mismatches.push({
+          name,
+          expected: config.type,
+          actual: existing.type,
+        });
+      }
     }
 
-    return { success: true, created: Object.keys(missingProps) };
+    return { ok: true, titlePropertyName, missing, mismatches, similarExisting };
   } catch (error) {
-    console.error("Leetion: Error ensuring schema:", error);
-    // Don't throw - let the save continue and fail on specific properties if needed
-    return { success: false, error: error.message };
+    console.error("Leetion: Error inspecting schema:", error);
+    return { ok: false, error: error.message };
   }
+}
+
+/**
+ * Creates the given missing columns. Only ever adds columns — existing
+ * columns are never renamed, retyped, or deleted. Throws on API failure so
+ * callers can surface the error instead of hitting an opaque page-write
+ * error later.
+ */
+async function ensureDatabaseSchema(apiKey, databaseId, missingProps) {
+  const names = Object.keys(missingProps);
+  if (names.length === 0) return { created: [] };
+
+  console.log(`Leetion: Creating ${names.length} missing columns:`, names);
+  await notionRequest(`databases/${databaseId}`, apiKey, "PATCH", {
+    properties: missingProps,
+  });
+  console.log("Leetion: Database schema updated successfully");
+  return { created: names };
 }
 
 async function checkExistingProblem(data) {
@@ -306,17 +384,27 @@ async function checkExistingProblem(data) {
 
     // Get existing page content
     const existingContent = await getPageContent(apiKey, page.id);
+    const lastEdited = Date.parse(page.last_edited_time) || null;
 
     return {
       exists: true,
       pageId: page.id,
+      lastEdited,
       tags: extractMultiSelect(props["Tag"]),
       expertise: props["My Expertise"]?.select?.name || null,
       remark: extractRichText(props["Remark"]),
       altMethods: extractMultiSelect(props["Alternative Method Tags"]),
       done: props["Done"]?.checkbox || false,
       notes: existingContent.notes,
-      existingCode: existingContent.code,
+      // Fixed key mismatch: getPageContent returns `codeBlocks`, not `code`
+      // (the old `existingCode: existingContent.code` was always undefined).
+      codeBlocks: existingContent.codeBlocks,
+      // Snapshot objects reconstructed from the page's "Solution(s)" section,
+      // ready for the popup to hydrate its local snapshot list from.
+      remoteSnapshots: solutionGroupsToSnapshots(
+        existingContent.solutionGroups,
+        lastEdited,
+      ),
       timeComplexity: props["Time Complexity"]?.select?.name || "",
       spaceComplexity: props["Space Complexity"]?.select?.name || "",
       attempts: props["Attempts"]?.number || 1,
@@ -329,56 +417,101 @@ async function checkExistingProblem(data) {
 }
 
 /**
- * Gets existing page content (notes and code blocks by language).
+ * Fetches ALL child blocks of a page, following pagination.
+ * (The old single-request fetch silently truncated pages over 100 blocks.)
+ */
+async function fetchAllBlocks(apiKey, pageId) {
+  const allBlocks = [];
+  let cursor;
+  do {
+    const url = cursor
+      ? `blocks/${pageId}/children?page_size=100&start_cursor=${cursor}`
+      : `blocks/${pageId}/children?page_size=100`;
+    const response = await notionRequest(url, apiKey, "GET");
+    allBlocks.push(...(response.results || []));
+    cursor = response.has_more ? response.next_cursor : undefined;
+  } while (cursor);
+  return allBlocks;
+}
+
+/**
+ * Gets existing page content (notes, code blocks, and solution groups).
  */
 async function getPageContent(apiKey, pageId) {
+  try {
+    const allBlocks = await fetchAllBlocks(apiKey, pageId);
+    return parsePageBlocks(allBlocks);
+  } catch (error) {
+    console.error("Leetion: Error getting page content:", error);
+    return { notes: "", codeBlocks: [], solutionGroups: [], hasQuestion: false };
+  }
+}
+
+/**
+ * Pure parser: turns a page's block list into structured content.
+ *
+ * `solutionGroups` reconstructs the logical solutions of the "Solution(s)"
+ * section: each H3 subheading ("<Language> - Solution N (<date>)") starts a
+ * group, and consecutive code blocks inside a group are chunks of one
+ * solution (long code is chunk-split on save). Code blocks with no owning
+ * subheading (legacy pages) are grouped by consecutive same language+caption.
+ */
+function parsePageBlocks(blocks) {
   const content = {
     notes: "",
-    codeBlocks: [], // Array of { language, code } objects
+    codeBlocks: [], // Array of { language, caption, code } objects
+    solutionGroups: [], // Array of { heading, language, caption, chunks }
     hasQuestion: false,
   };
 
-  try {
-    const response = await notionRequest(
-      `blocks/${pageId}/children?page_size=100`,
-      apiKey,
-      "GET",
-    );
+  let currentSection = "";
+  let currentGroup = null;
 
-    let currentSection = "";
+  for (const block of blocks || []) {
+    if (block.type === "heading_2") {
+      const heading = block.heading_2?.rich_text?.[0]?.plain_text || "";
+      currentSection = heading.toLowerCase();
+      currentGroup = null;
 
-    for (const block of response.results || []) {
-      if (block.type === "heading_2") {
-        const heading = block.heading_2?.rich_text?.[0]?.plain_text || "";
-        currentSection = heading.toLowerCase();
+      if (heading === "Question") {
+        content.hasQuestion = true;
+      }
+      continue;
+    }
 
-        if (heading === "Question") {
-          content.hasQuestion = true;
-        }
+    if (currentSection === "notes") {
+      if (block.type === "paragraph") {
+        const text =
+          block.paragraph?.rich_text?.map((t) => t.plain_text).join("") || "";
+        if (text) content.notes += (content.notes ? "\n" : "") + text;
+      } else if (block.type === "bulleted_list_item") {
+        const text =
+          block.bulleted_list_item?.rich_text
+            ?.map((t) => t.plain_text)
+            .join("") || "";
+        if (text) content.notes += (content.notes ? "\n" : "") + "- " + text;
+      } else if (block.type === "numbered_list_item") {
+        const text =
+          block.numbered_list_item?.rich_text
+            ?.map((t) => t.plain_text)
+            .join("") || "";
+        if (text) content.notes += (content.notes ? "\n" : "") + "1. " + text;
+      }
+    }
+
+    if (currentSection === "solution(s)") {
+      if (block.type === "heading_3") {
+        currentGroup = {
+          heading: block.heading_3?.rich_text?.[0]?.plain_text || "",
+          language: null,
+          caption: "",
+          chunks: [],
+        };
+        content.solutionGroups.push(currentGroup);
         continue;
       }
 
-      if (currentSection === "notes") {
-        if (block.type === "paragraph") {
-          const text =
-            block.paragraph?.rich_text?.map((t) => t.plain_text).join("") || "";
-          if (text) content.notes += (content.notes ? "\n" : "") + text;
-        } else if (block.type === "bulleted_list_item") {
-          const text =
-            block.bulleted_list_item?.rich_text
-              ?.map((t) => t.plain_text)
-              .join("") || "";
-          if (text) content.notes += (content.notes ? "\n" : "") + "- " + text;
-        } else if (block.type === "numbered_list_item") {
-          const text =
-            block.numbered_list_item?.rich_text
-              ?.map((t) => t.plain_text)
-              .join("") || "";
-          if (text) content.notes += (content.notes ? "\n" : "") + "1. " + text;
-        }
-      }
-
-      if (currentSection === "solution(s)" && block.type === "code") {
+      if (block.type === "code") {
         const codeText =
           block.code?.rich_text?.map((t) => t.plain_text).join("") || "";
         let codeLang = block.code?.language || "plain text";
@@ -392,15 +525,89 @@ async function getPageContent(apiKey, pageId) {
             caption: caption,
             code: codeText,
           });
+
+          const canJoin =
+            currentGroup &&
+            (currentGroup.language === null ||
+              (currentGroup.language === codeLang &&
+                currentGroup.caption === caption));
+          if (!canJoin) {
+            currentGroup = {
+              heading: null,
+              language: null,
+              caption: "",
+              chunks: [],
+            };
+            content.solutionGroups.push(currentGroup);
+          }
+          if (currentGroup.language === null) {
+            currentGroup.language = codeLang;
+            currentGroup.caption = caption;
+          }
+          currentGroup.chunks.push(codeText);
+        }
+      }
+    }
+  }
+
+  return content;
+}
+
+/**
+ * Reconstructs snapshot objects from parsed "Solution(s)" groups so a machine
+ * with no local snapshots can hydrate from Notion.
+ *
+ * Metadata policy (snapshot label/language/timestamp are not natively
+ * representable in Notion code blocks): the display language comes from the
+ * block caption when present (save writes it there), else from the
+ * "<Language> - Solution N (<date>)" subheading, else from the reverse
+ * language map; the timestamp comes from the subheading date when parseable,
+ * else the page's last_edited_time, else now; labels are regenerated
+ * positionally on save (existing behavior).
+ */
+function solutionGroupsToSnapshots(groups, fallbackTimestampMs) {
+  const snapshots = [];
+
+  for (const group of groups || []) {
+    if (!group.chunks || group.chunks.length === 0) continue;
+
+    let displayLanguage = group.caption || null;
+    let timestamp = null;
+    let label = null;
+
+    if (group.heading) {
+      const m = group.heading.match(
+        /^(.+?)\s*-\s*(Solution\s*\d+)\s*(?:\((.+)\))?\s*$/i,
+      );
+      if (m) {
+        if (!displayLanguage) displayLanguage = m[1].trim();
+        label = m[2].trim();
+        if (m[3]) {
+          const parsed = Date.parse(m[3]);
+          if (!Number.isNaN(parsed)) timestamp = parsed;
         }
       }
     }
 
-    return content;
-  } catch (error) {
-    console.error("Leetion: Error getting page content:", error);
-    return content;
+    if (!displayLanguage) {
+      displayLanguage = NOTION_LANG_TO_DISPLAY[group.language] || "Plain Text";
+    }
+    if (timestamp === null) {
+      timestamp = fallbackTimestampMs || Date.now();
+    }
+
+    snapshots.push({
+      id: `notion_${snapshots.length}_${timestamp}`,
+      code: group.chunks.join("\n"),
+      language: displayLanguage,
+      timestamp,
+      label: label || `Solution ${snapshots.length + 1}`,
+      synced: true,
+      source: "notion",
+    });
   }
+
+  return snapshots;
 }
 
 // NOTION API - MUTATIONS
@@ -408,7 +615,8 @@ async function getPageContent(apiKey, pageId) {
 /**
  * Saves or updates a problem in Notion.
  * Smart update: preserves solutions in different languages.
- * Auto-creates missing database columns.
+ * Missing database columns are only created after the user confirms the
+ * list in the popup (data.confirmSchemaChanges) — never silently.
  */
 async function saveToNotion(data) {
   const {
@@ -419,17 +627,88 @@ async function saveToNotion(data) {
     spacedRepetitionDays,
     incrementAttempts,
     attempts,
+    confirmSchemaChanges,
   } = data;
 
-  // Ensure all required columns exist (auto-create if missing)
-  await ensureDatabaseSchema(apiKey, databaseId);
+  // Inspect the schema first (read-only). Columns are only created after the
+  // user has confirmed the exact list in the popup (confirmSchemaChanges).
+  const schema = await inspectDatabaseSchema(apiKey, databaseId);
+
+  let titlePropertyName = "Question";
+  let schemaCreated = [];
+  let schemaWarning = null;
+
+  if (!schema.ok) {
+    // Could not read the schema (e.g. transient network error). Attempt the
+    // save anyway — the columns may already exist — but surface the problem
+    // instead of swallowing it.
+    schemaWarning = `Could not verify database columns: ${schema.error}`;
+  } else {
+    titlePropertyName = schema.titlePropertyName;
+  }
 
   const cleanedCode = cleanCode(problem.code);
   const properties = buildProperties(
     problem,
     existingPageId,
     spacedRepetitionDays,
+    titlePropertyName,
   );
+
+  if (schema.ok) {
+    // A column that exists under the required name but with the wrong Notion
+    // type would make the page write fail with an opaque error. Fail fast
+    // with a clear message when this save actually writes that column.
+    const blockingMismatches = schema.mismatches.filter(
+      (m) => properties[m.name] !== undefined,
+    );
+    if (blockingMismatches.length > 0) {
+      const detail = blockingMismatches
+        .map((m) => `"${m.name}" is ${m.actual} but Leetion needs ${m.expected}`)
+        .join("; ");
+      return {
+        success: false,
+        error: `Wrong column type in Notion: ${detail}. Change the column type in Notion (or rename the column), then save again.`,
+      };
+    }
+    if (schema.mismatches.length > 0) {
+      // Mismatched columns this save does not write: report, don't block.
+      schemaWarning = schema.mismatches
+        .map((m) => `Column "${m.name}" is ${m.actual} but Leetion expects ${m.expected}`)
+        .join("; ");
+    }
+
+    const missingNames = Object.keys(schema.missing);
+    if (missingNames.length > 0) {
+      if (!confirmSchemaChanges) {
+        // Never create columns silently — ask the popup to show the user
+        // exactly what would be created (and any same-type columns that
+        // might already serve that purpose).
+        return {
+          success: false,
+          needsSchemaConfirmation: true,
+          missingColumns: missingNames.map((name) => ({
+            name,
+            type: schema.missing[name].type,
+            similarExisting: schema.similarExisting[name] || [],
+          })),
+        };
+      }
+      try {
+        const result = await ensureDatabaseSchema(
+          apiKey,
+          databaseId,
+          schema.missing,
+        );
+        schemaCreated = result.created;
+      } catch (error) {
+        return {
+          success: false,
+          error: `Could not add columns (${missingNames.join(", ")}): ${error.message}`,
+        };
+      }
+    }
+  }
 
   // Determine if we have new content to save
   // Only snapshots count as "new code" - current editor code is just a preview
@@ -444,11 +723,12 @@ async function saveToNotion(data) {
         databaseId,
         problem,
         spacedRepetitionDays,
+        titlePropertyName,
         incrementAttempts,
         attempts,
       );
       pageId = updateResult.pageId;
-      return updateResult;
+      return { ...updateResult, schemaCreated, schemaWarning };
     } else {
       // CREATE new page
       const children = buildPageContent({ ...problem, code: cleanedCode });
@@ -461,6 +741,8 @@ async function saveToNotion(data) {
       updated: !!existingPageId,
       contentUpdated: true, // For new pages, content is always new
       attempts: 1, // First-time save always starts at 1
+      schemaCreated,
+      schemaWarning,
     };
   } catch (error) {
     console.error("Leetion: Save error:", error);
@@ -474,6 +756,7 @@ async function updatePageContent(
   databaseId,
   problem,
   spacedRepetitionDays,
+  titlePropertyName,
   incrementAttempts,
   attempts,
 ) {
@@ -483,6 +766,7 @@ async function updatePageContent(
       problem,
       existingPageId,
       spacedRepetitionDays,
+      titlePropertyName,
     );
 
     // Attempts resolution, in priority order:
@@ -518,56 +802,95 @@ async function updatePageContent(
 
     // Handle Content Updates
     // We rebuild the content. If user has 'saveQuestion' true, we usually want to ensure Question is at top.
-    const hasSnapshots = problem.snapshots && problem.snapshots.length > 0;
+    // Only solution-type snapshots count as content: a lone question-type
+    // snapshot must not trigger a rebuild that wipes the Solution(s) section.
+    const snapshots = problem.snapshots || [];
+    const localSolutionSnapshots = snapshots.filter(
+      (s) => s.type !== "question",
+    );
     const hasNotes = !!problem.notes;
-    const hasNewContent = hasSnapshots || hasNotes || problem.saveQuestion;
+    const hasNewContent =
+      localSolutionSnapshots.length > 0 || hasNotes || problem.saveQuestion;
 
-    if (hasNewContent) {
-      // Build the FULL intended content structure
-      const intendedChildren = buildPageContent({
-        ...problem,
-        code: cleanedCode,
-      });
+    // The Attempts write above has already landed, so every return path from
+    // here on must report it — the popup uses `attempts` to refresh the
+    // displayed count and to clear a staged edit.
+    const withAttempts = (result) =>
+      typeof newAttempts === "number"
+        ? { ...result, attempts: newAttempts }
+        : result;
 
-      // Smart Overwrite:
-      // 1. Fetch existing blocks
-      // 2. Identify if "Question" section exists
-      // 3. If "Question" exists and we are saving question -> Skip deleting it, Skip creating it
-
-      const { blocksToDelete, blocksToCreate } = await prepareSmartUpdate(
-        apiKey,
-        existingPageId,
-        intendedChildren,
-        problem.saveQuestion,
-      );
-
-      if (blocksToDelete.length > 0) {
-        await deleteBlocksList(apiKey, blocksToDelete);
-      }
-
-      if (blocksToCreate.length > 0) {
-        await appendBlocksInBatches(apiKey, existingPageId, blocksToCreate);
-      }
-
-      console.log(
-        `Leetion: Updated page. Deleted ${blocksToDelete.length}, Created ${blocksToCreate.length}`,
-      );
-    } else {
+    if (!hasNewContent) {
       console.log(
         "Leetion: No snapshots/notes, preserved existing page content",
       );
+      return withAttempts({
+        success: true,
+        pageId,
+        updated: true,
+        contentUpdated: false,
+      });
     }
 
-    const result = {
+    // Fetch the page once — used by both the clobber guard and the smart update.
+    const allBlocks = await fetchAllBlocks(apiKey, existingPageId);
+    const existingContent = parsePageBlocks(allBlocks);
+
+    // Clobber guard: if this device has no solution snapshots but the Notion
+    // page already has solutions (fresh machine, or popup hydration failed),
+    // rebuild the Solution(s) section from the page's own content instead of
+    // wiping it or replacing it with the current editor preview. Notion is
+    // the source of truth for solutions the device doesn't know about.
+    let effectiveSnapshots = snapshots;
+    if (
+      localSolutionSnapshots.length === 0 &&
+      existingContent.solutionGroups.length > 0
+    ) {
+      effectiveSnapshots = [
+        ...snapshots,
+        ...solutionGroupsToSnapshots(existingContent.solutionGroups, Date.now()),
+      ];
+      console.log(
+        `Leetion: Preserving ${existingContent.solutionGroups.length} existing Notion solution(s) — no local snapshots on this device`,
+      );
+    }
+
+    // Build the FULL intended content structure
+    const intendedChildren = buildPageContent({
+      ...problem,
+      code: cleanedCode,
+      snapshots: effectiveSnapshots,
+    });
+
+    // Smart Overwrite:
+    // 1. Use the fetched blocks
+    // 2. Identify if "Question" section exists
+    // 3. If "Question" exists and we are saving question -> Skip deleting it, Skip creating it
+
+    const { blocksToDelete, blocksToCreate } = prepareSmartUpdate(
+      allBlocks,
+      intendedChildren,
+      problem.saveQuestion,
+    );
+
+    if (blocksToDelete.length > 0) {
+      await deleteBlocksList(apiKey, blocksToDelete);
+    }
+
+    if (blocksToCreate.length > 0) {
+      await appendBlocksInBatches(apiKey, existingPageId, blocksToCreate);
+    }
+
+    console.log(
+      `Leetion: Updated page. Deleted ${blocksToDelete.length}, Created ${blocksToCreate.length}`,
+    );
+
+    return withAttempts({
       success: true,
       pageId,
       updated: true,
-      contentUpdated: hasNewContent,
-    };
-    if (typeof newAttempts === "number") {
-      result.attempts = newAttempts;
-    }
-    return result;
+      contentUpdated: true,
+    });
   } catch (error) {
     console.error("Leetion: Save error:", error);
     throw error;
@@ -599,25 +922,8 @@ async function createPage(apiKey, databaseId, properties, children) {
   return pageId;
 }
 
-async function prepareSmartUpdate(
-  apiKey,
-  pageId,
-  intendedChildren,
-  saveQuestion,
-) {
+function prepareSmartUpdate(allBlocks, intendedChildren, saveQuestion) {
   try {
-    // Get all blocks
-    let allBlocks = [];
-    let cursor = undefined;
-    do {
-      const url = cursor
-        ? `blocks/${pageId}/children?page_size=100&start_cursor=${cursor}`
-        : `blocks/${pageId}/children?page_size=100`;
-      const response = await notionRequest(url, apiKey, "GET");
-      allBlocks = allBlocks.concat(response.results || []);
-      cursor = response.has_more ? response.next_cursor : undefined;
-    } while (cursor);
-
     // Find Headers
     // Notion API returns block objects. We check type and content.
     // Heading 2 is "heading_2". Content is in "rich_text".
@@ -804,9 +1110,16 @@ function splitRichText(text, maxLength = NOTION_RICH_TEXT_LIMIT) {
   return chunks;
 }
 
-function buildProperties(problem, existingPageId, spacedRepetitionDays) {
+function buildProperties(
+  problem,
+  existingPageId,
+  spacedRepetitionDays,
+  titlePropertyName = "Question",
+) {
   const properties = {
-    Question: {
+    // The title is written to the database's actual title column, which may
+    // have a different name in user-created databases (e.g. "Name").
+    [titlePropertyName]: {
       title: [{ text: { content: problem.title || "Untitled Problem" } }],
     },
   };
@@ -898,25 +1211,39 @@ async function fetchCurrentAttempts(apiKey, pageId) {
 
 /**
  * Updates only the spaced repetition date for a page.
+ * `days` of 0 (or less) means reviews are disabled for that expertise level:
+ * no date is written, matching the `> 0` guard in buildProperties.
  */
 async function updateSpacedRepetition(data) {
   const { apiKey, pageId, days, attempts } = data;
 
   try {
     const properties = {};
+    let dateStr = null;
 
     // Set new spaced repetition date
-    const reviewDate = new Date();
-    reviewDate.setDate(reviewDate.getDate() + days);
-    const dateStr = reviewDate.toISOString().split("T")[0];
-    properties["Spaced Repetition"] = { date: { start: dateStr } };
+    if (days && days > 0) {
+      const reviewDate = new Date();
+      reviewDate.setDate(reviewDate.getDate() + days);
+      dateStr = reviewDate.toISOString().split("T")[0];
+      properties["Spaced Repetition"] = { date: { start: dateStr } };
 
-    console.log("Leetion: Updating Spaced Repetition to:", dateStr);
+      console.log("Leetion: Updating Spaced Repetition to:", dateStr);
+    } else {
+      console.log(
+        "Leetion: Spaced repetition disabled for this level - leaving date untouched",
+      );
+    }
 
     // Update attempts if provided
     if (attempts !== undefined) {
       properties["Attempts"] = { number: attempts };
       console.log("Leetion: Updating Attempts to:", attempts);
+    }
+
+    if (Object.keys(properties).length === 0) {
+      console.log("Leetion: Nothing to update, skipping request");
+      return { success: true, date: null, skipped: true };
     }
 
     await notionRequest(`pages/${pageId}`, apiKey, "PATCH", { properties });
@@ -991,18 +1318,19 @@ function buildPageContent(problem) {
   }
 
   // 2. Solutions Section
-  const hasSnapshots = problem.snapshots && problem.snapshots.length > 0;
+  // Question-type snapshots are excluded: they must not create an empty
+  // Solution(s) heading, and numbering runs over real solutions only.
+  const solutionSnapshots = (problem.snapshots || []).filter(
+    (s) => s.type !== "question",
+  );
 
   // Only save snapshots - the "current code" is just a preview
   // Users must click "Save Snapshot" to add code to their Notion page
-  if (hasSnapshots) {
+  if (solutionSnapshots.length > 0) {
     blocks.push(createHeading("Solution(s)"));
 
-    for (let i = 0; i < problem.snapshots.length; i++) {
-      const snapshot = problem.snapshots[i];
-      // Skip question snapshots if we are using the new toggle method
-      if (snapshot.type === "question") continue;
-
+    for (let i = 0; i < solutionSnapshots.length; i++) {
+      const snapshot = solutionSnapshots[i];
       const snapshotLang = LANGUAGE_MAP[snapshot.language] || "plain text";
       const date = new Date(snapshot.timestamp);
       const dateStr = date.toLocaleDateString([], {
