@@ -1,0 +1,5 @@
+$ node --check popup.js background.js content.js onboarding.js
+PASS (4 files)
+
+$ bash build.sh
+Done! Created leetion.zip
