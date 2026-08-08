@@ -887,16 +887,25 @@ async function fetchCurrentAttempts(apiKey, pageId) {
 }
 
 /**
- * Increments only the "Attempts" property for a page (manual +1).
- * Reads the current value server-fresh, writes read-value + 1, and touches
- * nothing else — the "Spaced Repetition" date is left exactly as it is.
+ * Writes only the "Attempts" property for a page, touching nothing else —
+ * the "Spaced Repetition" date is left exactly as it is.
+ *
+ * `data.attempts` omitted → increment: reads the current value server-fresh
+ * and writes read-value + 1, so a concurrent edit in Notion is preserved.
+ * `data.attempts` given   → set that exact value (hand-typed by the user,
+ * which is an explicit override, so no read-back is wanted).
  */
 async function updateAttempts(data) {
   const { apiKey, pageId } = data;
+  const explicit = data.attempts;
 
   try {
-    const currentAttempts = await fetchCurrentAttempts(apiKey, pageId);
-    const attempts = currentAttempts + 1;
+    let attempts;
+    if (typeof explicit === "number" && Number.isFinite(explicit)) {
+      attempts = Math.max(0, Math.floor(explicit));
+    } else {
+      attempts = (await fetchCurrentAttempts(apiKey, pageId)) + 1;
+    }
 
     await notionRequest(`pages/${pageId}`, apiKey, "PATCH", {
       properties: { Attempts: { number: attempts } },

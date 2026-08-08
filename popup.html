@@ -342,11 +342,39 @@
             <h2 id="problem-title" class="problem-title">Loading problem...</h2>
             <!-- Problem Stats -->
             <div id="problem-stats" class="problem-stats hidden">
+              <span class="stat" id="stat-acceptance" title="Acceptance Rate">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="20,6 9,17 4,12" />
+                </svg>
+                <span>--</span>
+              </span>
               <span
                 class="stat"
-                id="stat-attempts"
-                title="Times you have attempted this problem"
+                id="stat-submissions"
+                title="Total Submissions"
               >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                  <circle cx="8.5" cy="7" r="4" />
+                  <path d="M20 8v6M23 11h-6" />
+                </svg>
+                <span>--</span>
+              </span>
+              <span class="stat" id="stat-attempts" title="Your Attempts">
                 <svg
                   width="12"
                   height="12"
@@ -359,8 +387,7 @@
                     d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"
                   />
                 </svg>
-                <span class="attempt-label">Attempts</span>
-                <span class="attempt-count" id="attempt-count">--</span>
+                <span>--</span>
               </span>
             </div>
           </article>
@@ -378,8 +405,8 @@
                 title="Set review for tomorrow"
               >
                 <svg
-                  width="14"
-                  height="14"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -391,7 +418,7 @@
                   <line x1="3" y1="10" x2="21" y2="10" />
                   <path d="M9 16l2 2 4-4" />
                 </svg>
-                Tomorrow
+                Review Tomorrow
               </button>
               <button
                 type="button"
@@ -400,8 +427,8 @@
                 title="Reset spaced repetition"
               >
                 <svg
-                  width="14"
-                  height="14"
+                  width="16"
+                  height="16"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -413,16 +440,7 @@
                     d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"
                   />
                 </svg>
-                Revisit
-              </button>
-              <button
-                type="button"
-                id="btn-attempt-plus"
-                class="quick-btn quick-btn-compact"
-                aria-label="Add one attempt"
-                title="Add one attempt — updates Attempts only, review date untouched"
-              >
-                +1
+                Revisit (Reset)
               </button>
             </div>
           </article>
@@ -736,6 +754,31 @@
               />
               <label for="input-done" class="toggle-switch"></label>
               <span class="toggle-label">Mark as Done</span>
+              <!-- Shown only for entries that already exist in Notion. -->
+              <div class="attempts-control hidden" id="attempts-control">
+                <label class="attempts-label" for="input-attempts"
+                  >Attempts:</label
+                >
+                <input
+                  type="number"
+                  id="input-attempts"
+                  class="attempts-input"
+                  min="0"
+                  max="9999"
+                  step="1"
+                  value="0"
+                  title="Type a new count and press Enter"
+                />
+                <button
+                  type="button"
+                  id="btn-attempt-plus"
+                  class="attempts-plus"
+                  title="Add one attempt — updates Attempts only, review date untouched"
+                  aria-label="Add one attempt"
+                >
+                  +
+                </button>
+              </div>
             </div>
           </article>
         </main>

@@ -133,8 +133,9 @@ const DOM = {
     refreshBtn: document.getElementById("btn-refresh-code"),
     questionPreview: document.getElementById("question-preview"),
     statsContainer: document.getElementById("problem-stats"),
+    statAcceptance: document.getElementById("stat-acceptance"),
+    statSubmissions: document.getElementById("stat-submissions"),
     statAttempts: document.getElementById("stat-attempts"),
-    attemptCount: document.getElementById("attempt-count"),
     // Empty/filled state containers
     codeEmpty: document.getElementById("code-empty"),
     codeFilled: document.getElementById("code-filled"),
@@ -158,7 +159,11 @@ const DOM = {
     card: document.getElementById("card-quick-actions"),
     markReview: document.getElementById("btn-mark-review"),
     revisit: document.getElementById("btn-revisit"),
-    attemptPlus: document.getElementById("btn-attempt-plus"),
+  },
+  attempts: {
+    control: document.getElementById("attempts-control"),
+    input: document.getElementById("input-attempts"),
+    plus: document.getElementById("btn-attempt-plus"),
   },
   complexity: {
     time: document.getElementById("input-time-complexity"),
@@ -871,6 +876,7 @@ async function checkExistingEntry() {
         userAttemptCount = response.attempts;
       }
       updateProblemStats();
+      showAttemptsControl();
 
       if (!hasLocalState) {
         if (response.timeComplexity && DOM.complexity.time) {
@@ -1015,6 +1021,7 @@ async function saveToNotion() {
         attemptSessionIncremented = true;
       }
       updateProblemStats();
+      showAttemptsControl();
     } else {
       showStatus(DOM.save.status, response.error || "Failed", "error");
     }
@@ -1138,7 +1145,23 @@ function setupEventListeners() {
   DOM.quickActions.revisit?.addEventListener("click", revisitProblem);
 
   // Manual +1 attempt (stats row, existing entries only)
-  DOM.quickActions.attemptPlus?.addEventListener("click", addManualAttempt);
+  DOM.attempts.plus?.addEventListener("click", addManualAttempt);
+  DOM.attempts.input?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      // Commit directly rather than relying on the blur handler: a popup that
+      // closes on Enter may never dispatch blur, silently dropping the edit.
+      e.preventDefault();
+      commitAttemptEdit();
+      DOM.attempts.input.blur();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      updateAttemptDisplay(); // discard, so the blur below is a no-op
+      DOM.attempts.input.blur();
+    }
+  });
+  // Backup path for clicking away without pressing Enter. Re-entrant by
+  // design: commitAttemptEdit no-ops when the field already matches the count.
+  DOM.attempts.input?.addEventListener("blur", commitAttemptEdit);
 
   // Complexity - auto-suggest and persist
   DOM.complexity.time?.addEventListener("change", () => {
@@ -1395,41 +1418,46 @@ async function revisitProblem() {
 }
 
 /**
- * Manually adds one attempt (the "+1" pill in the quick-actions row).
- * Updates ONLY the "Attempts" property via the lightweight background
+ * Writes the "Attempts" property via the lightweight background
  * `updateAttempts` action — the "Spaced Repetition" date is untouched.
- * The count is bumped optimistically and rolled back on failure
+ *
+ * `explicitCount` omitted → server-fresh increment (the "+" button).
+ * `explicitCount` given   → set that exact value (typed into the field).
+ *
+ * The displayed count moves optimistically and rolls back on failure
  * (parity with revisitProblem's rollback).
  */
-async function addManualAttempt() {
+async function writeAttempts(explicitCount) {
   if (!existingPageId) return;
 
   const settings = await chrome.storage.sync.get(["notionApiKey"]);
   if (!settings.notionApiKey) {
     showStatus(DOM.save.status, "Configure API key first", "error");
+    updateAttemptDisplay();
     return;
   }
 
-  const btn = DOM.quickActions.attemptPlus;
+  const isSet = typeof explicitCount === "number";
   const previousCount = userAttemptCount;
 
-  userAttemptCount++;
+  userAttemptCount = isSet ? explicitCount : userAttemptCount + 1;
   updateAttemptDisplay();
 
   try {
-    if (btn) btn.disabled = true;
+    setAttemptsBusy(true);
 
     const response = await chrome.runtime.sendMessage({
       action: "updateAttempts",
       data: {
         apiKey: settings.notionApiKey,
         pageId: existingPageId,
+        ...(isSet ? { attempts: explicitCount } : {}),
       },
     });
 
     if (response?.success) {
-      // Trust the server-fresh value (may differ from the optimistic bump
-      // if the page was edited in Notion meanwhile).
+      // Trust the server value (an increment may differ from the optimistic
+      // bump if the page was edited in Notion meanwhile).
       if (typeof response.attempts === "number") {
         userAttemptCount = response.attempts;
       }
@@ -1445,22 +1473,78 @@ async function addManualAttempt() {
       );
     }
   } catch (error) {
-    console.error("Leetion: Error adding attempt:", error);
+    console.error("Leetion: Error updating attempts:", error);
     userAttemptCount = previousCount;
     updateAttemptDisplay();
     showStatus(DOM.save.status, "Failed to update attempts", "error");
   } finally {
-    if (btn) btn.disabled = false;
+    setAttemptsBusy(false);
   }
+}
+
+/**
+ * Reveals the Attempts control and syncs it to the current count. Gated on an
+ * existing Notion entry — before the first save there is no page to write to.
+ */
+function showAttemptsControl() {
+  if (!existingPageId) return;
+  DOM.attempts.control?.classList.remove("hidden");
+  updateAttemptDisplay();
+}
+
+/**
+ * Manually adds one attempt (the "+" button beside the count).
+ */
+function addManualAttempt() {
+  return writeAttempts();
+}
+
+/**
+ * Commits a hand-typed count. Called on Enter and on blur; a value equal to
+ * the current count (or an empty/garbage field) writes nothing and just
+ * restores the display, so tabbing through the field is not a Notion write.
+ */
+function commitAttemptEdit() {
+  const raw = DOM.attempts.input?.value ?? "";
+  if (raw.trim() === "") {
+    updateAttemptDisplay();
+    return;
+  }
+
+  const parsed = Math.floor(Number(raw));
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    showStatus(DOM.save.status, "Attempts must be 0 or more", "error");
+    updateAttemptDisplay();
+    return;
+  }
+
+  const next = Math.min(parsed, 9999);
+  if (next === userAttemptCount) {
+    updateAttemptDisplay();
+    return;
+  }
+
+  return writeAttempts(next);
+}
+
+/**
+ * Disables the attempts field and "+" during an in-flight write, so a
+ * double-click or a blur-into-click can't queue a second conflicting write.
+ */
+function setAttemptsBusy(busy) {
+  if (DOM.attempts.input) DOM.attempts.input.disabled = busy;
+  if (DOM.attempts.plus) DOM.attempts.plus.disabled = busy;
 }
 
 /**
  * Updates the attempt count display.
  */
 function updateAttemptDisplay() {
-  if (DOM.problem.attemptCount) {
-    DOM.problem.attemptCount.textContent = userAttemptCount.toString();
+  if (DOM.attempts.input) {
+    DOM.attempts.input.value = userAttemptCount.toString();
   }
+  const attSpan = DOM.problem.statAttempts?.querySelector("span:last-child");
+  if (attSpan) attSpan.textContent = userAttemptCount.toString();
 }
 
 // COMPLEXITY SUGGESTIONS
@@ -1503,20 +1587,28 @@ function suggestComplexity() {
 }
 
 /**
- * Updates the problem stats row.
- * Attempts is the only live stat — the acceptance-rate / total-submissions
- * extractors never fire in the popup's scraper, so those spans were removed.
- * Shown only for existing entries; the manual "+1" control that bumps this
- * count lives in the quick-actions row, which gates on the same condition.
+ * Updates problem stats display.
  */
 function updateProblemStats() {
-  if (!existingPageId) {
-    DOM.problem.statsContainer?.classList.add("hidden");
-    return;
-  }
+  if (problemData.acceptanceRate || problemData.totalSubmissions) {
+    DOM.problem.statsContainer?.classList.remove("hidden");
 
-  DOM.problem.statsContainer?.classList.remove("hidden");
-  updateAttemptDisplay();
+    if (problemData.acceptanceRate) {
+      const accSpan =
+        DOM.problem.statAcceptance?.querySelector("span:last-child");
+      if (accSpan) accSpan.textContent = problemData.acceptanceRate;
+    }
+
+    if (problemData.totalSubmissions) {
+      const subSpan =
+        DOM.problem.statSubmissions?.querySelector("span:last-child");
+      if (subSpan)
+        subSpan.textContent = formatNumber(problemData.totalSubmissions);
+    }
+
+    const attSpan = DOM.problem.statAttempts?.querySelector("span:last-child");
+    if (attSpan) attSpan.textContent = userAttemptCount.toString();
+  }
 }
 
 // CODE SNAPSHOTS

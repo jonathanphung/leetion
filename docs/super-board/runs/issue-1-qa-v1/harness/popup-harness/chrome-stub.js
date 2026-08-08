@@ -107,7 +107,13 @@
           qa.failNextUpdateAttempts = false;
           return { success: false, error: "QA forced +1 failure (Notion 500)" };
         }
-        setAttempts(qa.notion.attempts + 1); // spacedRepDate deliberately NOT touched
+        // Mirrors background.js: an explicit `attempts` sets that exact value
+        // (hand-typed), omitting it increments. spacedRepDate NOT touched.
+        setAttempts(
+          typeof d.attempts === "number"
+            ? Math.max(0, Math.floor(d.attempts))
+            : qa.notion.attempts + 1,
+        );
         return { success: true, attempts: qa.notion.attempts };
       }
       case "updateSpacedRepetition": {

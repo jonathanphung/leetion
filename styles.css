@@ -641,26 +641,86 @@ body {
   color: var(--text-tertiary);
 }
 
-/* Deliberately NOT `.stat-label` — that class belongs to the stats-dashboard
-   grid (9px, uppercase, margin-top: 6px), and reusing it here knocked the
-   label 6px below its own count inside this center-aligned flex row. */
-.stat .attempt-label {
-  color: var(--text-tertiary);
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+/* Attempts control — sits at the right end of the "Mark as Done" row.
+   The count is a live number input (click and type), with a "+" beside it
+   for the common case of bumping by one. */
+.attempts-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
 }
 
-.stat .attempt-count {
+.attempts-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.attempts-input {
+  width: 48px;
+  padding: 3px 6px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
   color: var(--text-primary);
-  font-size: 13px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  /* Equal-width digits so the field doesn't twitch across 1 → 10 → 100. */
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.15s ease;
+}
+
+.attempts-input:hover {
+  border-color: var(--text-tertiary);
+}
+
+.attempts-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.attempts-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Native steppers are tiny click targets and duplicate the "+" button. */
+.attempts-input::-webkit-outer-spin-button,
+.attempts-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.attempts-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 15px;
   font-weight: 600;
   line-height: 1;
-  /* Equal-width digits: the count changes in place on +1 / Revisit, and
-     proportional digits make the row twitch as it crosses 1 → 10 → 100. */
-  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.attempts-plus:hover {
+  background: var(--bg-elevated);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.attempts-plus:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .card-quick-actions {
@@ -679,9 +739,6 @@ body {
   justify-content: center;
   gap: 6px;
   padding: 8px 12px;
-  /* Three pills share this row at a 400px popup width — without this the
-     longest label wraps and drags every sibling to double height. */
-  white-space: nowrap;
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -701,15 +758,6 @@ body {
 .quick-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-/* Third pill in the row. Opts out of `flex: 1` so it stays a compact counter
-   bump next to the two full-width scheduling actions. */
-.quick-btn-compact {
-  flex: 0 0 auto;
-  padding: 8px 12px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
 }
 
 .quick-btn-success {
