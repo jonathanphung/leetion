@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Leetion popup — Settings view (QA fixture, issue #3)</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #eef0f4;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      .stage {
+        padding: 24px;
+      }
+      .cap {
+        margin: 0 0 10px;
+        font-size: 12px;
+        line-height: 1.45;
+        color: #374151;
+        max-width: 620px;
+      }
+      .cap b {
+        color: #111827;
+      }
+      iframe {
+        width: 400px;
+        height: 600px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+        background: #fff;
+        display: block;
+      }
+      @media (max-width: 420px) {
+        .stage {
+          padding: 0;
+        }
+        .cap {
+          padding: 6px 8px;
+          margin: 0;
+        }
+        /* The popup surface is a fixed 400px (same on main). Scale it to fit a
+           narrower viewport so the whole settings form stays visible. */
+        body.fit iframe {
+          transform: scale(0.9);
+          transform-origin: top left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stage">
+      <p class="cap" id="cap"></p>
+      <iframe id="popup" src="/popup.html" title="Leetion popup"></iframe>
+    </div>
+    <script>
+      // QA fixture for issue #3. Renders the REAL popup.html + styles.css in an
+      // iframe at the extension popup's native 400x600 surface and opens the
+      // Settings view (the popup normally opens it from a button handler that
+      // needs the chrome.* APIs). Optional ?low=&medium=&high= override the
+      // rendered interval values so a migrated/legacy state can be shown.
+      const params = new URLSearchParams(location.search);
+      const label = params.get("label") || "defaults 1 / 3 / 7";
+      if (params.get("fit") === "1") document.body.classList.add("fit");
+      document.getElementById("cap").innerHTML =
+        "<b>Leetion popup - Settings view</b> (400x600, the extension popup's native surface) &middot; " +
+        "issue #3 per-expertise review intervals &middot; " +
+        label;
+
+      const frame = document.getElementById("popup");
+      if (params.get("fit") === "1") {
+        // The popup surface is a fixed 400px (unchanged from main). Scale it so
+        // the whole settings form is visible inside a narrower viewport.
+        frame.style.transform = "scale(0.9)";
+        frame.style.transformOrigin = "top left";
+      }
+      function apply() {
+        const d = frame.contentDocument;
+        if (!d) return;
+        ["view-not-leetcode", "view-main"].forEach((id) =>
+          d.getElementById(id)?.classList.add("hidden"),
+        );
+        d.getElementById("view-settings")?.classList.remove("hidden");
+        ["low", "medium", "high"].forEach((lvl) => {
+          const v = params.get(lvl);
+          if (v !== null) {
+            const el = d.getElementById("input-interval-" + lvl);
+            if (el) el.value = v;
+          }
+        });
+      }
+      frame.addEventListener("load", () => {
+        apply();
+        // popup.js finishes its async init after load; re-assert briefly.
+        let n = 0;
+        const t = setInterval(() => {
+          apply();
+          if (++n > 25) clearInterval(t);
+        }, 100);
+      });
+    </script>
+  </body>
+</html>

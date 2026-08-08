@@ -1,0 +1,69 @@
+$ node docs/super-board/runs/issue-3-qa-v1/qa-intervals.mjs
+Issue #3 QA — per-expertise spaced-repetition intervals
+(end-to-end: popup entry point -> background router -> Notion request body)
+
+AC1 — settings view: three inputs, defaults 1/3/7, persist across reload
+  PASS  popup.html has #input-interval-low (number, min 0, max 365, default 1)
+  PASS  popup.html has #input-interval-medium (number, min 0, max 365, default 3)
+  PASS  popup.html has #input-interval-high (number, min 0, max 365, default 7)
+  PASS  legacy single #input-spaced-rep input is gone from popup.html
+  PASS  fresh profile: loadSettings() fills inputs with 1 / 3 / 7
+  PASS  saveSettings() writes spacedRepetitionIntervals to chrome.storage.sync
+  PASS  saveSettings() preserves the stored Notion credentials
+  PASS  values survive a popup reload (fresh context, same sync storage)
+  PASS  a cleared field saves that level's default (7), not 0
+
+AC2 — save writes Spaced Repetition = today + the selected expertise's interval
+  PASS  Low save: POST /pages Spaced Repetition = today+1
+  PASS  Low save: My Expertise still written as Low
+  PASS  Low save: message carried the resolved day count, not a flat scalar
+  PASS  Medium save: POST /pages Spaced Repetition = today+3
+  PASS  Medium save: My Expertise still written as Medium
+  PASS  Medium save: message carried the resolved day count, not a flat scalar
+  PASS  High save: POST /pages Spaced Repetition = today+7
+  PASS  High save: My Expertise still written as High
+  PASS  High save: message carried the resolved day count, not a flat scalar
+  PASS  custom High=9: POST /pages Spaced Repetition = today+9
+  PASS  save-to-Notion happy path unregressed (Question title still written)
+
+AC3 — Revisit reschedules from the entry's stored 'My Expertise'
+  PASS  popup open hydrates selectedExpertise from "My Expertise" = Low
+  PASS  Revisit on a Low entry PATCHes Spaced Repetition = today+1
+  PASS  popup open hydrates selectedExpertise from "My Expertise" = Medium
+  PASS  Revisit on a Medium entry PATCHes Spaced Repetition = today+3
+  PASS  popup open hydrates selectedExpertise from "My Expertise" = High
+  PASS  Revisit on a High entry PATCHes Spaced Repetition = today+7
+  PASS  Revisit ignores a stale flat spacedRepetitionDays=30 (uses High=7)
+
+AC4 — 'Tomorrow' still hardcodes 1 day regardless of expertise
+  PASS  Tomorrow on a High(=90) entry still writes today+1
+  PASS  Tomorrow sends days: 1 on the wire
+  PASS  Tomorrow works even when all intervals are 0
+
+AC5 — a per-level 0 disables the review date for that expertise only
+  PASS  High=0 save: no Spaced Repetition property in the created page
+  PASS  High=0 save: the rest of the page is still written (My Expertise)
+  PASS  Low=1 is unaffected by High=0 (still today+1)
+  PASS  Revisit on a High=0 entry writes no Spaced Repetition date
+  PASS  Revisit on a High=0 entry still logs the Attempts bump
+
+AC6 — migration from the legacy flat spacedRepetitionDays scalar
+  PASS  legacy 30: settings inputs read 30 / 30 / 30
+  PASS  legacy 14, settings never opened: save still writes today+14
+  PASS  legacy 0: inputs read 0 / 0 / 0 (reviews stay disabled)
+  PASS  legacy 0: save writes no Spaced Repetition date
+  PASS  first saveSettings() writes the object seeded from the legacy scalar
+  PASS  first saveSettings() deletes the legacy spacedRepetitionDays key
+  PASS  partial object: Low from object, Medium+High fall back to the legacy scalar
+  PASS  garbage values are sanitized (negative/NaN -> default, >365 -> 365)
+  PASS  unknown expertise falls back to the Medium interval (today+3)
+
+AC7 — the hourly checkReviews alarm + notification are unchanged
+  PASS  checkDueReviews() is byte-identical to main
+  PASS  the checkReviews alarm registration is byte-identical to main
+  PASS  checkDueReviews queries Spaced Repetition on_or_before today
+  PASS  checkDueReviews raises the 'LeetCode Review Due' notification
+
+48 passed, 0 failed (48 assertions)
+
+exit=0
