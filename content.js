@@ -666,11 +666,9 @@
   }
 
   function saveAndClose() {
-    if (checkCanvasHasContent()) {
-      const dataUrl = canvas.toDataURL("image/png");
-      const base64 = dataUrl.split(",")[1];
-      chrome.storage.local.set({ pendingDrawing: base64 });
-    }
+    // Drawings are saved via the explicit download button. The old
+    // `pendingDrawing` storage write here was dead — nothing ever read
+    // that key — so it was removed (issue #2 dead-key cleanup).
     closeCanvas();
   }
 

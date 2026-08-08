@@ -911,6 +911,22 @@ function populateExistingData(data) {
   DOM.form.done.checked = data.done || false;
 }
 
+/**
+ * Clears the Notion-synced form fields before repopulating from Notion.
+ * Used when the Notion page is newer than a stale local draft, so values
+ * deleted remotely (e.g. cleared notes) don't linger from the draft.
+ * Tags stay additive (scraped tags were auto-selected) and expertise is
+ * overwritten by populateExistingData when Notion has a value.
+ */
+function resetSyncedFormFields() {
+  if (DOM.form.notes) DOM.form.notes.value = "";
+  if (DOM.form.remark) DOM.form.remark.value = "";
+  if (DOM.form.altMethods) DOM.form.altMethods.value = "";
+  if (DOM.complexity.time) DOM.complexity.time.value = "";
+  if (DOM.complexity.space) DOM.complexity.space.value = "";
+  if (DOM.form.done) DOM.form.done.checked = false;
+}
+
 // NOTION INTEGRATION
 
 /**
@@ -941,11 +957,31 @@ async function checkExistingEntry() {
     if (response?.exists) {
       existingPageId = response.pageId;
 
+      // Hydrate/reconcile the snapshot list from the Notion page so every
+      // machine sees the same solutions (Notion is the source of truth).
+      await reconcileSnapshots(response.remoteSnapshots || []);
+
       const formStateKey = `form_state_${problemData.number}`;
       const localState = await chrome.storage.local.get([formStateKey]);
-      const hasLocalState = !!localState[formStateKey];
+      const draft = localState[formStateKey];
 
-      if (!hasLocalState) {
+      // Freshness gate: a local form draft only wins while it is newer than
+      // the Notion page. If the page was edited after the draft was written
+      // (e.g. saved from another machine), Notion data populates the form.
+      const notionIsNewer =
+        !!draft &&
+        typeof response.lastEdited === "number" &&
+        response.lastEdited > (draft.timestamp || 0);
+      const useNotionData = !draft || notionIsNewer;
+
+      if (useNotionData) {
+        if (notionIsNewer) {
+          console.log(
+            "Leetion: Notion page is newer than the local draft - using Notion data",
+          );
+          resetSyncedFormFields();
+          await clearPersistedFormState(problemData.number);
+        }
         populateExistingData(response);
       }
 
@@ -958,7 +994,7 @@ async function checkExistingEntry() {
         updateAttemptDisplay();
       }
 
-      if (!hasLocalState) {
+      if (useNotionData) {
         if (response.timeComplexity && DOM.complexity.time) {
           DOM.complexity.time.value = response.timeComplexity;
         }
@@ -976,7 +1012,7 @@ async function checkExistingEntry() {
         if (
           response.hasQuestion &&
           DOM.problem.saveQuestionToggle &&
-          !localState[formStateKey].hasOwnProperty("saveQuestion")
+          !draft.hasOwnProperty("saveQuestion")
         ) {
           DOM.problem.saveQuestionToggle.checked = true;
         }
@@ -984,7 +1020,9 @@ async function checkExistingEntry() {
 
       showStatus(
         DOM.save.status,
-        "Found existing entry - will update on save",
+        notionIsNewer
+          ? "Loaded latest data from Notion (newer than local draft)"
+          : "Found existing entry - will update on save",
         "success",
       );
     }
@@ -1085,6 +1123,20 @@ async function saveToNotion() {
       showStatus(DOM.save.status, message, "success");
 
       await clearPersistedFormState(problemData.number);
+
+      // The saved state is now the reconciled baseline: mark every snapshot
+      // as synced and persist, so a stale pre-hydration snapshot list can
+      // never resurrect solutions that were deleted on another machine.
+      codeSnapshots = codeSnapshots.map((s) =>
+        s.synced ? s : { ...s, synced: true },
+      );
+      try {
+        await chrome.storage.local.set({
+          [`snapshots_${problemData.number}`]: codeSnapshots,
+        });
+      } catch (persistError) {
+        console.error("Error persisting synced snapshots:", persistError);
+      }
 
       if (!existingPageId && response.pageId) {
         existingPageId = response.pageId;
@@ -1599,6 +1651,45 @@ async function loadSnapshots(problemNumber) {
 }
 
 /**
+ * Reconciles the local snapshot list with the solutions on the Notion page.
+ * Notion is the source of truth for solutions that have been saved:
+ * - Remote solutions replace their local (synced) copies, so an empty local
+ *   list hydrates fully from Notion and remote deletions propagate here.
+ * - Local snapshots never marked `synced` (not yet saved to Notion, and not
+ *   matching any remote code) are kept and appended after the remote ones.
+ * - Question-type snapshots are local-only and kept as-is.
+ * The reconciled list is persisted immediately so a stale pre-hydration
+ * `snapshots_<n>` cannot be used by a later save.
+ * @param {Array} remoteSnapshots - Snapshots reconstructed from the Notion page
+ */
+async function reconcileSnapshots(remoteSnapshots) {
+  if (!problemData.number) return;
+
+  const remoteSolutions = (remoteSnapshots || []).filter(
+    (s) => s.type !== "question",
+  );
+  const localQuestions = codeSnapshots.filter((s) => s.type === "question");
+  const remoteCodes = new Set(remoteSolutions.map((s) => (s.code || "").trim()));
+  const localUnsynced = codeSnapshots.filter(
+    (s) =>
+      s.type !== "question" &&
+      !s.synced &&
+      !remoteCodes.has((s.code || "").trim()),
+  );
+
+  codeSnapshots = [...localQuestions, ...remoteSolutions, ...localUnsynced];
+
+  try {
+    const key = `snapshots_${problemData.number}`;
+    await chrome.storage.local.set({ [key]: codeSnapshots });
+  } catch (error) {
+    console.error("Error persisting reconciled snapshots:", error);
+  }
+
+  renderSnapshots();
+}
+
+/**
  * Saves a new code snapshot.
  */
 async function saveSnapshot() {
@@ -1874,22 +1965,6 @@ function renderSnapshots() {
  */
 function getSnapshotsForSave() {
   return codeSnapshots;
-}
-
-/**
- * Loads the amount of reviews due.
- */
-async function loadDueReviewCount() {
-  const { dueReviewCount } = await chrome.storage.local.get(["dueReviewCount"]);
-  if (dueReviewCount > 0) {
-    const reviewBadge = document.getElementById("review-badge");
-    if (reviewBadge) {
-      reviewBadge.textContent = `🔔 ${dueReviewCount} problem${
-        dueReviewCount > 1 ? "s" : ""
-      } due for review`;
-      reviewBadge.classList.remove("hidden");
-    }
-  }
 }
 
 /**
