@@ -89,8 +89,6 @@ let problemData = {
   language: null,
   url: null,
   scrapedTags: [],
-  acceptanceRate: null,
-  totalSubmissions: null,
   userAttempts: null,
   questionContent: null,
   examples: [],
@@ -112,8 +110,27 @@ let currentView = "not-leetcode";
 /** @type {string} Previous view for back navigation */
 let previousView = "not-leetcode";
 
-/** @type {number} User's attempt count for this problem */
+/** Upper bound for a hand-entered attempt count; matches the input's max. */
+const ATTEMPTS_MAX = 9999;
+
+/** @type {number} Attempt count as last known from Notion */
 let userAttemptCount = 0;
+
+/**
+ * @type {number|null} Attempt count staged by the user, or null if untouched.
+ * Both the editable field and the "+" button write here only — nothing about
+ * Attempts reaches Notion until "Update in Notion" is pressed. On save this
+ * value is sent verbatim and the automatic increment is suppressed, so a
+ * staged edit can never be double-counted.
+ */
+let pendingAttempts = null;
+
+/**
+ * @type {boolean} Whether this popup session already incremented Attempts.
+ * "Update in Notion" adds +1 once per popup session — repeat updates in the
+ * same session (e.g. fixing a typo in notes) must not add more.
+ */
+let attemptSessionIncremented = false;
 
 // DOM ELEMENT REFERENCES
 
@@ -178,6 +195,11 @@ const DOM = {
     card: document.getElementById("card-quick-actions"),
     markReview: document.getElementById("btn-mark-review"),
     revisit: document.getElementById("btn-revisit"),
+  },
+  attempts: {
+    control: document.getElementById("attempts-control"),
+    input: document.getElementById("input-attempts"),
+    plus: document.getElementById("btn-attempt-plus"),
   },
   complexity: {
     time: document.getElementById("input-time-complexity"),
@@ -995,8 +1017,9 @@ async function checkExistingEntry() {
 
       if (response.attempts) {
         userAttemptCount = response.attempts;
-        updateAttemptDisplay();
       }
+      updateProblemStats();
+      showAttemptsControl();
 
       if (useNotionData) {
         if (response.timeComplexity && DOM.complexity.time) {
@@ -1082,12 +1105,23 @@ async function saveToNotion(confirmSchemaChanges = false) {
       description = description.substring(0, descEnd).trim();
     }
 
+    // A staged count is an explicit "make it this", so it is sent as-is and
+    // the automatic increment is suppressed — otherwise typing 5 and pressing
+    // Update in Notion would land on 6. With nothing staged, Attempts is
+    // incremented once per popup session, computed server-fresh in the
+    // background.
+    const stagedAttempts = pendingAttempts;
+    const shouldIncrementAttempts =
+      !!existingPageId && !attemptSessionIncremented && stagedAttempts === null;
+
     const response = await chrome.runtime.sendMessage({
       action: "saveToNotion",
       data: {
         apiKey: settings.notionApiKey,
         databaseId: settings.notionDatabaseId,
         existingPageId,
+        incrementAttempts: shouldIncrementAttempts,
+        ...(stagedAttempts !== null ? { attempts: stagedAttempts } : {}),
         spacedRepetitionDays: spacedRepDays,
         confirmSchemaChanges: confirmSchemaChanges === true,
         problem: {
@@ -1105,7 +1139,6 @@ async function saveToNotion(confirmSchemaChanges = false) {
           done: DOM.form.done.checked,
           timeComplexity: DOM.complexity.time?.value || "",
           spaceComplexity: DOM.complexity.space?.value || "",
-          attempts: userAttemptCount || 1,
           snapshots: snapshotsToSave,
           saveQuestion: DOM.problem.saveQuestionToggle?.checked || false,
           questionContent: {
@@ -1142,6 +1175,8 @@ async function saveToNotion(confirmSchemaChanges = false) {
 
       await clearPersistedFormState(problemData.number);
 
+      const wasFirstSave = !existingPageId;
+
       // The saved state is now the reconciled baseline: mark every snapshot
       // as synced and persist, so a stale pre-hydration snapshot list can
       // never resurrect solutions that were deleted on another machine.
@@ -1161,6 +1196,23 @@ async function saveToNotion(confirmSchemaChanges = false) {
         updateSaveButton(true);
         DOM.quickActions.card?.classList.remove("hidden");
       }
+
+      // Per-popup-session attempt accounting: a first save wrote
+      // Attempts = 1 (this session's attempt); an update incremented
+      // server-fresh only on the session's first update.
+      if (typeof response.attempts === "number") {
+        userAttemptCount = response.attempts;
+      }
+      // The staged edit has landed, so the field is no longer unsaved. Cleared
+      // only on success — a failed save leaves it staged to retry.
+      if (stagedAttempts !== null && response.attempts === stagedAttempts) {
+        pendingAttempts = null;
+      }
+      if (wasFirstSave || shouldIncrementAttempts) {
+        attemptSessionIncremented = true;
+      }
+      updateProblemStats();
+      showAttemptsControl();
     } else if (response.needsSchemaConfirmation) {
       showSchemaConfirmation(response.missingColumns || []);
     } else {
@@ -1317,6 +1369,25 @@ function setupEventListeners() {
   // Quick Actions
   DOM.quickActions.markReview?.addEventListener("click", markForReviewTomorrow);
   DOM.quickActions.revisit?.addEventListener("click", revisitProblem);
+
+  // Manual +1 attempt (stats row, existing entries only)
+  DOM.attempts.plus?.addEventListener("click", addManualAttempt);
+  DOM.attempts.input?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      // Commit directly rather than relying on the blur handler: a popup that
+      // closes on Enter may never dispatch blur, silently dropping the edit.
+      e.preventDefault();
+      commitAttemptEdit();
+      DOM.attempts.input.blur();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      updateAttemptDisplay(); // discard, so the blur below is a no-op
+      DOM.attempts.input.blur();
+    }
+  });
+  // Backup path for clicking away without pressing Enter. Re-entrant by
+  // design: commitAttemptEdit no-ops when the field already matches the count.
+  DOM.attempts.input?.addEventListener("blur", commitAttemptEdit);
 
   // Complexity - auto-suggest and persist
   DOM.complexity.time?.addEventListener("change", () => {
@@ -1613,14 +1684,82 @@ async function revisitProblem() {
 }
 
 /**
- * Updates the attempt count display.
+ * Reveals the Attempts control and syncs it to the current count. Gated on an
+ * existing Notion entry — before the first save there is no page to write to.
+ */
+function showAttemptsControl() {
+  if (!existingPageId) return;
+  DOM.attempts.control?.classList.remove("hidden");
+  updateAttemptDisplay();
+}
+
+/**
+ * The count the field is showing: the staged edit if there is one, otherwise
+ * the value last read from Notion.
+ */
+function effectiveAttemptCount() {
+  return pendingAttempts ?? userAttemptCount;
+}
+
+/**
+ * Stages a count. Nothing is sent to Notion here — `saveToNotion` picks the
+ * staged value up on the next "Update in Notion". Staging back to the stored
+ * value clears the pending state rather than queuing a no-op write.
+ */
+function stageAttempts(count) {
+  pendingAttempts = count === userAttemptCount ? null : count;
+  updateAttemptDisplay();
+}
+
+/**
+ * Adds one attempt (the "+" button beside the count). Stages only — it bumps
+ * whatever the field is currently showing.
+ */
+function addManualAttempt() {
+  if (!existingPageId) return;
+  stageAttempts(Math.min(effectiveAttemptCount() + 1, ATTEMPTS_MAX));
+}
+
+/**
+ * Reads the hand-typed count out of the field and stages it. Called on Enter
+ * and on blur; an empty or invalid field just restores the display.
+ */
+function commitAttemptEdit() {
+  const raw = DOM.attempts.input?.value ?? "";
+  if (raw.trim() === "") {
+    updateAttemptDisplay();
+    return;
+  }
+
+  const parsed = Math.floor(Number(raw));
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    showStatus(DOM.save.status, "Attempts must be 0 or more", "error");
+    updateAttemptDisplay();
+    return;
+  }
+
+  stageAttempts(Math.min(parsed, ATTEMPTS_MAX));
+}
+
+/**
+ * Updates the attempt count display, flagging the field as unsaved while an
+ * edit is staged so the deferred write is visible rather than implied.
  */
 function updateAttemptDisplay() {
-  const attemptSpan =
-    DOM.problem.statAttempts?.querySelector("span:last-child");
-  if (attemptSpan) {
-    attemptSpan.textContent = userAttemptCount.toString();
+  const count = effectiveAttemptCount();
+  const staged = pendingAttempts !== null;
+
+  if (DOM.attempts.input) {
+    DOM.attempts.input.value = count.toString();
+    DOM.attempts.input.classList.toggle("is-staged", staged);
+    DOM.attempts.input.title = staged
+      ? "Unsaved — press Update in Notion to apply"
+      : "Type a new count and press Enter";
   }
+  DOM.attempts.control?.classList.toggle("is-staged", staged);
+
+  const attSpan = DOM.problem.statAttempts?.querySelector("span:last-child");
+  if (attSpan) attSpan.textContent = count.toString();
 }
 
 // COMPLEXITY SUGGESTIONS
@@ -1685,15 +1824,6 @@ function updateProblemStats() {
     const attSpan = DOM.problem.statAttempts?.querySelector("span:last-child");
     if (attSpan) attSpan.textContent = userAttemptCount.toString();
   }
-}
-
-/**
- * Formats large numbers with K/M suffix.
- */
-function formatNumber(num) {
-  if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
-  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
-  return num.toString();
 }
 
 // CODE SNAPSHOTS

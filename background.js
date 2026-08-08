@@ -625,6 +625,8 @@ async function saveToNotion(data) {
     problem,
     existingPageId,
     spacedRepetitionDays,
+    incrementAttempts,
+    attempts,
     confirmSchemaChanges,
   } = data;
 
@@ -722,6 +724,8 @@ async function saveToNotion(data) {
         problem,
         spacedRepetitionDays,
         titlePropertyName,
+        incrementAttempts,
+        attempts,
       );
       pageId = updateResult.pageId;
       return { ...updateResult, schemaCreated, schemaWarning };
@@ -736,6 +740,7 @@ async function saveToNotion(data) {
       pageId,
       updated: !!existingPageId,
       contentUpdated: true, // For new pages, content is always new
+      attempts: 1, // First-time save always starts at 1
       schemaCreated,
       schemaWarning,
     };
@@ -752,6 +757,8 @@ async function updatePageContent(
   problem,
   spacedRepetitionDays,
   titlePropertyName,
+  incrementAttempts,
+  attempts,
 ) {
   try {
     const cleanedCode = cleanCode(problem.code);
@@ -761,6 +768,30 @@ async function updatePageContent(
       spacedRepetitionDays,
       titlePropertyName,
     );
+
+    // Attempts resolution, in priority order:
+    //
+    // 1. An explicit count staged in the popup wins outright. The user typed
+    //    (or "+"-ed) a value meaning "make it this", so it is written as-is
+    //    with no read-back, and no increment is applied on top — the popup
+    //    sends incrementAttempts: false alongside it.
+    // 2. Otherwise a server-fresh increment: read the current value from
+    //    Notion immediately before the PATCH so an edit made directly in
+    //    Notion is preserved +1 instead of overwritten with a stale value.
+    // 3. Otherwise (repeat update in the same popup session) Attempts is
+    //    omitted from the PATCH entirely so Notion keeps its value.
+    let newAttempts;
+    if (typeof attempts === "number" && Number.isFinite(attempts)) {
+      newAttempts = Math.max(0, Math.floor(attempts));
+      properties["Attempts"] = { number: newAttempts };
+    } else if (incrementAttempts) {
+      const currentAttempts = await fetchCurrentAttempts(
+        apiKey,
+        existingPageId,
+      );
+      newAttempts = currentAttempts + 1;
+      properties["Attempts"] = { number: newAttempts };
+    }
 
     // Always update properties (Tags, Status, etc.)
     await notionRequest(`pages/${existingPageId}`, apiKey, "PATCH", {
@@ -781,11 +812,24 @@ async function updatePageContent(
     const hasNewContent =
       localSolutionSnapshots.length > 0 || hasNotes || problem.saveQuestion;
 
+    // The Attempts write above has already landed, so every return path from
+    // here on must report it — the popup uses `attempts` to refresh the
+    // displayed count and to clear a staged edit.
+    const withAttempts = (result) =>
+      typeof newAttempts === "number"
+        ? { ...result, attempts: newAttempts }
+        : result;
+
     if (!hasNewContent) {
       console.log(
         "Leetion: No snapshots/notes, preserved existing page content",
       );
-      return { success: true, pageId, updated: true, contentUpdated: false };
+      return withAttempts({
+        success: true,
+        pageId,
+        updated: true,
+        contentUpdated: false,
+      });
     }
 
     // Fetch the page once — used by both the clobber guard and the smart update.
@@ -841,12 +885,12 @@ async function updatePageContent(
       `Leetion: Updated page. Deleted ${blocksToDelete.length}, Created ${blocksToCreate.length}`,
     );
 
-    return {
+    return withAttempts({
       success: true,
       pageId,
       updated: true,
       contentUpdated: true,
-    };
+    });
   } catch (error) {
     console.error("Leetion: Save error:", error);
     throw error;
@@ -1130,9 +1174,11 @@ function buildProperties(
     };
   }
 
-  // Add attempt count
-  if (problem.attempts) {
-    properties["Attempts"] = { number: problem.attempts };
+  // Attempts: a first-time save always starts at 1. For existing pages
+  // updatePageContent resolves the value — an explicit staged count, or a
+  // server-fresh increment so a stale popup value never overwrites Notion.
+  if (!existingPageId) {
+    properties["Attempts"] = { number: 1 };
   }
 
   // Add spaced repetition date
@@ -1152,6 +1198,15 @@ function buildProperties(
   }
 
   return properties;
+}
+
+/**
+ * Reads the current "Attempts" number for a page straight from Notion.
+ * Used immediately before a PATCH so increments are computed server-fresh.
+ */
+async function fetchCurrentAttempts(apiKey, pageId) {
+  const page = await notionRequest(`pages/${pageId}`, apiKey, "GET");
+  return page?.properties?.["Attempts"]?.number ?? 0;
 }
 
 /**

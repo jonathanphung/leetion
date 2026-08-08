@@ -785,6 +785,31 @@
               />
               <label for="input-done" class="toggle-switch"></label>
               <span class="toggle-label">Mark as Done</span>
+              <!-- Shown only for entries that already exist in Notion. -->
+              <div class="attempts-control hidden" id="attempts-control">
+                <label class="attempts-label" for="input-attempts"
+                  >Attempts:</label
+                >
+                <input
+                  type="number"
+                  id="input-attempts"
+                  class="attempts-input"
+                  min="0"
+                  max="9999"
+                  step="1"
+                  value="0"
+                  title="Type a new count and press Enter"
+                />
+                <button
+                  type="button"
+                  id="btn-attempt-plus"
+                  class="attempts-plus"
+                  title="Add one attempt — updates Attempts only, review date untouched"
+                  aria-label="Add one attempt"
+                >
+                  +
+                </button>
+              </div>
             </div>
           </article>
         </main>

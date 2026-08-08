@@ -1,0 +1,54 @@
+AC1 — README schema table matches DATABASE_SCHEMA exactly
+  PASS  README contains a schema table with a Question row
+  PASS  every DATABASE_SCHEMA property appears in the README table
+  PASS  README table has no property that DATABASE_SCHEMA lacks
+  PASS  README type for "Question" is "Title" (schema: title)
+  PASS  README type for "S No." is "Number" (schema: number)
+  PASS  README type for "Level" is "Select (Easy/Medium/Hard)" (schema: select)
+  PASS  README type for "Tag" is "Multi-select" (schema: multi_select)
+  PASS  README type for "My Expertise" is "Select (Low/Medium/High)" (schema: select)
+  PASS  README type for "Done" is "Checkbox" (schema: checkbox)
+  PASS  README type for "Date (of first attempt)" is "Date" (schema: date)
+  PASS  README type for "Question Link" is "URL" (schema: url)
+  PASS  README type for "Remark" is "Rich text" (schema: rich_text)
+  PASS  README type for "Alternative Method Tags" is "Multi-select" (schema: multi_select)
+  PASS  README type for "Spaced Repetition" is "Date" (schema: date)
+  PASS  README type for "Time Complexity" is "Select" (schema: select)
+  PASS  README type for "Space Complexity" is "Select" (schema: select)
+  PASS  README type for "Attempts" is "Number" (schema: number)
+  PASS  no stale old-README name appears as a column name in the table
+  PASS  README documents manual cleanup of legacy duplicate columns (issue note)
+
+AC2 — legacy README-style DB: no silent second date column
+  PASS  unconfirmed save returns needsSchemaConfirmation instead of creating columns
+  PASS  no PATCH (column create) and no page write before confirmation
+  PASS  warning lists existing same-type columns ("Date", "Review") next to "Date (of first attempt)"
+  PASS  warning lists exactly the columns about to be created (9, title excluded)
+  PASS  confirmed save succeeds
+  PASS  PATCH creates exactly the confirmed missing columns — nothing else
+  PASS  problem title is written to the DB's real title column ("Name"), not a new "Question"
+  PASS  response reports the created columns back to the popup (schemaCreated)
+  PASS  non-blocking wrong-type columns (legacy rich_text Time/Space Complexity) reported as warning
+
+AC3 — schema results/errors surfaced, not swallowed
+  PASS  failed column creation returns a clear error to the popup (not swallowed)
+  PASS  no page write is attempted after column creation fails
+  PASS  schema-read failure surfaces schemaWarning on an otherwise-successful save
+
+AC4 — wrong-type same-name column detected and reported clearly
+  PASS  save fails fast with a message naming the column, actual and required type
+  PASS  no opaque page write and no column create happen after the type mismatch
+
+AC5 — regression: matching DB untouched; first-attempt date only on create
+  PASS  already-correct DB: save succeeds with no confirmation prompt
+  PASS  already-correct DB: zero columns created (no databases PATCH)
+  PASS  already-correct DB: schemaCreated is empty
+  PASS  new page carries "Date (of first attempt)"
+  PASS  buildProperties gate: "Date (of first attempt)" set on create only, never on update
+
+AC6 — conservative: columns only added, never renamed/retyped/deleted
+  PASS  at least one databases PATCH was captured across scenarios
+  PASS  every databases PATCH is add-only (no null deletes, no renames, schema columns only)
+  PASS  static check: background.js never sends a null property (Notion delete syntax)
+
+RESULT: 41/41 checks passed, 0 failed

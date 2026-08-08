@@ -1,0 +1,438 @@
+/**
+ * super-board QA harness — issue #1 (Attempts counter), background.js layer.
+ *
+ * Loads the REAL background.js (unmodified) into a Node vm context with a
+ * stubbed `chrome` API and a fake Notion `fetch` that records every request
+ * in order and keeps page state, then drives the registered onMessage
+ * listener exactly like the popup does.
+ *
+ * Run:  node docs/super-board/runs/issue-1-qa-v1/harness/background.qa.test.mjs
+ * Exit: 0 = all assertions pass, 1 = failures (printed per test).
+ */
+import fs from "node:fs";
+import vm from "node:vm";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, "../../../../.."); // → worktree root
+const backgroundSrc = fs.readFileSync(path.join(repoRoot, "background.js"), "utf8");
+
+// ---------------------------------------------------------------- fake Notion
+function makeFakeNotion() {
+  const state = {
+    pages: new Map(), // id → { properties }
+    log: [],          // { method, endpoint, body } in call order
+    failNext: null,   // { match: RegExp, status, message } — persistent while set
+                      // (background's notionRequest retries ALL errors 3×, so a
+                      // realistic outage must fail every attempt, not just one)
+  };
+
+  function pageObject(id) {
+    const page = state.pages.get(id);
+    return { object: "page", id, properties: JSON.parse(JSON.stringify(page.properties)) };
+  }
+
+  async function fakeFetch(url, options = {}) {
+    const method = options.method || "GET";
+    const endpoint = url.replace("https://api.notion.com/v1/", "");
+    const body = options.body ? JSON.parse(options.body) : null;
+    state.log.push({ method, endpoint, body });
+
+    const respond = (status, obj) => ({
+      ok: status >= 200 && status < 300,
+      status,
+      headers: { get: () => null },
+      json: async () => obj,
+    });
+
+    if (state.failNext && state.failNext.match.test(`${method} ${endpoint}`)) {
+      const f = state.failNext; // stays set: a real outage fails retries too
+      return respond(f.status, { message: f.message, code: "qa_forced_failure" });
+    }
+
+    // GET pages/{id}
+    let m = endpoint.match(/^pages\/([^/?]+)$/);
+    if (m && method === "GET") {
+      if (!state.pages.has(m[1])) return respond(404, { message: "page not found" });
+      return respond(200, pageObject(m[1]));
+    }
+    // PATCH pages/{id}
+    if (m && method === "PATCH") {
+      if (!state.pages.has(m[1])) return respond(404, { message: "page not found" });
+      const page = state.pages.get(m[1]);
+      Object.assign(page.properties, JSON.parse(JSON.stringify(body.properties || {})));
+      return respond(200, pageObject(m[1]));
+    }
+    // POST pages  (create)
+    if (endpoint === "pages" && method === "POST") {
+      const id = `created-page-${state.pages.size + 1}`;
+      state.pages.set(id, { properties: JSON.parse(JSON.stringify(body.properties || {})) });
+      return respond(200, { object: "page", id });
+    }
+    // GET databases/{id} — report a fully-provisioned, correctly-typed schema
+    // so the schema inspector finds nothing missing and nothing mismatched.
+    m = endpoint.match(/^databases\/([^/?]+)$/);
+    if (m && method === "GET") {
+      return respond(200, {
+        object: "database",
+        id: m[1],
+        properties: fakeDatabaseProperties(),
+      });
+    }
+    if (m && method === "PATCH") return respond(200, { object: "database", id: m[1] });
+    // POST databases/{id}/query
+    if (/^databases\/[^/]+\/query$/.test(endpoint) && method === "POST") {
+      return respond(200, { results: [] });
+    }
+    // GET blocks/{id}/children
+    if (/^blocks\/[^/]+\/children/.test(endpoint) && method === "GET") {
+      return respond(200, { results: [], has_more: false });
+    }
+    // POST blocks/{id}/children (append)
+    if (/^blocks\/[^/]+\/children$/.test(endpoint) && method === "POST") {
+      return respond(200, { results: [] });
+    }
+    // DELETE blocks/{id}
+    if (/^blocks\/[^/]+$/.test(endpoint) && method === "DELETE") {
+      return respond(200, {});
+    }
+    return respond(200, {});
+  }
+
+  return { state, fakeFetch };
+}
+
+// The fake database must mirror the REAL `DATABASE_SCHEMA` in background.js,
+// column names AND Notion types. Since #4 landed, `inspectDatabaseSchema`
+// fails a save fast when a required column has the wrong type — a fake that
+// omits `type` reads as "every column mismatched" and every save errors out.
+// Reading the constant out of the loaded module keeps the fake honest if the
+// schema changes again.
+let cachedDatabaseProperties = null;
+function fakeDatabaseProperties() {
+  if (cachedDatabaseProperties) return cachedDatabaseProperties;
+
+  const probeFetch = async () => ({
+    ok: true, status: 200, headers: { get: () => null }, json: async () => ({}),
+  });
+  const schema = vm.runInContext(
+    "DATABASE_SCHEMA",
+    loadBackground(probeFetch).context,
+  );
+
+  const props = {};
+  for (const [name, config] of Object.entries(schema)) {
+    props[name] = { id: name, name, type: config.type, [config.type]: {} };
+  }
+  // A couple of user-owned extras so the fake isn't a Leetion-only database.
+  props["Notes"] = { id: "Notes", name: "Notes", type: "rich_text", rich_text: {} };
+
+  cachedDatabaseProperties = props;
+  return props;
+}
+
+// ------------------------------------------------------------- chrome + load
+function loadBackground(fakeFetch) {
+  let messageListener = null;
+  const noop = () => {};
+  const listenerSink = { addListener: noop };
+  const chrome = {
+    runtime: {
+      onMessage: { addListener: (fn) => { messageListener = fn; } },
+      onInstalled: listenerSink,
+      onStartup: listenerSink,
+      sendMessage: noop,
+      getURL: (p) => `chrome-extension://qa-harness/${p}`,
+      lastError: null,
+    },
+    tabs: { onUpdated: listenerSink, create: noop },
+    alarms: { create: noop, onAlarm: listenerSink },
+    notifications: { create: noop },
+    storage: { sync: { get: async () => ({}) } },
+  };
+  const context = vm.createContext({
+    chrome,
+    fetch: fakeFetch,
+    console: { log: noop, warn: noop, error: noop },
+    setTimeout, clearTimeout,
+    Date, JSON, Math, Promise, Error, Object, Array, String, Number, Boolean, RegExp, Map, Set, URL,
+  });
+  new vm.Script(backgroundSrc, { filename: "background.js" }).runInContext(context);
+  if (!messageListener) throw new Error("background.js did not register an onMessage listener");
+  const sendMessage = function sendMessage(request) {
+    return new Promise((resolve) => {
+      messageListener(request, { id: "qa-harness" }, resolve);
+    });
+  };
+  // Exposed so the fake database can read the real DATABASE_SCHEMA back out.
+  sendMessage.context = context;
+  return sendMessage;
+}
+
+// ------------------------------------------------------------------ helpers
+let passCount = 0, failCount = 0;
+const failures = [];
+function check(name, cond, detail) {
+  if (cond) { passCount++; console.log(`  ok   - ${name}`); }
+  else {
+    failCount++;
+    failures.push({ name, detail });
+    console.log(`  FAIL - ${name}${detail ? `\n         ${detail}` : ""}`);
+  }
+}
+const patchOf = (log, id) => log.filter((r) => r.method === "PATCH" && r.endpoint === `pages/${id}`);
+const getOf = (log, id) => log.filter((r) => r.method === "GET" && r.endpoint === `pages/${id}`);
+
+const PROBLEM = {
+  number: 1, title: "Two Sum", difficulty: "Easy",
+  code: "def twoSum(): pass", language: "Python",
+  url: "https://leetcode.com/problems/two-sum/", tags: [], expertise: "Medium",
+  remark: "", notes: "", altMethods: [], done: true,
+  timeComplexity: "O(n)", spaceComplexity: "O(n)",
+  snapshots: [], saveQuestion: false,
+  questionContent: { description: "", examples: [], constraints: [] },
+};
+
+// -------------------------------------------------------------------- tests
+async function main() {
+  // ============================================ AC2 — server-fresh increment
+  console.log("\nAC2: update with incrementAttempts=true reads server value and writes read+1");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: {
+      Attempts: { number: 7 },
+      "Spaced Repetition": { date: { start: "2026-08-20" } },
+    }});
+    const res = await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: true, spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    const patches = patchOf(state.log, "page-1");
+    const gets = getOf(state.log, "page-1");
+    check("PATCH carries Attempts = server 7 + 1 = 8",
+      patches.length >= 1 && patches[0].body?.properties?.Attempts?.number === 8,
+      `patch properties: ${JSON.stringify(patches[0]?.body?.properties?.Attempts)}`);
+    check("a GET pages/{id} precedes the PATCH (server-fresh read)",
+      gets.length >= 1 && state.log.indexOf(gets[0]) < state.log.indexOf(patches[0]),
+      `log order: ${state.log.map((r) => `${r.method} ${r.endpoint}`).join(" → ")}`);
+    check("GET is IMMEDIATELY before the PATCH (no calls between)",
+      state.log.indexOf(patches[0]) - state.log.indexOf(gets[0]) === 1,
+      `log order: ${state.log.map((r) => `${r.method} ${r.endpoint}`).join(" → ")}`);
+    check("response.success && response.attempts === 8",
+      res?.success === true && res?.attempts === 8, JSON.stringify(res));
+    check("Notion page now has Attempts 8",
+      state.pages.get("page-1").properties.Attempts.number === 8);
+  }
+
+  // ------------ AC2b — a direct Notion edit between popup-open and save wins
+  console.log("\nAC2b: direct Notion edit (7 → 41) made before save is preserved +1, not stale-overwritten");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: { Attempts: { number: 41 } } }); // user edited in Notion
+    const res = await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: true, spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    check("write is 42 (fresh 41 + 1), not a stale popup value",
+      res?.attempts === 42 && state.pages.get("page-1").properties.Attempts.number === 42,
+      JSON.stringify(res));
+  }
+
+  // ===================== AC1 (backend half) — repeat update omits Attempts
+  console.log("\nAC1-backend: update with incrementAttempts=false omits Attempts from the PATCH");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: { Attempts: { number: 8 } } });
+    const res = await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: false, spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    const patches = patchOf(state.log, "page-1");
+    check("PATCH body has NO Attempts key",
+      patches.length >= 1 && !("Attempts" in (patches[0].body?.properties || {})),
+      `patch properties keys: ${Object.keys(patches[0]?.body?.properties || {}).join(", ")}`);
+    check("no GET pages/{id} read is wasted when not incrementing",
+      getOf(state.log, "page-1").length === 0,
+      `log: ${state.log.map((r) => `${r.method} ${r.endpoint}`).join(" → ")}`);
+    check("Notion Attempts unchanged at 8",
+      state.pages.get("page-1").properties.Attempts.number === 8);
+    check("response carries no attempts field (popup keeps its display value)",
+      res?.success === true && !("attempts" in res), JSON.stringify(res));
+  }
+
+  // ========================================= AC3 — first save writes Attempts 1
+  console.log("\nAC3: first-time save (no existingPageId) creates the page with Attempts = 1");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    const res = await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: null,
+      incrementAttempts: false, spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    const create = state.log.find((r) => r.method === "POST" && r.endpoint === "pages");
+    check("POST pages body has Attempts = 1",
+      create?.body?.properties?.Attempts?.number === 1,
+      JSON.stringify(create?.body?.properties?.Attempts));
+    check("response.success, pageId set, attempts === 1",
+      res?.success === true && !!res?.pageId && res?.attempts === 1, JSON.stringify(res));
+  }
+
+  // ===== AC4 — a staged count is written verbatim and suppresses the increment
+  console.log("\nAC4: save with an explicit staged `attempts` sets that exact value, no +1 on top");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: { Attempts: { number: 3 } } });
+    const res = await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: false, attempts: 5,
+      spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    const patches = patchOf(state.log, "page-1");
+    check("Attempts written as the staged 5 — NOT 5+1 and NOT 3+1",
+      patches[0]?.body?.properties?.Attempts?.number === 5,
+      JSON.stringify(patches[0]?.body?.properties?.Attempts));
+    check("no server-fresh GET is issued for an explicit value",
+      getOf(state.log, "page-1").length === 0,
+      `log: ${state.log.map((r) => `${r.method} ${r.endpoint}`).join(" → ")}`);
+    check("Notion Attempts is exactly 5",
+      state.pages.get("page-1").properties.Attempts.number === 5);
+    check("response reports the staged value so the popup can clear it",
+      res?.success === true && res?.attempts === 5, JSON.stringify(res));
+  }
+
+  // ---- AC4b — an explicit count wins even if the caller also asks to increment
+  console.log("\nAC4b: explicit `attempts` takes priority over incrementAttempts (no double-count)");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: { Attempts: { number: 3 } } });
+    await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: true, attempts: 5,
+      spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    check("staged 5 wins over the increment path — result is 5, not 4 or 6",
+      state.pages.get("page-1").properties.Attempts.number === 5,
+      String(state.pages.get("page-1").properties.Attempts.number));
+  }
+
+  // ---------------- AC4c — a staged count leaves Spaced Repetition alone
+  console.log("\nAC4c: staging a count does not disturb an existing Spaced Repetition date");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    const dateBefore = JSON.stringify({ date: { start: "2026-08-20" } });
+    state.pages.set("page-1", { properties: {
+      Attempts: { number: 3 },
+      "Spaced Repetition": JSON.parse(dateBefore),
+    }});
+    // spacedRepetitionDays omitted → buildProperties writes no review date,
+    // which is the "update an existing entry" shape.
+    await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: false, attempts: 9, problem: PROBLEM,
+    }});
+    check("Spaced Repetition byte-identical before/after",
+      JSON.stringify(state.pages.get("page-1").properties["Spaced Repetition"]) === dateBefore,
+      JSON.stringify(state.pages.get("page-1").properties["Spaced Repetition"]));
+    check("Attempts still landed on the staged 9",
+      state.pages.get("page-1").properties.Attempts.number === 9);
+  }
+
+  // ------------------------- AC4d — a staged 0 is honored, not treated as unset
+  console.log("\nAC4d: a staged 0 is written (falsy, but a real value)");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: { Attempts: { number: 7 } } });
+    await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: false, attempts: 0,
+      spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    check("Attempts written as 0, not skipped as falsy",
+      state.pages.get("page-1").properties.Attempts.number === 0,
+      String(state.pages.get("page-1").properties.Attempts.number));
+  }
+
+  // ============ AC6 — Revisit increments via updateSpacedRepetition; Tomorrow doesn't
+  console.log("\nAC6: updateSpacedRepetition with attempts (Revisit) vs without (Tomorrow)");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: {
+      Attempts: { number: 4 },
+      "Spaced Repetition": { date: { start: "2026-08-20" } },
+    }});
+    // Revisit path: popup sends days + attempts
+    const r1 = await send({ action: "updateSpacedRepetition", data: {
+      apiKey: "qa-key", pageId: "page-1", days: 30, attempts: 5,
+    }});
+    let patches = patchOf(state.log, "page-1");
+    check("Revisit: PATCH sets BOTH Spaced Repetition and Attempts=5",
+      r1?.success === true &&
+      patches[0]?.body?.properties?.["Spaced Repetition"]?.date?.start &&
+      patches[0]?.body?.properties?.Attempts?.number === 5,
+      JSON.stringify(patches[0]?.body?.properties));
+    // Tomorrow path: popup sends days:1 and NO attempts
+    state.log.length = 0;
+    const r2 = await send({ action: "updateSpacedRepetition", data: {
+      apiKey: "qa-key", pageId: "page-1", days: 1,
+    }});
+    patches = patchOf(state.log, "page-1");
+    check("Tomorrow: PATCH sets Spaced Repetition only — NO Attempts key",
+      r2?.success === true &&
+      patches[0]?.body?.properties?.["Spaced Repetition"]?.date?.start &&
+      !("Attempts" in (patches[0]?.body?.properties || {})),
+      JSON.stringify(patches[0]?.body?.properties));
+    check("Attempts still 5 after Tomorrow",
+      state.pages.get("page-1").properties.Attempts.number === 5);
+  }
+
+  // ============================ AC7 (backend half) — failed write reports error
+  console.log("\nAC7-backend: a failed save of a staged count reports {success:false, error}");
+  {
+    const { state, fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    state.pages.set("page-1", { properties: { Attempts: { number: 9 } } });
+    state.failNext = { match: /^PATCH pages\/page-1$/, status: 500, message: "Notion exploded (QA forced)" };
+    const res = await send({ action: "saveToNotion", data: {
+      apiKey: "qa-key", databaseId: "db-1", existingPageId: "page-1",
+      incrementAttempts: false, attempts: 12,
+      spacedRepetitionDays: 30, problem: PROBLEM,
+    }});
+    check("response is {success:false, error:...}",
+      res?.success === false && typeof res?.error === "string" && res.error.includes("QA forced"),
+      JSON.stringify(res));
+    check("Notion Attempts unchanged at 9 after failed PATCH",
+      state.pages.get("page-1").properties.Attempts.number === 9);
+    check("no attempts echoed back, so the popup keeps the edit staged for retry",
+      !("attempts" in (res || {})), JSON.stringify(res));
+  }
+
+  // ---- unknown action still errors cleanly (guard for the new switch case)
+  console.log("\nRegression: unknown action still rejects via the wrapper");
+  {
+    const { fakeFetch } = makeFakeNotion();
+    const send = loadBackground(fakeFetch);
+    const res = await send({ action: "definitelyNotAnAction", data: {} });
+    check("unknown action → {success:false, error mentions action}",
+      res?.success === false && /Unknown action/.test(res?.error || ""), JSON.stringify(res));
+  }
+
+  // -------------------------------------------------------------- summary
+  console.log(`\n${"=".repeat(60)}`);
+  console.log(`background.js layer: ${passCount} passed, ${failCount} failed`);
+  if (failCount > 0) {
+    console.log("\nFailures:");
+    for (const f of failures) console.log(`  - ${f.name}${f.detail ? ` :: ${f.detail}` : ""}`);
+    process.exit(1);
+  }
+}
+
+main().catch((e) => { console.error("HARNESS CRASH:", e); process.exit(2); });

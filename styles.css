@@ -673,6 +673,7 @@ body {
 
 .problem-stats {
   display: flex;
+  align-items: center;
   gap: 16px;
   margin-top: 10px;
   padding-top: 10px;
@@ -689,6 +690,99 @@ body {
 
 .stat svg {
   color: var(--text-tertiary);
+}
+
+/* Attempts control — sits at the right end of the "Mark as Done" row.
+   The count is a live number input (click and type), with a "+" beside it
+   for the common case of bumping by one. */
+.attempts-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.attempts-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.attempts-input {
+  width: 48px;
+  padding: 3px 6px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  /* Equal-width digits so the field doesn't twitch across 1 → 10 → 100. */
+  font-variant-numeric: tabular-nums;
+  transition: border-color 0.15s ease;
+}
+
+.attempts-input:hover {
+  border-color: var(--text-tertiary);
+}
+
+.attempts-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Staged but not yet written: the value only reaches Notion on "Update in
+   Notion", so the field reads as pending rather than as stored state. */
+.attempts-input.is-staged {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.attempts-control.is-staged .attempts-label {
+  color: var(--accent);
+}
+
+.attempts-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Native steppers are tiny click targets and duplicate the "+" button. */
+.attempts-input::-webkit-outer-spin-button,
+.attempts-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.attempts-plus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.attempts-plus:hover {
+  background: var(--bg-elevated);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.attempts-plus:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .card-quick-actions {

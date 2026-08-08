@@ -190,8 +190,16 @@ export function createNotionMock(initialState, onMutate) {
         return { status: 200, payload: pageRead(page) };
       }
 
-      // PATCH pages/{id} (properties update)
+      // GET pages/{id} (property read) — used by the server-fresh Attempts
+      // read that runs immediately before the properties PATCH (issue #1).
       m = endpoint.match(/^pages\/([^/?]+)$/);
+      if (m && method === "GET") {
+        const page = state.pages[m[1]];
+        if (!page) return { status: 404, payload: { message: "page not found", code: "object_not_found" } };
+        return { status: 200, payload: pageRead(page) };
+      }
+
+      // PATCH pages/{id} (properties update)
       if (m && method === "PATCH") {
         const page = state.pages[m[1]];
         if (!page) return { status: 404, payload: { message: "page not found", code: "object_not_found" } };
