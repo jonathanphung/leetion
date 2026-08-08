@@ -274,42 +274,92 @@ async function handleVerifyConnection(data) {
 // NOTION API - QUERIES
 
 /**
- * Ensures all required database columns exist, creating missing ones.
+ * Inspects the database schema against DATABASE_SCHEMA. Read-only: never
+ * modifies the database.
+ *
+ * The title column is special: every Notion database has exactly one title
+ * property and a second one can never be created, so instead of requiring the
+ * name "Question" we map to whatever the database's title column is named
+ * (e.g. "Name" in databases created from older setup instructions).
+ *
+ * Returns:
+ *   ok: false + error          — schema could not be read
+ *   ok: true +
+ *     titlePropertyName        — actual name of the database's title column
+ *     missing                  — { name: config } columns absent by name
+ *     mismatches               — [{ name, expected, actual }] present by name
+ *                                but with the wrong Notion type
+ *     similarExisting          — { missingName: [existing same-type column
+ *                                names] } possible duplicates to warn about
  */
-async function ensureDatabaseSchema(apiKey, databaseId) {
+async function inspectDatabaseSchema(apiKey, databaseId) {
   try {
-    // Get current database schema
     const db = await notionRequest(`databases/${databaseId}`, apiKey, "GET");
     const existingProps = db.properties || {};
 
-    // Find missing properties
-    const missingProps = {};
-    for (const [name, config] of Object.entries(DATABASE_SCHEMA)) {
-      if (!existingProps[name]) {
-        missingProps[name] = config;
-        console.log(`Leetion: Will create missing column: ${name}`);
+    let titlePropertyName = "Question";
+    for (const [name, prop] of Object.entries(existingProps)) {
+      if (prop.type === "title") {
+        titlePropertyName = name;
+        break;
       }
     }
 
-    // Create missing properties if any
-    if (Object.keys(missingProps).length > 0) {
-      console.log(
-        `Leetion: Creating ${
-          Object.keys(missingProps).length
-        } missing columns...`,
-      );
-      await notionRequest(`databases/${databaseId}`, apiKey, "PATCH", {
-        properties: missingProps,
-      });
-      console.log("Leetion: Database schema updated successfully");
+    const schemaNames = new Set(Object.keys(DATABASE_SCHEMA));
+    const missing = {};
+    const mismatches = [];
+    const similarExisting = {};
+
+    for (const [name, config] of Object.entries(DATABASE_SCHEMA)) {
+      if (config.type === "title") continue; // mapped via titlePropertyName
+
+      const existing = existingProps[name];
+      if (!existing) {
+        missing[name] = config;
+        // Existing columns of the same type that Leetion does not own —
+        // likely duplicates from manually-created schemas (e.g. a "Date"
+        // date column vs Leetion's "Date (of first attempt)").
+        const similar = Object.entries(existingProps)
+          .filter(
+            ([propName, prop]) =>
+              prop.type === config.type &&
+              !schemaNames.has(propName) &&
+              propName !== titlePropertyName,
+          )
+          .map(([propName]) => propName);
+        if (similar.length > 0) similarExisting[name] = similar;
+      } else if (existing.type !== config.type) {
+        mismatches.push({
+          name,
+          expected: config.type,
+          actual: existing.type,
+        });
+      }
     }
 
-    return { success: true, created: Object.keys(missingProps) };
+    return { ok: true, titlePropertyName, missing, mismatches, similarExisting };
   } catch (error) {
-    console.error("Leetion: Error ensuring schema:", error);
-    // Don't throw - let the save continue and fail on specific properties if needed
-    return { success: false, error: error.message };
+    console.error("Leetion: Error inspecting schema:", error);
+    return { ok: false, error: error.message };
   }
+}
+
+/**
+ * Creates the given missing columns. Only ever adds columns — existing
+ * columns are never renamed, retyped, or deleted. Throws on API failure so
+ * callers can surface the error instead of hitting an opaque page-write
+ * error later.
+ */
+async function ensureDatabaseSchema(apiKey, databaseId, missingProps) {
+  const names = Object.keys(missingProps);
+  if (names.length === 0) return { created: [] };
+
+  console.log(`Leetion: Creating ${names.length} missing columns:`, names);
+  await notionRequest(`databases/${databaseId}`, apiKey, "PATCH", {
+    properties: missingProps,
+  });
+  console.log("Leetion: Database schema updated successfully");
+  return { created: names };
 }
 
 async function checkExistingProblem(data) {
@@ -565,21 +615,98 @@ function solutionGroupsToSnapshots(groups, fallbackTimestampMs) {
 /**
  * Saves or updates a problem in Notion.
  * Smart update: preserves solutions in different languages.
- * Auto-creates missing database columns.
+ * Missing database columns are only created after the user confirms the
+ * list in the popup (data.confirmSchemaChanges) — never silently.
  */
 async function saveToNotion(data) {
-  const { apiKey, databaseId, problem, existingPageId, spacedRepetitionDays } =
-    data;
+  const {
+    apiKey,
+    databaseId,
+    problem,
+    existingPageId,
+    spacedRepetitionDays,
+    confirmSchemaChanges,
+  } = data;
 
-  // Ensure all required columns exist (auto-create if missing)
-  await ensureDatabaseSchema(apiKey, databaseId);
+  // Inspect the schema first (read-only). Columns are only created after the
+  // user has confirmed the exact list in the popup (confirmSchemaChanges).
+  const schema = await inspectDatabaseSchema(apiKey, databaseId);
+
+  let titlePropertyName = "Question";
+  let schemaCreated = [];
+  let schemaWarning = null;
+
+  if (!schema.ok) {
+    // Could not read the schema (e.g. transient network error). Attempt the
+    // save anyway — the columns may already exist — but surface the problem
+    // instead of swallowing it.
+    schemaWarning = `Could not verify database columns: ${schema.error}`;
+  } else {
+    titlePropertyName = schema.titlePropertyName;
+  }
 
   const cleanedCode = cleanCode(problem.code);
   const properties = buildProperties(
     problem,
     existingPageId,
     spacedRepetitionDays,
+    titlePropertyName,
   );
+
+  if (schema.ok) {
+    // A column that exists under the required name but with the wrong Notion
+    // type would make the page write fail with an opaque error. Fail fast
+    // with a clear message when this save actually writes that column.
+    const blockingMismatches = schema.mismatches.filter(
+      (m) => properties[m.name] !== undefined,
+    );
+    if (blockingMismatches.length > 0) {
+      const detail = blockingMismatches
+        .map((m) => `"${m.name}" is ${m.actual} but Leetion needs ${m.expected}`)
+        .join("; ");
+      return {
+        success: false,
+        error: `Wrong column type in Notion: ${detail}. Change the column type in Notion (or rename the column), then save again.`,
+      };
+    }
+    if (schema.mismatches.length > 0) {
+      // Mismatched columns this save does not write: report, don't block.
+      schemaWarning = schema.mismatches
+        .map((m) => `Column "${m.name}" is ${m.actual} but Leetion expects ${m.expected}`)
+        .join("; ");
+    }
+
+    const missingNames = Object.keys(schema.missing);
+    if (missingNames.length > 0) {
+      if (!confirmSchemaChanges) {
+        // Never create columns silently — ask the popup to show the user
+        // exactly what would be created (and any same-type columns that
+        // might already serve that purpose).
+        return {
+          success: false,
+          needsSchemaConfirmation: true,
+          missingColumns: missingNames.map((name) => ({
+            name,
+            type: schema.missing[name].type,
+            similarExisting: schema.similarExisting[name] || [],
+          })),
+        };
+      }
+      try {
+        const result = await ensureDatabaseSchema(
+          apiKey,
+          databaseId,
+          schema.missing,
+        );
+        schemaCreated = result.created;
+      } catch (error) {
+        return {
+          success: false,
+          error: `Could not add columns (${missingNames.join(", ")}): ${error.message}`,
+        };
+      }
+    }
+  }
 
   // Determine if we have new content to save
   // Only snapshots count as "new code" - current editor code is just a preview
@@ -594,9 +721,10 @@ async function saveToNotion(data) {
         databaseId,
         problem,
         spacedRepetitionDays,
+        titlePropertyName,
       );
       pageId = updateResult.pageId;
-      return updateResult;
+      return { ...updateResult, schemaCreated, schemaWarning };
     } else {
       // CREATE new page
       const children = buildPageContent({ ...problem, code: cleanedCode });
@@ -608,6 +736,8 @@ async function saveToNotion(data) {
       pageId,
       updated: !!existingPageId,
       contentUpdated: true, // For new pages, content is always new
+      schemaCreated,
+      schemaWarning,
     };
   } catch (error) {
     console.error("Leetion: Save error:", error);
@@ -621,6 +751,7 @@ async function updatePageContent(
   databaseId,
   problem,
   spacedRepetitionDays,
+  titlePropertyName,
 ) {
   try {
     const cleanedCode = cleanCode(problem.code);
@@ -628,6 +759,7 @@ async function updatePageContent(
       problem,
       existingPageId,
       spacedRepetitionDays,
+      titlePropertyName,
     );
 
     // Always update properties (Tags, Status, etc.)
@@ -934,9 +1066,16 @@ function splitRichText(text, maxLength = NOTION_RICH_TEXT_LIMIT) {
   return chunks;
 }
 
-function buildProperties(problem, existingPageId, spacedRepetitionDays) {
+function buildProperties(
+  problem,
+  existingPageId,
+  spacedRepetitionDays,
+  titlePropertyName = "Question",
+) {
   const properties = {
-    Question: {
+    // The title is written to the database's actual title column, which may
+    // have a different name in user-created databases (e.g. "Name").
+    [titlePropertyName]: {
       title: [{ text: { content: problem.title || "Untitled Problem" } }],
     },
   };

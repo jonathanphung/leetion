@@ -808,6 +808,25 @@
             </svg>
             <span>Save to Notion</span>
           </button>
+          <div id="schema-confirm" class="schema-confirm hidden">
+            <p class="schema-confirm-title">
+              Your Notion database is missing columns Leetion uses:
+            </p>
+            <ul id="schema-confirm-list" class="schema-confirm-list"></ul>
+            <p class="schema-confirm-note">
+              Leetion never renames or deletes your existing columns. If a
+              column marked "existing" above is a duplicate, cancel and tidy
+              it up in Notion first.
+            </p>
+            <div class="schema-confirm-actions">
+              <button id="btn-schema-cancel" class="schema-confirm-cancel">
+                Cancel
+              </button>
+              <button id="btn-schema-create" class="btn-primary">
+                Add columns &amp; save
+              </button>
+            </div>
+          </div>
           <div id="save-status" class="status-message hidden"></div>
         </footer>
       </section>

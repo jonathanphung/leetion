@@ -194,6 +194,10 @@ const DOM = {
   save: {
     btn: document.getElementById("btn-save"),
     status: document.getElementById("save-status"),
+    schemaConfirm: document.getElementById("schema-confirm"),
+    schemaList: document.getElementById("schema-confirm-list"),
+    schemaCreateBtn: document.getElementById("btn-schema-create"),
+    schemaCancelBtn: document.getElementById("btn-schema-cancel"),
   },
   stats: {
     modal: document.getElementById("stats-modal"),
@@ -1033,8 +1037,12 @@ async function checkExistingEntry() {
 
 /**
  * Saves problem to Notion.
+ * @param {boolean} confirmSchemaChanges - True only when the user has just
+ *   confirmed the missing-columns warning; lets the background create them.
  */
-async function saveToNotion() {
+async function saveToNotion(confirmSchemaChanges = false) {
+  hideSchemaConfirmation();
+
   const settings = await chrome.storage.sync.get([
     "notionApiKey",
     "notionDatabaseId",
@@ -1081,6 +1089,7 @@ async function saveToNotion() {
         databaseId: settings.notionDatabaseId,
         existingPageId,
         spacedRepetitionDays: spacedRepDays,
+        confirmSchemaChanges: confirmSchemaChanges === true,
         problem: {
           number: problemData.number,
           title: problemData.title,
@@ -1120,6 +1129,15 @@ async function saveToNotion() {
       } else {
         message = "Saved to Notion!";
       }
+      if (response.schemaCreated?.length > 0) {
+        message += ` Added ${response.schemaCreated.length} column${
+          response.schemaCreated.length === 1 ? "" : "s"
+        }: ${response.schemaCreated.join(", ")}`;
+      }
+      if (response.schemaWarning) {
+        console.warn("Leetion: Schema warning:", response.schemaWarning);
+        message += " (column check warning — see extension console)";
+      }
       showStatus(DOM.save.status, message, "success");
 
       await clearPersistedFormState(problemData.number);
@@ -1143,6 +1161,8 @@ async function saveToNotion() {
         updateSaveButton(true);
         DOM.quickActions.card?.classList.remove("hidden");
       }
+    } else if (response.needsSchemaConfirmation) {
+      showSchemaConfirmation(response.missingColumns || []);
     } else {
       showStatus(DOM.save.status, response.error || "Failed", "error");
     }
@@ -1168,6 +1188,39 @@ function showStatus(el, msg, type) {
   el.classList.add(`status-${type}`);
   el.textContent = msg;
   setTimeout(() => el.classList.add("hidden"), 4000);
+}
+
+/**
+ * Shows the one-time warning listing the Notion columns Leetion is about to
+ * create, before creating them. Columns are only created after the user
+ * clicks "Add columns & save".
+ * @param {Array<{name: string, type: string, similarExisting: string[]}>} columns
+ */
+function showSchemaConfirmation(columns) {
+  if (!DOM.save.schemaConfirm || !DOM.save.schemaList) return;
+
+  // Built with textContent (not innerHTML): names come from the user's
+  // Notion database and must be treated as plain text.
+  DOM.save.schemaList.replaceChildren();
+  for (const col of columns) {
+    const li = document.createElement("li");
+    li.textContent = `${col.name} (${col.type.replace(/_/g, " ")})`;
+    if (col.similarExisting?.length > 0) {
+      const hint = document.createElement("span");
+      hint.className = "schema-confirm-similar";
+      hint.textContent = ` — existing ${col.type.replace(/_/g, " ")} column${
+        col.similarExisting.length === 1 ? "" : "s"
+      }: ${col.similarExisting.join(", ")}`;
+      li.appendChild(hint);
+    }
+    DOM.save.schemaList.appendChild(li);
+  }
+
+  DOM.save.schemaConfirm.classList.remove("hidden");
+}
+
+function hideSchemaConfirmation() {
+  DOM.save.schemaConfirm?.classList.add("hidden");
 }
 
 /**
@@ -1287,8 +1340,21 @@ function setupEventListeners() {
   DOM.form.altMethods?.addEventListener("blur", persistFormState);
   DOM.form.done?.addEventListener("change", persistFormState);
 
-  // Save
-  DOM.save.btn?.addEventListener("click", saveToNotion);
+  // Save (wrapped so the click event isn't passed as confirmSchemaChanges)
+  DOM.save.btn?.addEventListener("click", () => saveToNotion());
+
+  // Schema confirmation (missing Notion columns warning)
+  DOM.save.schemaCreateBtn?.addEventListener("click", () =>
+    saveToNotion(true),
+  );
+  DOM.save.schemaCancelBtn?.addEventListener("click", () => {
+    hideSchemaConfirmation();
+    showStatus(
+      DOM.save.status,
+      "Save canceled — no columns were added",
+      "error",
+    );
+  });
 
   // Stats modal
   DOM.stats.openBtn?.addEventListener("click", openStatsModal);
