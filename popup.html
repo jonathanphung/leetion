@@ -342,7 +342,11 @@
             <h2 id="problem-title" class="problem-title">Loading problem...</h2>
             <!-- Problem Stats -->
             <div id="problem-stats" class="problem-stats hidden">
-              <span class="stat" id="stat-attempts" title="Your Attempts">
+              <span
+                class="stat"
+                id="stat-attempts"
+                title="Times you have attempted this problem"
+              >
                 <svg
                   width="12"
                   height="12"
@@ -355,17 +359,9 @@
                     d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"
                   />
                 </svg>
-                <span class="stat-label">Attempts:</span>
-                <span>--</span>
+                <span class="attempt-label">Attempts</span>
+                <span class="attempt-count" id="attempt-count">--</span>
               </span>
-              <button
-                type="button"
-                id="btn-attempt-plus"
-                class="attempt-plus-btn"
-                title="Add one attempt (updates Attempts only — review date untouched)"
-              >
-                +1
-              </button>
             </div>
           </article>
 
@@ -382,8 +378,8 @@
                 title="Set review for tomorrow"
               >
                 <svg
-                  width="16"
-                  height="16"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -395,7 +391,7 @@
                   <line x1="3" y1="10" x2="21" y2="10" />
                   <path d="M9 16l2 2 4-4" />
                 </svg>
-                Review Tomorrow
+                Tomorrow
               </button>
               <button
                 type="button"
@@ -404,8 +400,8 @@
                 title="Reset spaced repetition"
               >
                 <svg
-                  width="16"
-                  height="16"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -417,7 +413,16 @@
                     d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"
                   />
                 </svg>
-                Revisit (Reset)
+                Revisit
+              </button>
+              <button
+                type="button"
+                id="btn-attempt-plus"
+                class="quick-btn quick-btn-compact"
+                aria-label="Add one attempt"
+                title="Add one attempt — updates Attempts only, review date untouched"
+              >
+                +1
               </button>
             </div>
           </article>

@@ -641,32 +641,26 @@ body {
   color: var(--text-tertiary);
 }
 
-.stat .stat-label {
+/* Deliberately NOT `.stat-label` — that class belongs to the stats-dashboard
+   grid (9px, uppercase, margin-top: 6px), and reusing it here knocked the
+   label 6px below its own count inside this center-aligned flex row. */
+.stat .attempt-label {
   color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.attempt-plus-btn {
-  margin-left: auto;
-  padding: 2px 10px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-secondary);
-  font-size: 11px;
+.stat .attempt-count {
+  color: var(--text-primary);
+  font-size: 13px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.attempt-plus-btn:hover {
-  background: var(--bg-elevated);
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.attempt-plus-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  line-height: 1;
+  /* Equal-width digits: the count changes in place on +1 / Revisit, and
+     proportional digits make the row twitch as it crosses 1 → 10 → 100. */
+  font-variant-numeric: tabular-nums;
 }
 
 .card-quick-actions {
@@ -685,6 +679,9 @@ body {
   justify-content: center;
   gap: 6px;
   padding: 8px 12px;
+  /* Three pills share this row at a 400px popup width — without this the
+     longest label wraps and drags every sibling to double height. */
+  white-space: nowrap;
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -704,6 +701,15 @@ body {
 .quick-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Third pill in the row. Opts out of `flex: 1` so it stays a compact counter
+   bump next to the two full-width scheduling actions. */
+.quick-btn-compact {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .quick-btn-success {

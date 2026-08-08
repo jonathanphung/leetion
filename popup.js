@@ -134,7 +134,7 @@ const DOM = {
     questionPreview: document.getElementById("question-preview"),
     statsContainer: document.getElementById("problem-stats"),
     statAttempts: document.getElementById("stat-attempts"),
-    attemptPlusBtn: document.getElementById("btn-attempt-plus"),
+    attemptCount: document.getElementById("attempt-count"),
     // Empty/filled state containers
     codeEmpty: document.getElementById("code-empty"),
     codeFilled: document.getElementById("code-filled"),
@@ -158,6 +158,7 @@ const DOM = {
     card: document.getElementById("card-quick-actions"),
     markReview: document.getElementById("btn-mark-review"),
     revisit: document.getElementById("btn-revisit"),
+    attemptPlus: document.getElementById("btn-attempt-plus"),
   },
   complexity: {
     time: document.getElementById("input-time-complexity"),
@@ -1137,7 +1138,7 @@ function setupEventListeners() {
   DOM.quickActions.revisit?.addEventListener("click", revisitProblem);
 
   // Manual +1 attempt (stats row, existing entries only)
-  DOM.problem.attemptPlusBtn?.addEventListener("click", addManualAttempt);
+  DOM.quickActions.attemptPlus?.addEventListener("click", addManualAttempt);
 
   // Complexity - auto-suggest and persist
   DOM.complexity.time?.addEventListener("change", () => {
@@ -1394,7 +1395,7 @@ async function revisitProblem() {
 }
 
 /**
- * Manually adds one attempt (the "+1" control in the stats row).
+ * Manually adds one attempt (the "+1" pill in the quick-actions row).
  * Updates ONLY the "Attempts" property via the lightweight background
  * `updateAttempts` action — the "Spaced Repetition" date is untouched.
  * The count is bumped optimistically and rolled back on failure
@@ -1409,7 +1410,7 @@ async function addManualAttempt() {
     return;
   }
 
-  const btn = DOM.problem.attemptPlusBtn;
+  const btn = DOM.quickActions.attemptPlus;
   const previousCount = userAttemptCount;
 
   userAttemptCount++;
@@ -1457,10 +1458,8 @@ async function addManualAttempt() {
  * Updates the attempt count display.
  */
 function updateAttemptDisplay() {
-  const attemptSpan =
-    DOM.problem.statAttempts?.querySelector("span:last-child");
-  if (attemptSpan) {
-    attemptSpan.textContent = userAttemptCount.toString();
+  if (DOM.problem.attemptCount) {
+    DOM.problem.attemptCount.textContent = userAttemptCount.toString();
   }
 }
 
@@ -1507,7 +1506,8 @@ function suggestComplexity() {
  * Updates the problem stats row.
  * Attempts is the only live stat — the acceptance-rate / total-submissions
  * extractors never fire in the popup's scraper, so those spans were removed.
- * The row (count + manual "+1" control) is shown only for existing entries.
+ * Shown only for existing entries; the manual "+1" control that bumps this
+ * count lives in the quick-actions row, which gates on the same condition.
  */
 function updateProblemStats() {
   if (!existingPageId) {
