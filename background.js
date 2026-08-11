@@ -1158,7 +1158,7 @@ function buildProperties(
 
   if (!existingPageId) {
     properties["Date (of first attempt)"] = {
-      date: { start: new Date().toISOString().split("T")[0] },
+      date: { start: localDateString() },
     };
   }
 
@@ -1188,9 +1188,7 @@ function buildProperties(
     typeof spacedRepetitionDays,
   );
   if (spacedRepetitionDays && spacedRepetitionDays > 0) {
-    const reviewDate = new Date();
-    reviewDate.setDate(reviewDate.getDate() + spacedRepetitionDays);
-    const dateStr = reviewDate.toISOString().split("T")[0];
+    const dateStr = localDateInDays(spacedRepetitionDays);
     console.log("Leetion: Setting Spaced Repetition to:", dateStr);
     properties["Spaced Repetition"] = { date: { start: dateStr } };
   } else {
@@ -1210,22 +1208,34 @@ async function fetchCurrentAttempts(apiKey, pageId) {
 }
 
 /**
- * Updates only the spaced repetition date for a page.
- * `days` of 0 (or less) means reviews are disabled for that expertise level:
- * no date is written, matching the `> 0` guard in buildProperties.
+ * Updates only the spaced repetition date (and optionally Attempts) for a page.
+ *
+ * The date intent is explicit rather than inferred from a single number,
+ * because "no date change" and "due today" are different intents that a
+ * `days` value alone cannot express:
+ *
+ *   - `setToday: true` — write TODAY's local calendar day ("review this now").
+ *     Takes precedence over `days` and never consults the expertise interval.
+ *   - `days > 0`       — write today + `days` (Review Tomorrow, save path).
+ *   - neither          — leave the date untouched; reviews are disabled for
+ *                        that expertise level, matching the `> 0` guard in
+ *                        buildProperties.
  */
 async function updateSpacedRepetition(data) {
-  const { apiKey, pageId, days, attempts } = data;
+  const { apiKey, pageId, days, attempts, setToday } = data;
 
   try {
     const properties = {};
     let dateStr = null;
 
     // Set new spaced repetition date
-    if (days && days > 0) {
-      const reviewDate = new Date();
-      reviewDate.setDate(reviewDate.getDate() + days);
-      dateStr = reviewDate.toISOString().split("T")[0];
+    if (setToday) {
+      dateStr = localDateString();
+      properties["Spaced Repetition"] = { date: { start: dateStr } };
+
+      console.log("Leetion: Setting Spaced Repetition to today:", dateStr);
+    } else if (days && days > 0) {
+      dateStr = localDateInDays(days);
       properties["Spaced Repetition"] = { date: { start: dateStr } };
 
       console.log("Leetion: Updating Spaced Repetition to:", dateStr);
@@ -1725,6 +1735,39 @@ function parseRichText(text) {
 
 // UTILITIES
 
+/**
+ * A Date rendered as a bare `YYYY-MM-DD` calendar day in the user's LOCAL
+ * timezone.
+ *
+ * `new Date().toISOString().split("T")[0]` is the UTC day, which is a
+ * different day from the user's for most of the clock: at UTC-5, 8pm local
+ * is already tomorrow in UTC (a review "due today" lands a day late); at
+ * UTC+9, 7am local is still yesterday in UTC (a review lands a day early and
+ * the due query misses it). Notion's date property stores a bare calendar
+ * day with no timezone, so it has to be built from local components.
+ *
+ * @param {Date} [date] - defaults to now
+ * @returns {string} `YYYY-MM-DD`
+ */
+function localDateString(date = new Date()) {
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate(),
+  )}`;
+}
+
+/**
+ * The local calendar day `days` days from now. `localDateInDays(0)` is today.
+ *
+ * @param {number} days
+ * @returns {string} `YYYY-MM-DD`
+ */
+function localDateInDays(days) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  return localDateString(date);
+}
+
 function cleanCode(code) {
   if (!code) return "";
   return code
@@ -1815,7 +1858,7 @@ async function checkDueReviews() {
       return;
     }
 
-    const today = new Date().toISOString().split("T")[0];
+    const today = localDateString();
     console.log("Querying for date:", today);
 
     const response = await notionRequest(
@@ -1882,7 +1925,7 @@ async function handleGetStats(data) {
       medium = 0,
       hard = 0,
       dueForReview = 0;
-    const today = new Date().toISOString().split("T")[0];
+    const today = localDateString();
 
     results.forEach((page) => {
       const props = page.properties;

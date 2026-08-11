@@ -1612,29 +1612,26 @@ async function markForReviewTomorrow() {
 }
 
 /**
- * Resets spaced repetition using the interval for this entry's expertise.
+ * Sets spaced repetition to TODAY — "review this now".
+ *
+ * Deliberately independent of the per-expertise intervals: those govern the
+ * save path (issue #3), where the question is "when should I see this next?".
+ * Here the user has just decided they need another pass, so the answer is
+ * always today's review queue — pushing it 1-7 days out (or skipping the
+ * write entirely when that expertise's interval is 0) defeats the button.
  */
 async function revisitProblem() {
   if (!existingPageId) return;
 
-  const settings = await chrome.storage.sync.get([
-    "notionApiKey",
-    INTERVALS_KEY,
-    LEGACY_INTERVAL_KEY,
-  ]);
+  const settings = await chrome.storage.sync.get(["notionApiKey"]);
   if (!settings.notionApiKey) {
     showStatus(DOM.save.status, "Configure API key first", "error");
     return;
   }
 
-  const days = intervalForExpertise(
-    resolveReviewIntervals(settings),
-    selectedExpertise,
-  );
-
   try {
     DOM.quickActions.revisit.disabled = true;
-    DOM.quickActions.revisit.textContent = "Resetting...";
+    DOM.quickActions.revisit.textContent = "Setting...";
 
     userAttemptCount++;
 
@@ -1643,7 +1640,7 @@ async function revisitProblem() {
       data: {
         apiKey: settings.notionApiKey,
         pageId: existingPageId,
-        days: days,
+        setToday: true,
         attempts: userAttemptCount,
       },
     });
@@ -1652,13 +1649,7 @@ async function revisitProblem() {
       DOM.quickActions.revisit.classList.add("quick-btn-success");
       DOM.quickActions.markReview.classList.remove("quick-btn-success");
       updateAttemptDisplay();
-      showStatus(
-        DOM.save.status,
-        days > 0
-          ? `Reset! Next review in ${days} day${days === 1 ? "" : "s"}`
-          : `Attempt logged — reviews are off for ${selectedExpertise} expertise`,
-        "success",
-      );
+      showStatus(DOM.save.status, "Reset! Due today", "success");
     } else {
       userAttemptCount--;
       showStatus(
@@ -1678,7 +1669,7 @@ async function revisitProblem() {
         <path d="M1 20v-6h6"/>
         <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
       </svg>
-      Revisit
+      Review Today
     `;
   }
 }
