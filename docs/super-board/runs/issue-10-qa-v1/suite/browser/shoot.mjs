@@ -43,7 +43,7 @@ const SHOTS = [
   ["03-revisit-intervals-0-0-0.png", "?demo=revisit&intervals=0,0,0", "AC3 — same result with every interval disabled"],
   ["04-due-today-alarm.png", "?demo=due&intervals=1,3,7", "AC6 — the hourly alarm sees it as due the same day"],
   ["05-review-tomorrow.png", "?demo=tomorrow", "AC7 — Review Tomorrow still writes today+1"],
-  ["06-revisit-failure-rollback.png", "?demo=revisit&fail=1", "AC5 — a failed write rolls the count back and reports the error"],
+  ["06-revisit-failure-rollback.png", "?demo=revisit&fail=1", "AC5 — a failed write leaves date and Attempts alone and reports the error"],
 ];
 
 const userDataDir = path.join(

@@ -1,5 +1,5 @@
 super-board QA — issue #10 · Revisit sets Spaced Repetition to today
-node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktrees\issue-10-qa\background.js
+node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\background.js
 ==============================================================================
 
 ### new-york-evening  [TZ=America/New_York]  frozen at 2026-08-11T01:00:00Z
@@ -18,6 +18,7 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC1] page 'Spaced Repetition' after the write
     PASS  [AC1] the stale 2026-09-30 date was replaced
     PASS  [AC1] unrelated properties untouched
+    PASS  [AC5] Attempts is not part of the write
   S3
     PASS  [AC3] setToday wins over no days field at all
     PASS  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
@@ -27,9 +28,11 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC3] setToday wins over days:null
     PASS  [AC3] intervals stored as 0/0/0 do not suppress the write
   S4
-    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
-    PASS  [AC5] second Revisit -> 5
+    PASS  [AC5] Attempts stays 3 after Review Today
+    PASS  [AC5] no Attempts property in the PATCH body
+    PASS  [AC5] second click still leaves Attempts at 3
     PASS  [AC5] date still today after the second click
+    PASS  [AC5] an explicit attempts value is still written
     PASS  [AC5] a failed PATCH reports success:false
     PASS  [AC5] a failed PATCH leaves Attempts alone
     PASS  [AC5] a failed PATCH leaves the date alone
@@ -82,6 +85,7 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC1] page 'Spaced Repetition' after the write
     PASS  [AC1] the stale 2026-09-30 date was replaced
     PASS  [AC1] unrelated properties untouched
+    PASS  [AC5] Attempts is not part of the write
   S3
     PASS  [AC3] setToday wins over no days field at all
     PASS  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
@@ -91,9 +95,11 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC3] setToday wins over days:null
     PASS  [AC3] intervals stored as 0/0/0 do not suppress the write
   S4
-    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
-    PASS  [AC5] second Revisit -> 5
+    PASS  [AC5] Attempts stays 3 after Review Today
+    PASS  [AC5] no Attempts property in the PATCH body
+    PASS  [AC5] second click still leaves Attempts at 3
     PASS  [AC5] date still today after the second click
+    PASS  [AC5] an explicit attempts value is still written
     PASS  [AC5] a failed PATCH reports success:false
     PASS  [AC5] a failed PATCH leaves Attempts alone
     PASS  [AC5] a failed PATCH leaves the date alone
@@ -146,6 +152,7 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC1] page 'Spaced Repetition' after the write
     PASS  [AC1] the stale 2026-09-30 date was replaced
     PASS  [AC1] unrelated properties untouched
+    PASS  [AC5] Attempts is not part of the write
   S3
     PASS  [AC3] setToday wins over no days field at all
     PASS  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
@@ -155,9 +162,11 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC3] setToday wins over days:null
     PASS  [AC3] intervals stored as 0/0/0 do not suppress the write
   S4
-    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
-    PASS  [AC5] second Revisit -> 5
+    PASS  [AC5] Attempts stays 3 after Review Today
+    PASS  [AC5] no Attempts property in the PATCH body
+    PASS  [AC5] second click still leaves Attempts at 3
     PASS  [AC5] date still today after the second click
+    PASS  [AC5] an explicit attempts value is still written
     PASS  [AC5] a failed PATCH reports success:false
     PASS  [AC5] a failed PATCH leaves Attempts alone
     PASS  [AC5] a failed PATCH leaves the date alone
@@ -210,6 +219,7 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC1] page 'Spaced Repetition' after the write
     PASS  [AC1] the stale 2026-09-30 date was replaced
     PASS  [AC1] unrelated properties untouched
+    PASS  [AC5] Attempts is not part of the write
   S3
     PASS  [AC3] setToday wins over no days field at all
     PASS  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
@@ -219,9 +229,11 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC3] setToday wins over days:null
     PASS  [AC3] intervals stored as 0/0/0 do not suppress the write
   S4
-    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
-    PASS  [AC5] second Revisit -> 5
+    PASS  [AC5] Attempts stays 3 after Review Today
+    PASS  [AC5] no Attempts property in the PATCH body
+    PASS  [AC5] second click still leaves Attempts at 3
     PASS  [AC5] date still today after the second click
+    PASS  [AC5] an explicit attempts value is still written
     PASS  [AC5] a failed PATCH reports success:false
     PASS  [AC5] a failed PATCH leaves Attempts alone
     PASS  [AC5] a failed PATCH leaves the date alone
@@ -274,6 +286,7 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC1] page 'Spaced Repetition' after the write
     PASS  [AC1] the stale 2026-09-30 date was replaced
     PASS  [AC1] unrelated properties untouched
+    PASS  [AC5] Attempts is not part of the write
   S3
     PASS  [AC3] setToday wins over no days field at all
     PASS  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
@@ -283,9 +296,11 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC3] setToday wins over days:null
     PASS  [AC3] intervals stored as 0/0/0 do not suppress the write
   S4
-    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
-    PASS  [AC5] second Revisit -> 5
+    PASS  [AC5] Attempts stays 3 after Review Today
+    PASS  [AC5] no Attempts property in the PATCH body
+    PASS  [AC5] second click still leaves Attempts at 3
     PASS  [AC5] date still today after the second click
+    PASS  [AC5] an explicit attempts value is still written
     PASS  [AC5] a failed PATCH reports success:false
     PASS  [AC5] a failed PATCH leaves Attempts alone
     PASS  [AC5] a failed PATCH leaves the date alone
@@ -338,6 +353,7 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC1] page 'Spaced Repetition' after the write
     PASS  [AC1] the stale 2026-09-30 date was replaced
     PASS  [AC1] unrelated properties untouched
+    PASS  [AC5] Attempts is not part of the write
   S3
     PASS  [AC3] setToday wins over no days field at all
     PASS  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
@@ -347,9 +363,11 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC3] setToday wins over days:null
     PASS  [AC3] intervals stored as 0/0/0 do not suppress the write
   S4
-    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
-    PASS  [AC5] second Revisit -> 5
+    PASS  [AC5] Attempts stays 3 after Review Today
+    PASS  [AC5] no Attempts property in the PATCH body
+    PASS  [AC5] second click still leaves Attempts at 3
     PASS  [AC5] date still today after the second click
+    PASS  [AC5] an explicit attempts value is still written
     PASS  [AC5] a failed PATCH reports success:false
     PASS  [AC5] a failed PATCH leaves Attempts alone
     PASS  [AC5] a failed PATCH leaves the date alone
@@ -402,6 +420,7 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC1] page 'Spaced Repetition' after the write
     PASS  [AC1] the stale 2026-09-30 date was replaced
     PASS  [AC1] unrelated properties untouched
+    PASS  [AC5] Attempts is not part of the write
   S3
     PASS  [AC3] setToday wins over no days field at all
     PASS  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
@@ -411,9 +430,11 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC3] setToday wins over days:null
     PASS  [AC3] intervals stored as 0/0/0 do not suppress the write
   S4
-    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
-    PASS  [AC5] second Revisit -> 5
+    PASS  [AC5] Attempts stays 3 after Review Today
+    PASS  [AC5] no Attempts property in the PATCH body
+    PASS  [AC5] second click still leaves Attempts at 3
     PASS  [AC5] date still today after the second click
+    PASS  [AC5] an explicit attempts value is still written
     PASS  [AC5] a failed PATCH reports success:false
     PASS  [AC5] a failed PATCH leaves Attempts alone
     PASS  [AC5] a failed PATCH leaves the date alone
@@ -466,6 +487,7 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC1] page 'Spaced Repetition' after the write
     PASS  [AC1] the stale 2026-09-30 date was replaced
     PASS  [AC1] unrelated properties untouched
+    PASS  [AC5] Attempts is not part of the write
   S3
     PASS  [AC3] setToday wins over no days field at all
     PASS  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
@@ -475,9 +497,11 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC3] setToday wins over days:null
     PASS  [AC3] intervals stored as 0/0/0 do not suppress the write
   S4
-    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
-    PASS  [AC5] second Revisit -> 5
+    PASS  [AC5] Attempts stays 3 after Review Today
+    PASS  [AC5] no Attempts property in the PATCH body
+    PASS  [AC5] second click still leaves Attempts at 3
     PASS  [AC5] date still today after the second click
+    PASS  [AC5] an explicit attempts value is still written
     PASS  [AC5] a failed PATCH reports success:false
     PASS  [AC5] a failed PATCH leaves Attempts alone
     PASS  [AC5] a failed PATCH leaves the date alone
@@ -515,11 +539,11 @@ node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktree
     PASS  [AC3] save path with interval 0 writes no review date
 
 ==============================================================================
-Scenarios: 8   Assertions: 408   Failures: 0
+Scenarios: 8   Assertions: 432   Failures: 0
   AC1    56 pass  0 fail
   AC3    72 pass  0 fail
   AC4    32 pass  0 fail
-  AC5    48 pass  0 fail
+  AC5    72 pass  0 fail
   AC6   120 pass  0 fail
   AC7    32 pass  0 fail
   —      48 pass  0 fail

@@ -179,14 +179,13 @@ async function runScenario(name) {
     notion.reset();
     const res = await bg.send({
       action: "updateSpacedRepetition",
-      data: { apiKey: "qa-key", pageId: PAGE, setToday: true, attempts: 4 },
+      data: { apiKey: "qa-key", pageId: PAGE, setToday: true },
     });
     check("S2", "AC1", "message router reports success", res?.success, true);
     check("S2", "AC1", "response.date is the local today", res?.date, s.today);
     check("S2", "AC1", "exactly one PATCH reached Notion", notion.requestsFor(/^pages\//).length, 1);
     check("S2", "AC1", "PATCH body properties", notion.lastRequest().body.properties, {
       "Spaced Repetition": { date: { start: s.today } },
-      Attempts: { number: 4 },
     });
     // Read the stored page back through the API, not out of the request log.
     const page = await (await notion.fetch(`https://api.notion.com/v1/pages/${PAGE}`, { method: "GET" })).json();
@@ -195,6 +194,7 @@ async function runScenario(name) {
     });
     check("S2", "AC1", "the stale 2026-09-30 date was replaced", notion.reviewDate(PAGE), s.today);
     check("S2", "AC1", "unrelated properties untouched", page.properties.Done, { checkbox: false });
+    check("S2", "AC5", "Attempts is not part of the write", page.properties.Attempts, { number: 3 });
   });
 
   // ===== S3 — interval independence (AC3) ===================================
@@ -211,7 +211,7 @@ async function runScenario(name) {
       const { notion, bg } = boot(s.isoNow);
       const res = await bg.send({
         action: "updateSpacedRepetition",
-        data: { apiKey: "qa-key", pageId: PAGE, attempts: 4, ...extra },
+        data: { apiKey: "qa-key", pageId: PAGE, ...extra },
       });
       check("S3", "AC3", `setToday wins over ${label}`, [res.success, notion.reviewDate(PAGE)], [true, s.today]);
     }
@@ -222,33 +222,45 @@ async function runScenario(name) {
     });
     await bg.send({
       action: "updateSpacedRepetition",
-      data: { apiKey: "qa-key", pageId: PAGE, setToday: true, attempts: 4 },
+      data: { apiKey: "qa-key", pageId: PAGE, setToday: true },
     });
     check("S3", "AC3", "intervals stored as 0/0/0 do not suppress the write", notion.reviewDate(PAGE), s.today);
   });
 
-  // ===== S4 — Attempts rides along (AC5) ====================================
+  // ===== S4 — Review Today does NOT touch Attempts (AC5) ====================
+  // Scheduling a problem for review is not an attempt at it. Revisit sends no
+  // `attempts` field at all, so the count must survive any number of clicks.
   await section("S4", "AC5", async () => {
     const { notion, bg } = boot(s.isoNow);
     await bg.send({
       action: "updateSpacedRepetition",
-      data: { apiKey: "qa-key", pageId: PAGE, setToday: true, attempts: 4 },
+      data: { apiKey: "qa-key", pageId: PAGE, setToday: true },
     });
-    check("S4", "AC5", "Attempts 3 -> 4 in the same PATCH", notion.attempts(PAGE), 4);
+    check("S4", "AC5", "Attempts stays 3 after Review Today", notion.attempts(PAGE), 3);
+    check("S4", "AC5", "no Attempts property in the PATCH body", "Attempts" in notion.lastRequest().body.properties, false);
     await bg.send({
       action: "updateSpacedRepetition",
-      data: { apiKey: "qa-key", pageId: PAGE, setToday: true, attempts: 5 },
+      data: { apiKey: "qa-key", pageId: PAGE, setToday: true },
     });
-    check("S4", "AC5", "second Revisit -> 5", notion.attempts(PAGE), 5);
+    check("S4", "AC5", "second click still leaves Attempts at 3", notion.attempts(PAGE), 3);
     check("S4", "AC5", "date still today after the second click", notion.reviewDate(PAGE), s.today);
 
-    // Failure path: the popup rolls its optimistic count back only if the
-    // background reports failure, so the failure must surface as success:false.
+    // The handler itself still honours `attempts` when a caller sends one —
+    // the save path and the manual +1 rely on that. Only Revisit stopped.
+    const other = boot(s.isoNow);
+    await other.bg.send({
+      action: "updateSpacedRepetition",
+      data: { apiKey: "qa-key", pageId: PAGE, setToday: true, attempts: 4 },
+    });
+    check("S4", "AC5", "an explicit attempts value is still written", other.notion.attempts(PAGE), 4);
+
+    // Failure path: a Notion error must surface as success:false so the popup
+    // can report it, and must leave both the date and the count untouched.
     const fail = boot(s.isoNow);
     fail.notion.failNextWith(500, "Notion is down");
     const res = await fail.bg.send({
       action: "updateSpacedRepetition",
-      data: { apiKey: "qa-key", pageId: PAGE, setToday: true, attempts: 4 },
+      data: { apiKey: "qa-key", pageId: PAGE, setToday: true },
     });
     check("S4", "AC5", "a failed PATCH reports success:false", res.success, false);
     check("S4", "AC5", "a failed PATCH leaves Attempts alone", fail.notion.attempts(PAGE), 3);
@@ -263,7 +275,7 @@ async function runScenario(name) {
     const w = boot(writeAt);
     await w.bg.send({
       action: "updateSpacedRepetition",
-      data: { apiKey: "qa-key", pageId: PAGE, setToday: true, attempts: 4 },
+      data: { apiKey: "qa-key", pageId: PAGE, setToday: true },
     });
     check("S5", "AC6", "written at 00:05 local -> today", w.notion.reviewDate(PAGE), s.today);
     const written = w.notion.reviewDate(PAGE);
@@ -276,7 +288,7 @@ async function runScenario(name) {
       const q = boot(localInstant(0, h, min));
       q.notion.setPage(PAGE, {
         "Spaced Repetition": { date: { start: written } },
-        Attempts: { number: 4 },
+        Attempts: { number: 3 },
       });
       q.notion.reset();
       await q.bg.api.checkDueReviews();

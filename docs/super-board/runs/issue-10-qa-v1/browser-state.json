@@ -35,8 +35,8 @@
       "localDay": "2026-08-10",
       "utcDay": "2026-08-11",
       "reviewDate": "2026-08-10",
-      "attempts": 4,
-      "input": "4",
+      "attempts": 3,
+      "input": "3",
       "status": "Reset! Due today",
       "statusClass": "status-message status-success",
       "revisitLabel": "Review Today",
@@ -54,8 +54,7 @@
           "action": "updateSpacedRepetition",
           "data": {
             "pageId": "qa-page-1",
-            "setToday": true,
-            "attempts": 4
+            "setToday": true
           }
         }
       ],
@@ -73,8 +72,8 @@
       "localDay": "2026-08-10",
       "utcDay": "2026-08-11",
       "reviewDate": "2026-08-10",
-      "attempts": 4,
-      "input": "4",
+      "attempts": 3,
+      "input": "3",
       "status": "Reset! Due today",
       "statusClass": "status-message status-success",
       "revisitLabel": "Review Today",
@@ -92,8 +91,7 @@
           "action": "updateSpacedRepetition",
           "data": {
             "pageId": "qa-page-1",
-            "setToday": true,
-            "attempts": 4
+            "setToday": true
           }
         }
       ],
@@ -111,8 +109,8 @@
       "localDay": "2026-08-10",
       "utcDay": "2026-08-11",
       "reviewDate": "2026-08-10",
-      "attempts": 4,
-      "input": "4",
+      "attempts": 3,
+      "input": "3",
       "status": "Reset! Due today",
       "statusClass": "status-message status-success",
       "revisitLabel": "Review Today",
@@ -130,8 +128,7 @@
           "action": "updateSpacedRepetition",
           "data": {
             "pageId": "qa-page-1",
-            "setToday": true,
-            "attempts": 4
+            "setToday": true
           }
         }
       ],
@@ -181,7 +178,7 @@
   {
     "file": "06-revisit-failure-rollback.png",
     "query": "?demo=revisit&fail=1",
-    "why": "AC5 — a failed write rolls the count back and reports the error",
+    "why": "AC5 — a failed write leaves date and Attempts alone and reports the error",
     "state": {
       "localDay": "2026-08-10",
       "utcDay": "2026-08-11",
@@ -205,8 +202,7 @@
           "action": "updateSpacedRepetition",
           "data": {
             "pageId": "qa-page-1",
-            "setToday": true,
-            "attempts": 4
+            "setToday": true
           }
         }
       ],

@@ -1619,6 +1619,11 @@ async function markForReviewTomorrow() {
  * Here the user has just decided they need another pass, so the answer is
  * always today's review queue — pushing it 1-7 days out (or skipping the
  * write entirely when that expertise's interval is 0) defeats the button.
+ *
+ * Scheduling only — Attempts is left alone. Queuing a problem for review is
+ * not an attempt at it; the attempt happens later, and is counted then by the
+ * `+` button, the Attempts field, or the next save. Incrementing here would
+ * inflate the count for anyone who queues a problem and never gets to it.
  */
 async function revisitProblem() {
   if (!existingPageId) return;
@@ -1633,25 +1638,20 @@ async function revisitProblem() {
     DOM.quickActions.revisit.disabled = true;
     DOM.quickActions.revisit.textContent = "Setting...";
 
-    userAttemptCount++;
-
     const response = await chrome.runtime.sendMessage({
       action: "updateSpacedRepetition",
       data: {
         apiKey: settings.notionApiKey,
         pageId: existingPageId,
         setToday: true,
-        attempts: userAttemptCount,
       },
     });
 
     if (response?.success) {
       DOM.quickActions.revisit.classList.add("quick-btn-success");
       DOM.quickActions.markReview.classList.remove("quick-btn-success");
-      updateAttemptDisplay();
       showStatus(DOM.save.status, "Reset! Due today", "success");
     } else {
-      userAttemptCount--;
       showStatus(
         DOM.save.status,
         response?.error || "Failed to update",
@@ -1659,7 +1659,6 @@ async function revisitProblem() {
       );
     }
   } catch (error) {
-    userAttemptCount--;
     showStatus(DOM.save.status, "Failed to update", "error");
   } finally {
     DOM.quickActions.revisit.disabled = false;

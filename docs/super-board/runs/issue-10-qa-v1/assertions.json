@@ -1,7 +1,7 @@
 {
   "node": "v25.8.1",
   "scenarios": 8,
-  "assertions": 408,
+  "assertions": 432,
   "failures": 0,
   "byAc": {
     "AC4": {
@@ -12,12 +12,12 @@
       "pass": 56,
       "fail": 0
     },
-    "AC3": {
+    "AC5": {
       "pass": 72,
       "fail": 0
     },
-    "AC5": {
-      "pass": 48,
+    "AC3": {
+      "pass": 72,
       "fail": 0
     },
     "AC6": {
@@ -110,9 +110,6 @@
           "date": {
             "start": "2026-08-10"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       },
       "actual": {
@@ -120,9 +117,6 @@
           "date": {
             "start": "2026-08-10"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       }
     },
@@ -163,6 +157,19 @@
       },
       "actual": {
         "checkbox": false
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
       }
     },
     {
@@ -268,19 +275,28 @@
       "scenario": "new-york-evening",
       "section": "S4",
       "ac": "AC5",
-      "label": "Attempts 3 -> 4 in the same PATCH",
+      "label": "Attempts stays 3 after Review Today",
       "ok": true,
-      "expected": 4,
-      "actual": 4
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "new-york-evening",
       "section": "S4",
       "ac": "AC5",
-      "label": "second Revisit -> 5",
+      "label": "no Attempts property in the PATCH body",
       "ok": true,
-      "expected": 5,
-      "actual": 5
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "new-york-evening",
@@ -290,6 +306,15 @@
       "ok": true,
       "expected": "2026-08-10",
       "actual": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
     },
     {
       "scenario": "new-york-evening",
@@ -734,9 +759,6 @@
           "date": {
             "start": "2026-08-11"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       },
       "actual": {
@@ -744,9 +766,6 @@
           "date": {
             "start": "2026-08-11"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       }
     },
@@ -787,6 +806,19 @@
       },
       "actual": {
         "checkbox": false
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
       }
     },
     {
@@ -892,19 +924,28 @@
       "scenario": "tokyo-morning",
       "section": "S4",
       "ac": "AC5",
-      "label": "Attempts 3 -> 4 in the same PATCH",
+      "label": "Attempts stays 3 after Review Today",
       "ok": true,
-      "expected": 4,
-      "actual": 4
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "tokyo-morning",
       "section": "S4",
       "ac": "AC5",
-      "label": "second Revisit -> 5",
+      "label": "no Attempts property in the PATCH body",
       "ok": true,
-      "expected": 5,
-      "actual": 5
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "tokyo-morning",
@@ -914,6 +955,15 @@
       "ok": true,
       "expected": "2026-08-11",
       "actual": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
     },
     {
       "scenario": "tokyo-morning",
@@ -1358,9 +1408,6 @@
           "date": {
             "start": "2026-08-10"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       },
       "actual": {
@@ -1368,9 +1415,6 @@
           "date": {
             "start": "2026-08-10"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       }
     },
@@ -1411,6 +1455,19 @@
       },
       "actual": {
         "checkbox": false
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
       }
     },
     {
@@ -1516,19 +1573,28 @@
       "scenario": "midway-late",
       "section": "S4",
       "ac": "AC5",
-      "label": "Attempts 3 -> 4 in the same PATCH",
+      "label": "Attempts stays 3 after Review Today",
       "ok": true,
-      "expected": 4,
-      "actual": 4
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "midway-late",
       "section": "S4",
       "ac": "AC5",
-      "label": "second Revisit -> 5",
+      "label": "no Attempts property in the PATCH body",
       "ok": true,
-      "expected": 5,
-      "actual": 5
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "midway-late",
@@ -1538,6 +1604,15 @@
       "ok": true,
       "expected": "2026-08-10",
       "actual": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
     },
     {
       "scenario": "midway-late",
@@ -1982,9 +2057,6 @@
           "date": {
             "start": "2026-08-11"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       },
       "actual": {
@@ -1992,9 +2064,6 @@
           "date": {
             "start": "2026-08-11"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       }
     },
@@ -2035,6 +2104,19 @@
       },
       "actual": {
         "checkbox": false
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
       }
     },
     {
@@ -2140,19 +2222,28 @@
       "scenario": "kiritimati-early",
       "section": "S4",
       "ac": "AC5",
-      "label": "Attempts 3 -> 4 in the same PATCH",
+      "label": "Attempts stays 3 after Review Today",
       "ok": true,
-      "expected": 4,
-      "actual": 4
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "kiritimati-early",
       "section": "S4",
       "ac": "AC5",
-      "label": "second Revisit -> 5",
+      "label": "no Attempts property in the PATCH body",
       "ok": true,
-      "expected": 5,
-      "actual": 5
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "kiritimati-early",
@@ -2162,6 +2253,15 @@
       "ok": true,
       "expected": "2026-08-11",
       "actual": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
     },
     {
       "scenario": "kiritimati-early",
@@ -2606,9 +2706,6 @@
           "date": {
             "start": "2026-08-10"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       },
       "actual": {
@@ -2616,9 +2713,6 @@
           "date": {
             "start": "2026-08-10"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       }
     },
@@ -2659,6 +2753,19 @@
       },
       "actual": {
         "checkbox": false
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
       }
     },
     {
@@ -2764,19 +2871,28 @@
       "scenario": "utc-control",
       "section": "S4",
       "ac": "AC5",
-      "label": "Attempts 3 -> 4 in the same PATCH",
+      "label": "Attempts stays 3 after Review Today",
       "ok": true,
-      "expected": 4,
-      "actual": 4
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "utc-control",
       "section": "S4",
       "ac": "AC5",
-      "label": "second Revisit -> 5",
+      "label": "no Attempts property in the PATCH body",
       "ok": true,
-      "expected": 5,
-      "actual": 5
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "utc-control",
@@ -2786,6 +2902,15 @@
       "ok": true,
       "expected": "2026-08-10",
       "actual": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
     },
     {
       "scenario": "utc-control",
@@ -3230,9 +3355,6 @@
           "date": {
             "start": "2026-03-07"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       },
       "actual": {
@@ -3240,9 +3362,6 @@
           "date": {
             "start": "2026-03-07"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       }
     },
@@ -3283,6 +3402,19 @@
       },
       "actual": {
         "checkbox": false
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
       }
     },
     {
@@ -3388,19 +3520,28 @@
       "scenario": "ny-dst-spring",
       "section": "S4",
       "ac": "AC5",
-      "label": "Attempts 3 -> 4 in the same PATCH",
+      "label": "Attempts stays 3 after Review Today",
       "ok": true,
-      "expected": 4,
-      "actual": 4
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "ny-dst-spring",
       "section": "S4",
       "ac": "AC5",
-      "label": "second Revisit -> 5",
+      "label": "no Attempts property in the PATCH body",
       "ok": true,
-      "expected": 5,
-      "actual": 5
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "ny-dst-spring",
@@ -3410,6 +3551,15 @@
       "ok": true,
       "expected": "2026-03-07",
       "actual": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
     },
     {
       "scenario": "ny-dst-spring",
@@ -3854,9 +4004,6 @@
           "date": {
             "start": "2026-11-01"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       },
       "actual": {
@@ -3864,9 +4011,6 @@
           "date": {
             "start": "2026-11-01"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       }
     },
@@ -3907,6 +4051,19 @@
       },
       "actual": {
         "checkbox": false
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
       }
     },
     {
@@ -4012,19 +4169,28 @@
       "scenario": "ny-dst-fall",
       "section": "S4",
       "ac": "AC5",
-      "label": "Attempts 3 -> 4 in the same PATCH",
+      "label": "Attempts stays 3 after Review Today",
       "ok": true,
-      "expected": 4,
-      "actual": 4
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "ny-dst-fall",
       "section": "S4",
       "ac": "AC5",
-      "label": "second Revisit -> 5",
+      "label": "no Attempts property in the PATCH body",
       "ok": true,
-      "expected": 5,
-      "actual": 5
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "ny-dst-fall",
@@ -4034,6 +4200,15 @@
       "ok": true,
       "expected": "2026-11-01",
       "actual": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
     },
     {
       "scenario": "ny-dst-fall",
@@ -4478,9 +4653,6 @@
           "date": {
             "start": "2026-12-31"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       },
       "actual": {
@@ -4488,9 +4660,6 @@
           "date": {
             "start": "2026-12-31"
           }
-        },
-        "Attempts": {
-          "number": 4
         }
       }
     },
@@ -4531,6 +4700,19 @@
       },
       "actual": {
         "checkbox": false
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
       }
     },
     {
@@ -4636,19 +4818,28 @@
       "scenario": "ny-year-rollover",
       "section": "S4",
       "ac": "AC5",
-      "label": "Attempts 3 -> 4 in the same PATCH",
+      "label": "Attempts stays 3 after Review Today",
       "ok": true,
-      "expected": 4,
-      "actual": 4
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "ny-year-rollover",
       "section": "S4",
       "ac": "AC5",
-      "label": "second Revisit -> 5",
+      "label": "no Attempts property in the PATCH body",
       "ok": true,
-      "expected": 5,
-      "actual": 5
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
     },
     {
       "scenario": "ny-year-rollover",
@@ -4658,6 +4849,15 @@
       "ok": true,
       "expected": "2026-12-31",
       "actual": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
     },
     {
       "scenario": "ny-year-rollover",

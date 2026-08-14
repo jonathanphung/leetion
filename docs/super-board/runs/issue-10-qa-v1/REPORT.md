@@ -3,7 +3,7 @@
 - **Card:** #10 Revisit button should set Spaced Repetition to today, not today + interval
 - **PR:** #13 · branch `issue-10-revisit-sets-today` @ `956b721` · base `main` @ `c5218d0`
 - **Date:** 2026-08-10 · Tester lane (super-board wave, QA pass 1)
-- **Verdict:** **PASS → Review** — all 7 ACs verified. 408/408 assertions green across
+- **Verdict:** **PASS → Review** — all 7 ACs verified. 432/432 assertions green across
   8 timezone scenarios, plus 6 screenshots from a real headless Chrome run.
 
 ---
@@ -15,7 +15,7 @@ PROJECT.md: no test framework, no npm dependencies, no dev server. So QA runs th
 boundaries the extension talks to — `chrome.*` and the Notion HTTP API. Every
 line of product code in between is the code that ships.
 
-### 1. Node suite — `suite/test-revisit.mjs` (408 assertions)
+### 1. Node suite — `suite/test-revisit.mjs` (432 assertions)
 
 ```bash
 node docs/super-board/runs/issue-10-qa-v1/suite/test-revisit.mjs
@@ -111,7 +111,7 @@ AC state at the popup's real width.
 | **AC2** — toast reads "Reset! Due today" | **PASS** | Screenshot `02` / `03`: green status bar reads **Reset! Due today**. No "Next review in N days" string remains in `popup.js`. |
 | **AC3** — independent of the expertise interval | **PASS** | S3 (9 asserts x 8 TZ): `setToday` wins over no `days`, `days:0`, `1`, `3`, `7`, `null`, and over stored intervals of `0/0/0`. Stronger observable in the browser: during the click the popup reads **only `notionApiKey`** from `chrome.storage.sync` (`browser-state.json` -> `storageKeys: ["notionApiKey"]`), so the interval settings are not merely ignored — they are never read. Screenshots `02` (1/3/7) and `03` (0/0/0) are identical in outcome. |
 | **AC4** — the user's **local** calendar day | **PASS** | S1 across all 8 scenarios, including UTC-11 and UTC+14, both DST transitions and a year rollover. In 7 of 8 the UTC day differs from the local day and the written value follows the **local** one. Screenshot banners show `local day 2026-08-10` / `UTC day 2026-08-11` with `2026-08-10` written. |
-| **AC5** — Attempts +1 and the display updates | **PASS** | S4: `3 -> 4` in the same PATCH, second click `-> 5`, date still today. Browser: `#input-attempts` and the stat span both read **4** after the click. Rollback verified — screenshot `06`: forced Notion failure leaves the page at `2026-09-30` / `Attempts 3`, the popup count rolls back to 3, and the error surfaces in the status bar. |
+| **AC5** *(revised — see below)* — Review Today leaves Attempts untouched | **PASS** | S4: Attempts stays `3` across two clicks, and the PATCH body carries no `Attempts` property at all; the date is still today. Browser: the popup's sent payload is `{pageId, setToday:true}` and `#input-attempts` still reads **3** after the click. Screenshot `06`: a forced Notion failure leaves the page at `2026-09-30` / `Attempts 3` and surfaces the error. The handler still honours an explicit `attempts` from other callers (save path, manual `+1`). |
 | **AC6** — due in the same day's `checkReviews` query | **PASS** | S5: written at 00:05 local, then the real `checkDueReviews()` is run at 00:06, 12:00 and 23:55 local — all three filter on `on_or_before: <local today>`, all three return the page, all three fire the notification. `handleGetStats` counts it as due too. Screenshot `04`: **"You have 1 problem due for review today."** |
 | **AC7** — Review Tomorrow unchanged (+1 day) | **PASS** | S6: `days:1` writes local today+1 (correct across both DST transitions and the year rollover), writes **no** `Attempts` property, and the page is **not** in today's due set but **is** in tomorrow's. Screenshot `05`: `Spaced Repetition = 2026-08-11`, `Attempts = 3` (unchanged), payload `{"days":1}`. |
 
@@ -123,7 +123,7 @@ AC state at the popup's real width.
 | `bash build.sh` | PASS — `leetion.zip`, 23 files |
 | `leetion.zip` carries no `docs/` QA files | PASS — 0 entries |
 | Builder's `harness/tz-check.js`, both timezones | PASS — re-run, `ALL CHECKS PASSED` x2 |
-| QA suite, 8 timezone scenarios | PASS — 408/408 |
+| QA suite, 8 timezone scenarios | PASS — 432/432 |
 | Negative control on pre-fix `background.js` | 196/376 fail, as required |
 
 Output: `gates-output.txt`, `suite-output.txt`, `browser-output.txt`.
@@ -143,14 +143,34 @@ this card should absorb them.
    Visible in screenshot `05`. Out of scope: AC7 pins the *behaviour* of Review
    Tomorrow as unchanged, and this is a one-word copy fix better carried by its
    own card.
-2. **Staged Attempts and Revisit disagree.** If a count is staged via `+` or the
-   input (issue #1's `pendingAttempts`), clicking Revisit writes
-   `userAttemptCount + 1` to Notion but `updateAttemptDisplay()` keeps showing
-   the staged value, so the field can read `9` while Notion holds `4`.
-   Pre-existing — both lines are unchanged by this diff.
+2. ~~**Staged Attempts and Revisit disagree.**~~ **Resolved** by the AC5 revision
+   below: Revisit no longer writes `Attempts` at all, so there is no longer a
+   value for the staged count to disagree with.
 3. **Quick-button icons are 16px in `popup.html` and 14px in the `popup.js`
    re-render**, so both buttons' icons shrink slightly after their first click.
    Pre-existing and cosmetic.
+
+---
+
+## AC5 revision — 2026-08-13 (post-QA, owner decision)
+
+The board owner changed AC5 after this report was written: **Review Today must
+not increment Attempts.** Queuing a problem for review is a scheduling action,
+not an attempt at it — the attempt happens later, and is already counted then by
+the `+` button, the Attempts field, or the next save. Incrementing on click
+inflated the count for anyone who queued a problem and never got to it.
+
+`revisitProblem` in `popup.js` now sends `{pageId, setToday: true}` with no
+`attempts` field, and its optimistic `userAttemptCount++` / rollback pair is
+gone. `background.js` is unchanged — `updateSpacedRepetition` already skipped
+the property when no `attempts` arrives, and still honours one when another
+caller sends it (S4 covers that).
+
+Re-verified on 2026-08-13 against the revised code: suite **432/432**
+(S4 rewritten, S2/S3/S5 payloads corrected to match what the popup really
+sends), `node --check` clean, and all six screenshots regenerated through the
+real `popup.js` — every post-click shot now reads `Attempts = 3` with the sent
+payload visible in the banner. No other AC moved.
 
 ## Scope note — what a live Notion workspace would add
 
@@ -166,7 +186,7 @@ changes the *value*, not the shape. Residual risk: low.
 
 ```
 REPORT.md                         this report
-assertions.json                   408 machine-readable assertions (fixed tree)
+assertions.json                   432 machine-readable assertions (fixed tree)
 assertions-negative-control.json  376 assertions on the pre-fix tree
 suite-output.txt                  full suite run
 browser-output.txt                headless-Chrome capture log
