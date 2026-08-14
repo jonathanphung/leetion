@@ -1,0 +1,25 @@
+=== node --version ===
+v25.8.1
+
+=== node --check (every touched JS file) ===
+PASS  background.js
+PASS  popup.js
+PASS  content.js
+PASS  onboarding.js
+
+=== bash build.sh ===
+Done! Created leetion.zip
+
+=== leetion.zip must not carry QA/doc files ===
+docs/ entries in zip: 0
+    25652  2026-08-10 19:19   styles.css
+---------                     -------
+   272818                     23 files
+
+=== builder harness re-run (docs/super-board/runs/issue-10-build/harness/tz-check.js) ===
+        actual   [true,null]
+
+ALL CHECKS PASSED
+        actual   [true,null]
+
+ALL CHECKS PASSED

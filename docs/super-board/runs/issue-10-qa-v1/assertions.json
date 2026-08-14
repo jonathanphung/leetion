@@ -1,0 +1,5230 @@
+{
+  "node": "v25.8.1",
+  "scenarios": 8,
+  "assertions": 432,
+  "failures": 0,
+  "byAc": {
+    "AC4": {
+      "pass": 32,
+      "fail": 0
+    },
+    "AC1": {
+      "pass": 56,
+      "fail": 0
+    },
+    "AC5": {
+      "pass": 72,
+      "fail": 0
+    },
+    "AC3": {
+      "pass": 72,
+      "fail": 0
+    },
+    "AC6": {
+      "pass": 120,
+      "fail": 0
+    },
+    "AC7": {
+      "pass": 32,
+      "fail": 0
+    },
+    "—": {
+      "pass": 48,
+      "fail": 0
+    }
+  },
+  "results": [
+    {
+      "scenario": "new-york-evening",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateString() is the LOCAL calendar day",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(0) === today",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(1) === tomorrow",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "pre-fix UTC formula would have written 2026-08-11 (local day 2026-08-10)",
+      "ok": true,
+      "informational": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-11",
+      "differs": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "message router reports success",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "response.date is the local today",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "exactly one PATCH reached Notion",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "PATCH body properties",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-10"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-10"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "page 'Spaced Repetition' after the write",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "the stale 2026-09-30 date was replaced",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "unrelated properties untouched",
+      "ok": true,
+      "expected": {
+        "checkbox": false
+      },
+      "actual": {
+        "checkbox": false
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over no days field at all",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:0 (reviews disabled for this expertise)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:1 (Low)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:3 (Medium)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:7 (High)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:null",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "intervals stored as 0/0/0 do not suppress the write",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "Attempts stays 3 after Review Today",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "no Attempts property in the PATCH body",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "date still today after the second click",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH reports success:false",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves Attempts alone",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves the date alone",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "written at 00:05 local -> today",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 12:00 local (midday)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 12:00 local (midday)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "getStats counts the reset problem as due",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes today+1 (local)",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 response.date",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes no Attempts property",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "Attempts on the page is untouched by Review Tomorrow",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "a Review-Tomorrow problem is NOT due today",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and no notification fires",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "next local day, the filter has advanced one day",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and the problem is due then",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 alone leaves the date untouched",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 still writes Attempts",
+      "ok": true,
+      "expected": 9,
+      "actual": 9
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 PATCH body carries only Attempts",
+      "ok": true,
+      "expected": {
+        "Attempts": {
+          "number": 9
+        }
+      },
+      "actual": {
+        "Attempts": {
+          "number": 9
+        }
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 response.date is null",
+      "ok": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> no request at all",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> skipped:true",
+      "ok": true,
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 3 -> local today+3",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-13"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-13"
+        }
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8",
+      "ac": "AC4",
+      "label": "'Date (of first attempt)' is the local day",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 0 writes no review date",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateString() is the LOCAL calendar day",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(0) === today",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(1) === tomorrow",
+      "ok": true,
+      "expected": "2026-08-12",
+      "actual": "2026-08-12"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "pre-fix UTC formula would have written 2026-08-10 (local day 2026-08-11)",
+      "ok": true,
+      "informational": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-10",
+      "differs": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "message router reports success",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "response.date is the local today",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "exactly one PATCH reached Notion",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "PATCH body properties",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "page 'Spaced Repetition' after the write",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-11"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "the stale 2026-09-30 date was replaced",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "unrelated properties untouched",
+      "ok": true,
+      "expected": {
+        "checkbox": false
+      },
+      "actual": {
+        "checkbox": false
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over no days field at all",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:0 (reviews disabled for this expertise)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:1 (Low)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:3 (Medium)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:7 (High)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:null",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "intervals stored as 0/0/0 do not suppress the write",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "Attempts stays 3 after Review Today",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "no Attempts property in the PATCH body",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "date still today after the second click",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH reports success:false",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves Attempts alone",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves the date alone",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "written at 00:05 local -> today",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 12:00 local (midday)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 12:00 local (midday)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "getStats counts the reset problem as due",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes today+1 (local)",
+      "ok": true,
+      "expected": "2026-08-12",
+      "actual": "2026-08-12"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 response.date",
+      "ok": true,
+      "expected": "2026-08-12",
+      "actual": "2026-08-12"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes no Attempts property",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-12"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-12"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "Attempts on the page is untouched by Review Tomorrow",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "a Review-Tomorrow problem is NOT due today",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and no notification fires",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "next local day, the filter has advanced one day",
+      "ok": true,
+      "expected": "2026-08-12",
+      "actual": "2026-08-12"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and the problem is due then",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 alone leaves the date untouched",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 still writes Attempts",
+      "ok": true,
+      "expected": 9,
+      "actual": 9
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 PATCH body carries only Attempts",
+      "ok": true,
+      "expected": {
+        "Attempts": {
+          "number": 9
+        }
+      },
+      "actual": {
+        "Attempts": {
+          "number": 9
+        }
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 response.date is null",
+      "ok": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> no request at all",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> skipped:true",
+      "ok": true,
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 3 -> local today+3",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-14"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-14"
+        }
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8",
+      "ac": "AC4",
+      "label": "'Date (of first attempt)' is the local day",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-11"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 0 writes no review date",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateString() is the LOCAL calendar day",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(0) === today",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(1) === tomorrow",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "pre-fix UTC formula would have written 2026-08-11 (local day 2026-08-10)",
+      "ok": true,
+      "informational": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-11",
+      "differs": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "message router reports success",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "response.date is the local today",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "exactly one PATCH reached Notion",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "PATCH body properties",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-10"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-10"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "page 'Spaced Repetition' after the write",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "the stale 2026-09-30 date was replaced",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "unrelated properties untouched",
+      "ok": true,
+      "expected": {
+        "checkbox": false
+      },
+      "actual": {
+        "checkbox": false
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over no days field at all",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:0 (reviews disabled for this expertise)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:1 (Low)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:3 (Medium)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:7 (High)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:null",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "intervals stored as 0/0/0 do not suppress the write",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "Attempts stays 3 after Review Today",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "no Attempts property in the PATCH body",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "date still today after the second click",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH reports success:false",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves Attempts alone",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves the date alone",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "written at 00:05 local -> today",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 12:00 local (midday)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 12:00 local (midday)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "getStats counts the reset problem as due",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes today+1 (local)",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 response.date",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes no Attempts property",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "Attempts on the page is untouched by Review Tomorrow",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "a Review-Tomorrow problem is NOT due today",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and no notification fires",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "next local day, the filter has advanced one day",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and the problem is due then",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 alone leaves the date untouched",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 still writes Attempts",
+      "ok": true,
+      "expected": 9,
+      "actual": 9
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 PATCH body carries only Attempts",
+      "ok": true,
+      "expected": {
+        "Attempts": {
+          "number": 9
+        }
+      },
+      "actual": {
+        "Attempts": {
+          "number": 9
+        }
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 response.date is null",
+      "ok": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> no request at all",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> skipped:true",
+      "ok": true,
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 3 -> local today+3",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-13"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-13"
+        }
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8",
+      "ac": "AC4",
+      "label": "'Date (of first attempt)' is the local day",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 0 writes no review date",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateString() is the LOCAL calendar day",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(0) === today",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(1) === tomorrow",
+      "ok": true,
+      "expected": "2026-08-12",
+      "actual": "2026-08-12"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "pre-fix UTC formula would have written 2026-08-10 (local day 2026-08-11)",
+      "ok": true,
+      "informational": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-10",
+      "differs": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "message router reports success",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "response.date is the local today",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "exactly one PATCH reached Notion",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "PATCH body properties",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "page 'Spaced Repetition' after the write",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-11"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "the stale 2026-09-30 date was replaced",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "unrelated properties untouched",
+      "ok": true,
+      "expected": {
+        "checkbox": false
+      },
+      "actual": {
+        "checkbox": false
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over no days field at all",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:0 (reviews disabled for this expertise)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:1 (Low)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:3 (Medium)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:7 (High)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:null",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-11"
+      ],
+      "actual": [
+        true,
+        "2026-08-11"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "intervals stored as 0/0/0 do not suppress the write",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "Attempts stays 3 after Review Today",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "no Attempts property in the PATCH body",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "date still today after the second click",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH reports success:false",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves Attempts alone",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves the date alone",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "written at 00:05 local -> today",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 12:00 local (midday)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 12:00 local (midday)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "getStats counts the reset problem as due",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes today+1 (local)",
+      "ok": true,
+      "expected": "2026-08-12",
+      "actual": "2026-08-12"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 response.date",
+      "ok": true,
+      "expected": "2026-08-12",
+      "actual": "2026-08-12"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes no Attempts property",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-12"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-12"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "Attempts on the page is untouched by Review Tomorrow",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "a Review-Tomorrow problem is NOT due today",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and no notification fires",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "next local day, the filter has advanced one day",
+      "ok": true,
+      "expected": "2026-08-12",
+      "actual": "2026-08-12"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and the problem is due then",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 alone leaves the date untouched",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 still writes Attempts",
+      "ok": true,
+      "expected": 9,
+      "actual": 9
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 PATCH body carries only Attempts",
+      "ok": true,
+      "expected": {
+        "Attempts": {
+          "number": 9
+        }
+      },
+      "actual": {
+        "Attempts": {
+          "number": 9
+        }
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 response.date is null",
+      "ok": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> no request at all",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> skipped:true",
+      "ok": true,
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 3 -> local today+3",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-14"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-14"
+        }
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8",
+      "ac": "AC4",
+      "label": "'Date (of first attempt)' is the local day",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-11"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-11"
+        }
+      }
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 0 writes no review date",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateString() is the LOCAL calendar day",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(0) === today",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(1) === tomorrow",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "pre-fix UTC formula would have written 2026-08-10 (local day 2026-08-10)",
+      "ok": true,
+      "informational": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10",
+      "differs": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "message router reports success",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "response.date is the local today",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "exactly one PATCH reached Notion",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "PATCH body properties",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-10"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-10"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "page 'Spaced Repetition' after the write",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "the stale 2026-09-30 date was replaced",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "unrelated properties untouched",
+      "ok": true,
+      "expected": {
+        "checkbox": false
+      },
+      "actual": {
+        "checkbox": false
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over no days field at all",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:0 (reviews disabled for this expertise)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:1 (Low)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:3 (Medium)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:7 (High)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:null",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-08-10"
+      ],
+      "actual": [
+        true,
+        "2026-08-10"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "intervals stored as 0/0/0 do not suppress the write",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "Attempts stays 3 after Review Today",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "no Attempts property in the PATCH body",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "date still today after the second click",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH reports success:false",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves Attempts alone",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves the date alone",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "written at 00:05 local -> today",
+      "ok": true,
+      "expected": "2026-08-10",
+      "actual": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 12:00 local (midday)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 12:00 local (midday)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "getStats counts the reset problem as due",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes today+1 (local)",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 response.date",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes no Attempts property",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-08-11"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "Attempts on the page is untouched by Review Tomorrow",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "a Review-Tomorrow problem is NOT due today",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and no notification fires",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "next local day, the filter has advanced one day",
+      "ok": true,
+      "expected": "2026-08-11",
+      "actual": "2026-08-11"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and the problem is due then",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 alone leaves the date untouched",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 still writes Attempts",
+      "ok": true,
+      "expected": 9,
+      "actual": 9
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 PATCH body carries only Attempts",
+      "ok": true,
+      "expected": {
+        "Attempts": {
+          "number": 9
+        }
+      },
+      "actual": {
+        "Attempts": {
+          "number": 9
+        }
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 response.date is null",
+      "ok": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> no request at all",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> skipped:true",
+      "ok": true,
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 3 -> local today+3",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-13"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-13"
+        }
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8",
+      "ac": "AC4",
+      "label": "'Date (of first attempt)' is the local day",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-10"
+        }
+      }
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 0 writes no review date",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateString() is the LOCAL calendar day",
+      "ok": true,
+      "expected": "2026-03-07",
+      "actual": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(0) === today",
+      "ok": true,
+      "expected": "2026-03-07",
+      "actual": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(1) === tomorrow",
+      "ok": true,
+      "expected": "2026-03-08",
+      "actual": "2026-03-08"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "pre-fix UTC formula would have written 2026-03-08 (local day 2026-03-07)",
+      "ok": true,
+      "informational": true,
+      "expected": "2026-03-07",
+      "actual": "2026-03-08",
+      "differs": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "message router reports success",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "response.date is the local today",
+      "ok": true,
+      "expected": "2026-03-07",
+      "actual": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "exactly one PATCH reached Notion",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "PATCH body properties",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-03-07"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-03-07"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "page 'Spaced Repetition' after the write",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-03-07"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-03-07"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "the stale 2026-09-30 date was replaced",
+      "ok": true,
+      "expected": "2026-03-07",
+      "actual": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "unrelated properties untouched",
+      "ok": true,
+      "expected": {
+        "checkbox": false
+      },
+      "actual": {
+        "checkbox": false
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over no days field at all",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-03-07"
+      ],
+      "actual": [
+        true,
+        "2026-03-07"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:0 (reviews disabled for this expertise)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-03-07"
+      ],
+      "actual": [
+        true,
+        "2026-03-07"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:1 (Low)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-03-07"
+      ],
+      "actual": [
+        true,
+        "2026-03-07"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:3 (Medium)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-03-07"
+      ],
+      "actual": [
+        true,
+        "2026-03-07"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:7 (High)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-03-07"
+      ],
+      "actual": [
+        true,
+        "2026-03-07"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:null",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-03-07"
+      ],
+      "actual": [
+        true,
+        "2026-03-07"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "intervals stored as 0/0/0 do not suppress the write",
+      "ok": true,
+      "expected": "2026-03-07",
+      "actual": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "Attempts stays 3 after Review Today",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "no Attempts property in the PATCH body",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "date still today after the second click",
+      "ok": true,
+      "expected": "2026-03-07",
+      "actual": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH reports success:false",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves Attempts alone",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves the date alone",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "written at 00:05 local -> today",
+      "ok": true,
+      "expected": "2026-03-07",
+      "actual": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-03-07"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-03-07"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-03-07"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-03-07"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 12:00 local (midday)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 12:00 local (midday)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-03-07"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-03-07"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "getStats counts the reset problem as due",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes today+1 (local)",
+      "ok": true,
+      "expected": "2026-03-08",
+      "actual": "2026-03-08"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 response.date",
+      "ok": true,
+      "expected": "2026-03-08",
+      "actual": "2026-03-08"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes no Attempts property",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-03-08"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-03-08"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "Attempts on the page is untouched by Review Tomorrow",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "a Review-Tomorrow problem is NOT due today",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and no notification fires",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "next local day, the filter has advanced one day",
+      "ok": true,
+      "expected": "2026-03-08",
+      "actual": "2026-03-08"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and the problem is due then",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 alone leaves the date untouched",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 still writes Attempts",
+      "ok": true,
+      "expected": 9,
+      "actual": 9
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 PATCH body carries only Attempts",
+      "ok": true,
+      "expected": {
+        "Attempts": {
+          "number": 9
+        }
+      },
+      "actual": {
+        "Attempts": {
+          "number": 9
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 response.date is null",
+      "ok": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> no request at all",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> skipped:true",
+      "ok": true,
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 3 -> local today+3",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-03-10"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-03-10"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8",
+      "ac": "AC4",
+      "label": "'Date (of first attempt)' is the local day",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-03-07"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-03-07"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 0 writes no review date",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateString() is the LOCAL calendar day",
+      "ok": true,
+      "expected": "2026-11-01",
+      "actual": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(0) === today",
+      "ok": true,
+      "expected": "2026-11-01",
+      "actual": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(1) === tomorrow",
+      "ok": true,
+      "expected": "2026-11-02",
+      "actual": "2026-11-02"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "pre-fix UTC formula would have written 2026-11-01 (local day 2026-11-01)",
+      "ok": true,
+      "informational": true,
+      "expected": "2026-11-01",
+      "actual": "2026-11-01",
+      "differs": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "message router reports success",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "response.date is the local today",
+      "ok": true,
+      "expected": "2026-11-01",
+      "actual": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "exactly one PATCH reached Notion",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "PATCH body properties",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-11-01"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-11-01"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "page 'Spaced Repetition' after the write",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-11-01"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-11-01"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "the stale 2026-09-30 date was replaced",
+      "ok": true,
+      "expected": "2026-11-01",
+      "actual": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "unrelated properties untouched",
+      "ok": true,
+      "expected": {
+        "checkbox": false
+      },
+      "actual": {
+        "checkbox": false
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over no days field at all",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-11-01"
+      ],
+      "actual": [
+        true,
+        "2026-11-01"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:0 (reviews disabled for this expertise)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-11-01"
+      ],
+      "actual": [
+        true,
+        "2026-11-01"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:1 (Low)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-11-01"
+      ],
+      "actual": [
+        true,
+        "2026-11-01"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:3 (Medium)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-11-01"
+      ],
+      "actual": [
+        true,
+        "2026-11-01"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:7 (High)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-11-01"
+      ],
+      "actual": [
+        true,
+        "2026-11-01"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:null",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-11-01"
+      ],
+      "actual": [
+        true,
+        "2026-11-01"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "intervals stored as 0/0/0 do not suppress the write",
+      "ok": true,
+      "expected": "2026-11-01",
+      "actual": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "Attempts stays 3 after Review Today",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "no Attempts property in the PATCH body",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "date still today after the second click",
+      "ok": true,
+      "expected": "2026-11-01",
+      "actual": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH reports success:false",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves Attempts alone",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves the date alone",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "written at 00:05 local -> today",
+      "ok": true,
+      "expected": "2026-11-01",
+      "actual": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-11-01"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-11-01"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-11-01"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-11-01"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 12:00 local (midday)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 12:00 local (midday)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-11-01"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-11-01"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "getStats counts the reset problem as due",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes today+1 (local)",
+      "ok": true,
+      "expected": "2026-11-02",
+      "actual": "2026-11-02"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 response.date",
+      "ok": true,
+      "expected": "2026-11-02",
+      "actual": "2026-11-02"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes no Attempts property",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-11-02"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-11-02"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "Attempts on the page is untouched by Review Tomorrow",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "a Review-Tomorrow problem is NOT due today",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and no notification fires",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "next local day, the filter has advanced one day",
+      "ok": true,
+      "expected": "2026-11-02",
+      "actual": "2026-11-02"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and the problem is due then",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 alone leaves the date untouched",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 still writes Attempts",
+      "ok": true,
+      "expected": 9,
+      "actual": 9
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 PATCH body carries only Attempts",
+      "ok": true,
+      "expected": {
+        "Attempts": {
+          "number": 9
+        }
+      },
+      "actual": {
+        "Attempts": {
+          "number": 9
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 response.date is null",
+      "ok": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> no request at all",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> skipped:true",
+      "ok": true,
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 3 -> local today+3",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-11-04"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-11-04"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8",
+      "ac": "AC4",
+      "label": "'Date (of first attempt)' is the local day",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-11-01"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-11-01"
+        }
+      }
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 0 writes no review date",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateString() is the LOCAL calendar day",
+      "ok": true,
+      "expected": "2026-12-31",
+      "actual": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(0) === today",
+      "ok": true,
+      "expected": "2026-12-31",
+      "actual": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "localDateInDays(1) === tomorrow",
+      "ok": true,
+      "expected": "2027-01-01",
+      "actual": "2027-01-01"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1",
+      "ac": "AC4",
+      "label": "pre-fix UTC formula would have written 2027-01-01 (local day 2026-12-31)",
+      "ok": true,
+      "informational": true,
+      "expected": "2026-12-31",
+      "actual": "2027-01-01",
+      "differs": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "message router reports success",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "response.date is the local today",
+      "ok": true,
+      "expected": "2026-12-31",
+      "actual": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "exactly one PATCH reached Notion",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "PATCH body properties",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-12-31"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2026-12-31"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "page 'Spaced Repetition' after the write",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-12-31"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-12-31"
+        }
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "the stale 2026-09-30 date was replaced",
+      "ok": true,
+      "expected": "2026-12-31",
+      "actual": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2",
+      "ac": "AC1",
+      "label": "unrelated properties untouched",
+      "ok": true,
+      "expected": {
+        "checkbox": false
+      },
+      "actual": {
+        "checkbox": false
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2",
+      "ac": "AC5",
+      "label": "Attempts is not part of the write",
+      "ok": true,
+      "expected": {
+        "number": 3
+      },
+      "actual": {
+        "number": 3
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over no days field at all",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-12-31"
+      ],
+      "actual": [
+        true,
+        "2026-12-31"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:0 (reviews disabled for this expertise)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-12-31"
+      ],
+      "actual": [
+        true,
+        "2026-12-31"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:1 (Low)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-12-31"
+      ],
+      "actual": [
+        true,
+        "2026-12-31"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:3 (Medium)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-12-31"
+      ],
+      "actual": [
+        true,
+        "2026-12-31"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:7 (High)",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-12-31"
+      ],
+      "actual": [
+        true,
+        "2026-12-31"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "setToday wins over days:null",
+      "ok": true,
+      "expected": [
+        true,
+        "2026-12-31"
+      ],
+      "actual": [
+        true,
+        "2026-12-31"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3",
+      "ac": "AC3",
+      "label": "intervals stored as 0/0/0 do not suppress the write",
+      "ok": true,
+      "expected": "2026-12-31",
+      "actual": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "Attempts stays 3 after Review Today",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "no Attempts property in the PATCH body",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "second click still leaves Attempts at 3",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "date still today after the second click",
+      "ok": true,
+      "expected": "2026-12-31",
+      "actual": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "an explicit attempts value is still written",
+      "ok": true,
+      "expected": 4,
+      "actual": 4
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH reports success:false",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves Attempts alone",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4",
+      "ac": "AC5",
+      "label": "a failed PATCH leaves the date alone",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "written at 00:05 local -> today",
+      "ok": true,
+      "expected": "2026-12-31",
+      "actual": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-12-31"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-12-31"
+        }
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 00:06 local (just after the write)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-12-31"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-12-31"
+        }
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 12:00 local (midday)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 12:00 local (midday)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
+      "ok": true,
+      "expected": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-12-31"
+        }
+      },
+      "actual": {
+        "property": "Spaced Repetition",
+        "date": {
+          "on_or_before": "2026-12-31"
+        }
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "reset problem is in the due set at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "the review notification fires at 23:55 local (last alarm of the day)",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5",
+      "ac": "AC6",
+      "label": "getStats counts the reset problem as due",
+      "ok": true,
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes today+1 (local)",
+      "ok": true,
+      "expected": "2027-01-01",
+      "actual": "2027-01-01"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 response.date",
+      "ok": true,
+      "expected": "2027-01-01",
+      "actual": "2027-01-01"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "days:1 writes no Attempts property",
+      "ok": true,
+      "expected": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2027-01-01"
+          }
+        }
+      },
+      "actual": {
+        "Spaced Repetition": {
+          "date": {
+            "start": "2027-01-01"
+          }
+        }
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6",
+      "ac": "AC7",
+      "label": "Attempts on the page is untouched by Review Tomorrow",
+      "ok": true,
+      "expected": 3,
+      "actual": 3
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "a Review-Tomorrow problem is NOT due today",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and no notification fires",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "next local day, the filter has advanced one day",
+      "ok": true,
+      "expected": "2027-01-01",
+      "actual": "2027-01-01"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6",
+      "ac": "AC6",
+      "label": "…and the problem is due then",
+      "ok": true,
+      "expected": [
+        "qa-page-1"
+      ],
+      "actual": [
+        "qa-page-1"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 alone leaves the date untouched",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 still writes Attempts",
+      "ok": true,
+      "expected": 9,
+      "actual": 9
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 PATCH body carries only Attempts",
+      "ok": true,
+      "expected": {
+        "Attempts": {
+          "number": 9
+        }
+      },
+      "actual": {
+        "Attempts": {
+          "number": 9
+        }
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7",
+      "ac": "—",
+      "label": "days:0 response.date is null",
+      "ok": true,
+      "expected": null,
+      "actual": null
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> no request at all",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7",
+      "ac": "—",
+      "label": "nothing to write -> skipped:true",
+      "ok": true,
+      "expected": [
+        true,
+        true
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 3 -> local today+3",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2027-01-03"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2027-01-03"
+        }
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8",
+      "ac": "AC4",
+      "label": "'Date (of first attempt)' is the local day",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-12-31"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-12-31"
+        }
+      }
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8",
+      "ac": "AC3",
+      "label": "save path with interval 0 writes no review date",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    }
+  ]
+}

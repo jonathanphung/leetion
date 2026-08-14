@@ -1,0 +1,879 @@
+super-board QA — issue #10 · Revisit sets Spaced Repetition to today
+node v25.8.1 · background.js under test: C:\Users\jonat\repos\leetion\.worktrees\issue-10-qa\docs\super-board\runs\issue-10-qa-v1\negative-control\background.prefix.js
+==============================================================================
+
+### new-york-evening  [TZ=America/New_York]  frozen at 2026-08-11T01:00:00Z
+    local day 2026-08-10 · UTC day 2026-08-11  <-- they disagree
+    AC4 primary case — negative UTC offset, evening: UTC is already tomorrow
+  S1
+    FAIL  [AC4] section threw: bg.api.localDateString is not a function
+          expected "no exception"
+          actual   "bg.api.localDateString is not a function"
+  S2
+    PASS  [AC1] message router reports success
+    FAIL  [AC1] response.date is the local today
+          expected "2026-08-10"
+          actual   null
+    PASS  [AC1] exactly one PATCH reached Notion
+    FAIL  [AC1] PATCH body properties
+          expected {"Spaced Repetition":{"date":{"start":"2026-08-10"}},"Attempts":{"number":4}}
+          actual   {"Attempts":{"number":4}}
+    FAIL  [AC1] page 'Spaced Repetition' after the write
+          expected {"date":{"start":"2026-08-10"}}
+          actual   {"date":{"start":"2026-09-30"}}
+    FAIL  [AC1] the stale 2026-09-30 date was replaced
+          expected "2026-08-10"
+          actual   "2026-09-30"
+    PASS  [AC1] unrelated properties untouched
+  S3
+    FAIL  [AC3] setToday wins over no days field at all
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:1 (Low)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-08-12"]
+    FAIL  [AC3] setToday wins over days:3 (Medium)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-08-14"]
+    FAIL  [AC3] setToday wins over days:7 (High)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-08-18"]
+    FAIL  [AC3] setToday wins over days:null
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] intervals stored as 0/0/0 do not suppress the write
+          expected "2026-08-10"
+          actual   "2026-09-30"
+  S4
+    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
+    PASS  [AC5] second Revisit -> 5
+    FAIL  [AC5] date still today after the second click
+          expected "2026-08-10"
+          actual   "2026-09-30"
+    PASS  [AC5] a failed PATCH reports success:false
+    PASS  [AC5] a failed PATCH leaves Attempts alone
+    PASS  [AC5] a failed PATCH leaves the date alone
+  S5
+    FAIL  [AC6] written at 00:05 local -> today
+          expected "2026-08-10"
+          actual   "2026-09-30"
+    PASS  [AC6] checkDueReviews at 00:06 local (just after the write) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 00:06 local (just after the write)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 00:06 local (just after the write)
+          expected 1
+          actual   0
+    PASS  [AC6] checkDueReviews at 12:00 local (midday) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 12:00 local (midday)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 12:00 local (midday)
+          expected 1
+          actual   0
+    FAIL  [AC6] checkDueReviews at 23:55 local (last alarm of the day) filters on the local today
+          expected {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-10"}}
+          actual   {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-11"}}
+    FAIL  [AC6] reset problem is in the due set at 23:55 local (last alarm of the day)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 23:55 local (last alarm of the day)
+          expected 1
+          actual   0
+    FAIL  [AC6] getStats counts the reset problem as due
+          expected 1
+          actual   0
+  S6
+    FAIL  [AC7] days:1 writes today+1 (local)
+          expected "2026-08-11"
+          actual   "2026-08-12"
+    FAIL  [AC7] days:1 response.date
+          expected "2026-08-11"
+          actual   "2026-08-12"
+    FAIL  [AC7] days:1 writes no Attempts property
+          expected {"Spaced Repetition":{"date":{"start":"2026-08-11"}}}
+          actual   {"Spaced Repetition":{"date":{"start":"2026-08-12"}}}
+    PASS  [AC7] Attempts on the page is untouched by Review Tomorrow
+    FAIL  [AC6] a Review-Tomorrow problem is NOT due today
+          expected 0
+          actual   1
+    FAIL  [AC6] …and no notification fires
+          expected 0
+          actual   1
+    PASS  [AC6] next local day, the filter has advanced one day
+    PASS  [AC6] …and the problem is due then
+  S7
+    PASS  [—] days:0 alone leaves the date untouched
+    PASS  [—] days:0 still writes Attempts
+    PASS  [—] days:0 PATCH body carries only Attempts
+    PASS  [—] days:0 response.date is null
+    PASS  [—] nothing to write -> no request at all
+    PASS  [—] nothing to write -> skipped:true
+  S8
+    FAIL  [AC3] section threw: bg.api.localDateInDays is not a function
+          expected "no exception"
+          actual   "bg.api.localDateInDays is not a function"
+
+### tokyo-morning  [TZ=Asia/Tokyo]  frozen at 2026-08-10T22:00:00Z
+    local day 2026-08-11 · UTC day 2026-08-10  <-- they disagree
+    positive UTC offset, morning: UTC is still yesterday
+  S1
+    FAIL  [AC4] section threw: bg.api.localDateString is not a function
+          expected "no exception"
+          actual   "bg.api.localDateString is not a function"
+  S2
+    PASS  [AC1] message router reports success
+    FAIL  [AC1] response.date is the local today
+          expected "2026-08-11"
+          actual   null
+    PASS  [AC1] exactly one PATCH reached Notion
+    FAIL  [AC1] PATCH body properties
+          expected {"Spaced Repetition":{"date":{"start":"2026-08-11"}},"Attempts":{"number":4}}
+          actual   {"Attempts":{"number":4}}
+    FAIL  [AC1] page 'Spaced Repetition' after the write
+          expected {"date":{"start":"2026-08-11"}}
+          actual   {"date":{"start":"2026-09-30"}}
+    FAIL  [AC1] the stale 2026-09-30 date was replaced
+          expected "2026-08-11"
+          actual   "2026-09-30"
+    PASS  [AC1] unrelated properties untouched
+  S3
+    FAIL  [AC3] setToday wins over no days field at all
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-09-30"]
+    PASS  [AC3] setToday wins over days:1 (Low)
+    FAIL  [AC3] setToday wins over days:3 (Medium)
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-08-13"]
+    FAIL  [AC3] setToday wins over days:7 (High)
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-08-17"]
+    FAIL  [AC3] setToday wins over days:null
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] intervals stored as 0/0/0 do not suppress the write
+          expected "2026-08-11"
+          actual   "2026-09-30"
+  S4
+    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
+    PASS  [AC5] second Revisit -> 5
+    FAIL  [AC5] date still today after the second click
+          expected "2026-08-11"
+          actual   "2026-09-30"
+    PASS  [AC5] a failed PATCH reports success:false
+    PASS  [AC5] a failed PATCH leaves Attempts alone
+    PASS  [AC5] a failed PATCH leaves the date alone
+  S5
+    FAIL  [AC6] written at 00:05 local -> today
+          expected "2026-08-11"
+          actual   "2026-09-30"
+    FAIL  [AC6] checkDueReviews at 00:06 local (just after the write) filters on the local today
+          expected {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-11"}}
+          actual   {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-10"}}
+    FAIL  [AC6] reset problem is in the due set at 00:06 local (just after the write)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 00:06 local (just after the write)
+          expected 1
+          actual   0
+    PASS  [AC6] checkDueReviews at 12:00 local (midday) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 12:00 local (midday)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 12:00 local (midday)
+          expected 1
+          actual   0
+    PASS  [AC6] checkDueReviews at 23:55 local (last alarm of the day) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 23:55 local (last alarm of the day)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 23:55 local (last alarm of the day)
+          expected 1
+          actual   0
+    FAIL  [AC6] getStats counts the reset problem as due
+          expected 1
+          actual   0
+  S6
+    FAIL  [AC7] days:1 writes today+1 (local)
+          expected "2026-08-12"
+          actual   "2026-08-11"
+    FAIL  [AC7] days:1 response.date
+          expected "2026-08-12"
+          actual   "2026-08-11"
+    FAIL  [AC7] days:1 writes no Attempts property
+          expected {"Spaced Repetition":{"date":{"start":"2026-08-12"}}}
+          actual   {"Spaced Repetition":{"date":{"start":"2026-08-11"}}}
+    PASS  [AC7] Attempts on the page is untouched by Review Tomorrow
+    PASS  [AC6] a Review-Tomorrow problem is NOT due today
+    PASS  [AC6] …and no notification fires
+    PASS  [AC6] next local day, the filter has advanced one day
+    PASS  [AC6] …and the problem is due then
+  S7
+    PASS  [—] days:0 alone leaves the date untouched
+    PASS  [—] days:0 still writes Attempts
+    PASS  [—] days:0 PATCH body carries only Attempts
+    PASS  [—] days:0 response.date is null
+    PASS  [—] nothing to write -> no request at all
+    PASS  [—] nothing to write -> skipped:true
+  S8
+    FAIL  [AC3] section threw: bg.api.localDateInDays is not a function
+          expected "no exception"
+          actual   "bg.api.localDateInDays is not a function"
+
+### midway-late  [TZ=Pacific/Midway]  frozen at 2026-08-11T10:00:00Z
+    local day 2026-08-10 · UTC day 2026-08-11  <-- they disagree
+    extreme negative offset (UTC-11), last hour of the local day
+  S1
+    FAIL  [AC4] section threw: bg.api.localDateString is not a function
+          expected "no exception"
+          actual   "bg.api.localDateString is not a function"
+  S2
+    PASS  [AC1] message router reports success
+    FAIL  [AC1] response.date is the local today
+          expected "2026-08-10"
+          actual   null
+    PASS  [AC1] exactly one PATCH reached Notion
+    FAIL  [AC1] PATCH body properties
+          expected {"Spaced Repetition":{"date":{"start":"2026-08-10"}},"Attempts":{"number":4}}
+          actual   {"Attempts":{"number":4}}
+    FAIL  [AC1] page 'Spaced Repetition' after the write
+          expected {"date":{"start":"2026-08-10"}}
+          actual   {"date":{"start":"2026-09-30"}}
+    FAIL  [AC1] the stale 2026-09-30 date was replaced
+          expected "2026-08-10"
+          actual   "2026-09-30"
+    PASS  [AC1] unrelated properties untouched
+  S3
+    FAIL  [AC3] setToday wins over no days field at all
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:1 (Low)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-08-12"]
+    FAIL  [AC3] setToday wins over days:3 (Medium)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-08-14"]
+    FAIL  [AC3] setToday wins over days:7 (High)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-08-18"]
+    FAIL  [AC3] setToday wins over days:null
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] intervals stored as 0/0/0 do not suppress the write
+          expected "2026-08-10"
+          actual   "2026-09-30"
+  S4
+    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
+    PASS  [AC5] second Revisit -> 5
+    FAIL  [AC5] date still today after the second click
+          expected "2026-08-10"
+          actual   "2026-09-30"
+    PASS  [AC5] a failed PATCH reports success:false
+    PASS  [AC5] a failed PATCH leaves Attempts alone
+    PASS  [AC5] a failed PATCH leaves the date alone
+  S5
+    FAIL  [AC6] written at 00:05 local -> today
+          expected "2026-08-10"
+          actual   "2026-09-30"
+    PASS  [AC6] checkDueReviews at 00:06 local (just after the write) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 00:06 local (just after the write)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 00:06 local (just after the write)
+          expected 1
+          actual   0
+    PASS  [AC6] checkDueReviews at 12:00 local (midday) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 12:00 local (midday)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 12:00 local (midday)
+          expected 1
+          actual   0
+    FAIL  [AC6] checkDueReviews at 23:55 local (last alarm of the day) filters on the local today
+          expected {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-10"}}
+          actual   {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-11"}}
+    FAIL  [AC6] reset problem is in the due set at 23:55 local (last alarm of the day)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 23:55 local (last alarm of the day)
+          expected 1
+          actual   0
+    FAIL  [AC6] getStats counts the reset problem as due
+          expected 1
+          actual   0
+  S6
+    FAIL  [AC7] days:1 writes today+1 (local)
+          expected "2026-08-11"
+          actual   "2026-08-12"
+    FAIL  [AC7] days:1 response.date
+          expected "2026-08-11"
+          actual   "2026-08-12"
+    FAIL  [AC7] days:1 writes no Attempts property
+          expected {"Spaced Repetition":{"date":{"start":"2026-08-11"}}}
+          actual   {"Spaced Repetition":{"date":{"start":"2026-08-12"}}}
+    PASS  [AC7] Attempts on the page is untouched by Review Tomorrow
+    FAIL  [AC6] a Review-Tomorrow problem is NOT due today
+          expected 0
+          actual   1
+    FAIL  [AC6] …and no notification fires
+          expected 0
+          actual   1
+    PASS  [AC6] next local day, the filter has advanced one day
+    PASS  [AC6] …and the problem is due then
+  S7
+    PASS  [—] days:0 alone leaves the date untouched
+    PASS  [—] days:0 still writes Attempts
+    PASS  [—] days:0 PATCH body carries only Attempts
+    PASS  [—] days:0 response.date is null
+    PASS  [—] nothing to write -> no request at all
+    PASS  [—] nothing to write -> skipped:true
+  S8
+    FAIL  [AC3] section threw: bg.api.localDateInDays is not a function
+          expected "no exception"
+          actual   "bg.api.localDateInDays is not a function"
+
+### kiritimati-early  [TZ=Pacific/Kiritimati]  frozen at 2026-08-10T11:00:00Z
+    local day 2026-08-11 · UTC day 2026-08-10  <-- they disagree
+    extreme positive offset (UTC+14), first hour of the local day
+  S1
+    FAIL  [AC4] section threw: bg.api.localDateString is not a function
+          expected "no exception"
+          actual   "bg.api.localDateString is not a function"
+  S2
+    PASS  [AC1] message router reports success
+    FAIL  [AC1] response.date is the local today
+          expected "2026-08-11"
+          actual   null
+    PASS  [AC1] exactly one PATCH reached Notion
+    FAIL  [AC1] PATCH body properties
+          expected {"Spaced Repetition":{"date":{"start":"2026-08-11"}},"Attempts":{"number":4}}
+          actual   {"Attempts":{"number":4}}
+    FAIL  [AC1] page 'Spaced Repetition' after the write
+          expected {"date":{"start":"2026-08-11"}}
+          actual   {"date":{"start":"2026-09-30"}}
+    FAIL  [AC1] the stale 2026-09-30 date was replaced
+          expected "2026-08-11"
+          actual   "2026-09-30"
+    PASS  [AC1] unrelated properties untouched
+  S3
+    FAIL  [AC3] setToday wins over no days field at all
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-09-30"]
+    PASS  [AC3] setToday wins over days:1 (Low)
+    FAIL  [AC3] setToday wins over days:3 (Medium)
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-08-13"]
+    FAIL  [AC3] setToday wins over days:7 (High)
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-08-17"]
+    FAIL  [AC3] setToday wins over days:null
+          expected [true,"2026-08-11"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] intervals stored as 0/0/0 do not suppress the write
+          expected "2026-08-11"
+          actual   "2026-09-30"
+  S4
+    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
+    PASS  [AC5] second Revisit -> 5
+    FAIL  [AC5] date still today after the second click
+          expected "2026-08-11"
+          actual   "2026-09-30"
+    PASS  [AC5] a failed PATCH reports success:false
+    PASS  [AC5] a failed PATCH leaves Attempts alone
+    PASS  [AC5] a failed PATCH leaves the date alone
+  S5
+    FAIL  [AC6] written at 00:05 local -> today
+          expected "2026-08-11"
+          actual   "2026-09-30"
+    FAIL  [AC6] checkDueReviews at 00:06 local (just after the write) filters on the local today
+          expected {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-11"}}
+          actual   {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-10"}}
+    FAIL  [AC6] reset problem is in the due set at 00:06 local (just after the write)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 00:06 local (just after the write)
+          expected 1
+          actual   0
+    FAIL  [AC6] checkDueReviews at 12:00 local (midday) filters on the local today
+          expected {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-11"}}
+          actual   {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-10"}}
+    FAIL  [AC6] reset problem is in the due set at 12:00 local (midday)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 12:00 local (midday)
+          expected 1
+          actual   0
+    PASS  [AC6] checkDueReviews at 23:55 local (last alarm of the day) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 23:55 local (last alarm of the day)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 23:55 local (last alarm of the day)
+          expected 1
+          actual   0
+    FAIL  [AC6] getStats counts the reset problem as due
+          expected 1
+          actual   0
+  S6
+    FAIL  [AC7] days:1 writes today+1 (local)
+          expected "2026-08-12"
+          actual   "2026-08-11"
+    FAIL  [AC7] days:1 response.date
+          expected "2026-08-12"
+          actual   "2026-08-11"
+    FAIL  [AC7] days:1 writes no Attempts property
+          expected {"Spaced Repetition":{"date":{"start":"2026-08-12"}}}
+          actual   {"Spaced Repetition":{"date":{"start":"2026-08-11"}}}
+    PASS  [AC7] Attempts on the page is untouched by Review Tomorrow
+    PASS  [AC6] a Review-Tomorrow problem is NOT due today
+    PASS  [AC6] …and no notification fires
+    FAIL  [AC6] next local day, the filter has advanced one day
+          expected "2026-08-12"
+          actual   "2026-08-11"
+    FAIL  [AC6] …and the problem is due then
+          expected ["qa-page-1"]
+          actual   []
+  S7
+    PASS  [—] days:0 alone leaves the date untouched
+    PASS  [—] days:0 still writes Attempts
+    PASS  [—] days:0 PATCH body carries only Attempts
+    PASS  [—] days:0 response.date is null
+    PASS  [—] nothing to write -> no request at all
+    PASS  [—] nothing to write -> skipped:true
+  S8
+    FAIL  [AC3] section threw: bg.api.localDateInDays is not a function
+          expected "no exception"
+          actual   "bg.api.localDateInDays is not a function"
+
+### utc-control  [TZ=UTC]  frozen at 2026-08-10T12:00:00Z
+    local day 2026-08-10 · UTC day 2026-08-10  (they agree)
+    control — local and UTC agree; the fix must not disturb this case
+  S1
+    FAIL  [AC4] section threw: bg.api.localDateString is not a function
+          expected "no exception"
+          actual   "bg.api.localDateString is not a function"
+  S2
+    PASS  [AC1] message router reports success
+    FAIL  [AC1] response.date is the local today
+          expected "2026-08-10"
+          actual   null
+    PASS  [AC1] exactly one PATCH reached Notion
+    FAIL  [AC1] PATCH body properties
+          expected {"Spaced Repetition":{"date":{"start":"2026-08-10"}},"Attempts":{"number":4}}
+          actual   {"Attempts":{"number":4}}
+    FAIL  [AC1] page 'Spaced Repetition' after the write
+          expected {"date":{"start":"2026-08-10"}}
+          actual   {"date":{"start":"2026-09-30"}}
+    FAIL  [AC1] the stale 2026-09-30 date was replaced
+          expected "2026-08-10"
+          actual   "2026-09-30"
+    PASS  [AC1] unrelated properties untouched
+  S3
+    FAIL  [AC3] setToday wins over no days field at all
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:1 (Low)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-08-11"]
+    FAIL  [AC3] setToday wins over days:3 (Medium)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-08-13"]
+    FAIL  [AC3] setToday wins over days:7 (High)
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-08-17"]
+    FAIL  [AC3] setToday wins over days:null
+          expected [true,"2026-08-10"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] intervals stored as 0/0/0 do not suppress the write
+          expected "2026-08-10"
+          actual   "2026-09-30"
+  S4
+    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
+    PASS  [AC5] second Revisit -> 5
+    FAIL  [AC5] date still today after the second click
+          expected "2026-08-10"
+          actual   "2026-09-30"
+    PASS  [AC5] a failed PATCH reports success:false
+    PASS  [AC5] a failed PATCH leaves Attempts alone
+    PASS  [AC5] a failed PATCH leaves the date alone
+  S5
+    FAIL  [AC6] written at 00:05 local -> today
+          expected "2026-08-10"
+          actual   "2026-09-30"
+    PASS  [AC6] checkDueReviews at 00:06 local (just after the write) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 00:06 local (just after the write)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 00:06 local (just after the write)
+          expected 1
+          actual   0
+    PASS  [AC6] checkDueReviews at 12:00 local (midday) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 12:00 local (midday)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 12:00 local (midday)
+          expected 1
+          actual   0
+    PASS  [AC6] checkDueReviews at 23:55 local (last alarm of the day) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 23:55 local (last alarm of the day)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 23:55 local (last alarm of the day)
+          expected 1
+          actual   0
+    FAIL  [AC6] getStats counts the reset problem as due
+          expected 1
+          actual   0
+  S6
+    PASS  [AC7] days:1 writes today+1 (local)
+    PASS  [AC7] days:1 response.date
+    PASS  [AC7] days:1 writes no Attempts property
+    PASS  [AC7] Attempts on the page is untouched by Review Tomorrow
+    PASS  [AC6] a Review-Tomorrow problem is NOT due today
+    PASS  [AC6] …and no notification fires
+    PASS  [AC6] next local day, the filter has advanced one day
+    PASS  [AC6] …and the problem is due then
+  S7
+    PASS  [—] days:0 alone leaves the date untouched
+    PASS  [—] days:0 still writes Attempts
+    PASS  [—] days:0 PATCH body carries only Attempts
+    PASS  [—] days:0 response.date is null
+    PASS  [—] nothing to write -> no request at all
+    PASS  [—] nothing to write -> skipped:true
+  S8
+    FAIL  [AC3] section threw: bg.api.localDateInDays is not a function
+          expected "no exception"
+          actual   "bg.api.localDateInDays is not a function"
+
+### ny-dst-spring  [TZ=America/New_York]  frozen at 2026-03-08T04:30:00Z
+    local day 2026-03-07 · UTC day 2026-03-08  <-- they disagree
+    DST spring-forward boundary — today+1 crosses a 23-hour local day
+  S1
+    FAIL  [AC4] section threw: bg.api.localDateString is not a function
+          expected "no exception"
+          actual   "bg.api.localDateString is not a function"
+  S2
+    PASS  [AC1] message router reports success
+    FAIL  [AC1] response.date is the local today
+          expected "2026-03-07"
+          actual   null
+    PASS  [AC1] exactly one PATCH reached Notion
+    FAIL  [AC1] PATCH body properties
+          expected {"Spaced Repetition":{"date":{"start":"2026-03-07"}},"Attempts":{"number":4}}
+          actual   {"Attempts":{"number":4}}
+    FAIL  [AC1] page 'Spaced Repetition' after the write
+          expected {"date":{"start":"2026-03-07"}}
+          actual   {"date":{"start":"2026-09-30"}}
+    FAIL  [AC1] the stale 2026-09-30 date was replaced
+          expected "2026-03-07"
+          actual   "2026-09-30"
+    PASS  [AC1] unrelated properties untouched
+  S3
+    FAIL  [AC3] setToday wins over no days field at all
+          expected [true,"2026-03-07"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
+          expected [true,"2026-03-07"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:1 (Low)
+          expected [true,"2026-03-07"]
+          actual   [true,"2026-03-09"]
+    FAIL  [AC3] setToday wins over days:3 (Medium)
+          expected [true,"2026-03-07"]
+          actual   [true,"2026-03-11"]
+    FAIL  [AC3] setToday wins over days:7 (High)
+          expected [true,"2026-03-07"]
+          actual   [true,"2026-03-15"]
+    FAIL  [AC3] setToday wins over days:null
+          expected [true,"2026-03-07"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] intervals stored as 0/0/0 do not suppress the write
+          expected "2026-03-07"
+          actual   "2026-09-30"
+  S4
+    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
+    PASS  [AC5] second Revisit -> 5
+    FAIL  [AC5] date still today after the second click
+          expected "2026-03-07"
+          actual   "2026-09-30"
+    PASS  [AC5] a failed PATCH reports success:false
+    PASS  [AC5] a failed PATCH leaves Attempts alone
+    PASS  [AC5] a failed PATCH leaves the date alone
+  S5
+    FAIL  [AC6] written at 00:05 local -> today
+          expected "2026-03-07"
+          actual   "2026-09-30"
+    PASS  [AC6] checkDueReviews at 00:06 local (just after the write) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 00:06 local (just after the write)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 00:06 local (just after the write)
+          expected 1
+          actual   0
+    PASS  [AC6] checkDueReviews at 12:00 local (midday) filters on the local today
+    FAIL  [AC6] reset problem is in the due set at 12:00 local (midday)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 12:00 local (midday)
+          expected 1
+          actual   0
+    FAIL  [AC6] checkDueReviews at 23:55 local (last alarm of the day) filters on the local today
+          expected {"property":"Spaced Repetition","date":{"on_or_before":"2026-03-07"}}
+          actual   {"property":"Spaced Repetition","date":{"on_or_before":"2026-03-08"}}
+    FAIL  [AC6] reset problem is in the due set at 23:55 local (last alarm of the day)
+          expected ["qa-page-1"]
+          actual   []
+    FAIL  [AC6] the review notification fires at 23:55 local (last alarm of the day)
+          expected 1
+          actual   0
+    FAIL  [AC6] getStats counts the reset problem as due
+          expected 1
+          actual   0
+  S6
+    FAIL  [AC7] days:1 writes today+1 (local)
+          expected "2026-03-08"
+          actual   "2026-03-09"
+    FAIL  [AC7] days:1 response.date
+          expected "2026-03-08"
+          actual   "2026-03-09"
+    FAIL  [AC7] days:1 writes no Attempts property
+          expected {"Spaced Repetition":{"date":{"start":"2026-03-08"}}}
+          actual   {"Spaced Repetition":{"date":{"start":"2026-03-09"}}}
+    PASS  [AC7] Attempts on the page is untouched by Review Tomorrow
+    FAIL  [AC6] a Review-Tomorrow problem is NOT due today
+          expected 0
+          actual   1
+    FAIL  [AC6] …and no notification fires
+          expected 0
+          actual   1
+    PASS  [AC6] next local day, the filter has advanced one day
+    PASS  [AC6] …and the problem is due then
+  S7
+    PASS  [—] days:0 alone leaves the date untouched
+    PASS  [—] days:0 still writes Attempts
+    PASS  [—] days:0 PATCH body carries only Attempts
+    PASS  [—] days:0 response.date is null
+    PASS  [—] nothing to write -> no request at all
+    PASS  [—] nothing to write -> skipped:true
+  S8
+    FAIL  [AC3] section threw: bg.api.localDateInDays is not a function
+          expected "no exception"
+          actual   "bg.api.localDateInDays is not a function"
+
+### ny-dst-fall  [TZ=America/New_York]  frozen at 2026-11-01T05:30:00Z
+    local day 2026-11-01 · UTC day 2026-11-01  (they agree)
+    DST fall-back boundary — today+1 crosses a 25-hour local day
+  S1
+    FAIL  [AC4] section threw: bg.api.localDateString is not a function
+          expected "no exception"
+          actual   "bg.api.localDateString is not a function"
+  S2
+    PASS  [AC1] message router reports success
+    FAIL  [AC1] response.date is the local today
+          expected "2026-11-01"
+          actual   null
+    PASS  [AC1] exactly one PATCH reached Notion
+    FAIL  [AC1] PATCH body properties
+          expected {"Spaced Repetition":{"date":{"start":"2026-11-01"}},"Attempts":{"number":4}}
+          actual   {"Attempts":{"number":4}}
+    FAIL  [AC1] page 'Spaced Repetition' after the write
+          expected {"date":{"start":"2026-11-01"}}
+          actual   {"date":{"start":"2026-09-30"}}
+    FAIL  [AC1] the stale 2026-09-30 date was replaced
+          expected "2026-11-01"
+          actual   "2026-09-30"
+    PASS  [AC1] unrelated properties untouched
+  S3
+    FAIL  [AC3] setToday wins over no days field at all
+          expected [true,"2026-11-01"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
+          expected [true,"2026-11-01"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:1 (Low)
+          expected [true,"2026-11-01"]
+          actual   [true,"2026-11-02"]
+    FAIL  [AC3] setToday wins over days:3 (Medium)
+          expected [true,"2026-11-01"]
+          actual   [true,"2026-11-04"]
+    FAIL  [AC3] setToday wins over days:7 (High)
+          expected [true,"2026-11-01"]
+          actual   [true,"2026-11-08"]
+    FAIL  [AC3] setToday wins over days:null
+          expected [true,"2026-11-01"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] intervals stored as 0/0/0 do not suppress the write
+          expected "2026-11-01"
+          actual   "2026-09-30"
+  S4
+    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
+    PASS  [AC5] second Revisit -> 5
+    FAIL  [AC5] date still today after the second click
+          expected "2026-11-01"
+          actual   "2026-09-30"
+    PASS  [AC5] a failed PATCH reports success:false
+    PASS  [AC5] a failed PATCH leaves Attempts alone
+    PASS  [AC5] a failed PATCH leaves the date alone
+  S5
+    FAIL  [AC6] written at 00:05 local -> today
+          expected "2026-11-01"
+          actual   "2026-09-30"
+    PASS  [AC6] checkDueReviews at 00:06 local (just after the write) filters on the local today
+    PASS  [AC6] reset problem is in the due set at 00:06 local (just after the write)
+    PASS  [AC6] the review notification fires at 00:06 local (just after the write)
+    PASS  [AC6] checkDueReviews at 12:00 local (midday) filters on the local today
+    PASS  [AC6] reset problem is in the due set at 12:00 local (midday)
+    PASS  [AC6] the review notification fires at 12:00 local (midday)
+    FAIL  [AC6] checkDueReviews at 23:55 local (last alarm of the day) filters on the local today
+          expected {"property":"Spaced Repetition","date":{"on_or_before":"2026-11-01"}}
+          actual   {"property":"Spaced Repetition","date":{"on_or_before":"2026-11-02"}}
+    PASS  [AC6] reset problem is in the due set at 23:55 local (last alarm of the day)
+    PASS  [AC6] the review notification fires at 23:55 local (last alarm of the day)
+    PASS  [AC6] getStats counts the reset problem as due
+  S6
+    PASS  [AC7] days:1 writes today+1 (local)
+    PASS  [AC7] days:1 response.date
+    PASS  [AC7] days:1 writes no Attempts property
+    PASS  [AC7] Attempts on the page is untouched by Review Tomorrow
+    PASS  [AC6] a Review-Tomorrow problem is NOT due today
+    PASS  [AC6] …and no notification fires
+    PASS  [AC6] next local day, the filter has advanced one day
+    PASS  [AC6] …and the problem is due then
+  S7
+    PASS  [—] days:0 alone leaves the date untouched
+    PASS  [—] days:0 still writes Attempts
+    PASS  [—] days:0 PATCH body carries only Attempts
+    PASS  [—] days:0 response.date is null
+    PASS  [—] nothing to write -> no request at all
+    PASS  [—] nothing to write -> skipped:true
+  S8
+    FAIL  [AC3] section threw: bg.api.localDateInDays is not a function
+          expected "no exception"
+          actual   "bg.api.localDateInDays is not a function"
+
+### ny-year-rollover  [TZ=America/New_York]  frozen at 2027-01-01T02:00:00Z
+    local day 2026-12-31 · UTC day 2027-01-01  <-- they disagree
+    year rollover with a negative offset — UTC is already next year
+  S1
+    FAIL  [AC4] section threw: bg.api.localDateString is not a function
+          expected "no exception"
+          actual   "bg.api.localDateString is not a function"
+  S2
+    PASS  [AC1] message router reports success
+    FAIL  [AC1] response.date is the local today
+          expected "2026-12-31"
+          actual   null
+    PASS  [AC1] exactly one PATCH reached Notion
+    FAIL  [AC1] PATCH body properties
+          expected {"Spaced Repetition":{"date":{"start":"2026-12-31"}},"Attempts":{"number":4}}
+          actual   {"Attempts":{"number":4}}
+    FAIL  [AC1] page 'Spaced Repetition' after the write
+          expected {"date":{"start":"2026-12-31"}}
+          actual   {"date":{"start":"2026-09-30"}}
+    FAIL  [AC1] the stale 2026-09-30 date was replaced
+          expected "2026-12-31"
+          actual   "2026-09-30"
+    PASS  [AC1] unrelated properties untouched
+  S3
+    FAIL  [AC3] setToday wins over no days field at all
+          expected [true,"2026-12-31"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:0 (reviews disabled for this expertise)
+          expected [true,"2026-12-31"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] setToday wins over days:1 (Low)
+          expected [true,"2026-12-31"]
+          actual   [true,"2027-01-02"]
+    FAIL  [AC3] setToday wins over days:3 (Medium)
+          expected [true,"2026-12-31"]
+          actual   [true,"2027-01-04"]
+    FAIL  [AC3] setToday wins over days:7 (High)
+          expected [true,"2026-12-31"]
+          actual   [true,"2027-01-08"]
+    FAIL  [AC3] setToday wins over days:null
+          expected [true,"2026-12-31"]
+          actual   [true,"2026-09-30"]
+    FAIL  [AC3] intervals stored as 0/0/0 do not suppress the write
+          expected "2026-12-31"
+          actual   "2026-09-30"
+  S4
+    PASS  [AC5] Attempts 3 -> 4 in the same PATCH
+    PASS  [AC5] second Revisit -> 5
+    FAIL  [AC5] date still today after the second click
+          expected "2026-12-31"
+          actual   "2026-09-30"
+    PASS  [AC5] a failed PATCH reports success:false
+    PASS  [AC5] a failed PATCH leaves Attempts alone
+    PASS  [AC5] a failed PATCH leaves the date alone
+  S5
+    FAIL  [AC6] written at 00:05 local -> today
+          expected "2026-12-31"
+          actual   "2026-09-30"
+    PASS  [AC6] checkDueReviews at 00:06 local (just after the write) filters on the local today
+    PASS  [AC6] reset problem is in the due set at 00:06 local (just after the write)
+    PASS  [AC6] the review notification fires at 00:06 local (just after the write)
+    PASS  [AC6] checkDueReviews at 12:00 local (midday) filters on the local today
+    PASS  [AC6] reset problem is in the due set at 12:00 local (midday)
+    PASS  [AC6] the review notification fires at 12:00 local (midday)
+    FAIL  [AC6] checkDueReviews at 23:55 local (last alarm of the day) filters on the local today
+          expected {"property":"Spaced Repetition","date":{"on_or_before":"2026-12-31"}}
+          actual   {"property":"Spaced Repetition","date":{"on_or_before":"2027-01-01"}}
+    PASS  [AC6] reset problem is in the due set at 23:55 local (last alarm of the day)
+    PASS  [AC6] the review notification fires at 23:55 local (last alarm of the day)
+    PASS  [AC6] getStats counts the reset problem as due
+  S6
+    FAIL  [AC7] days:1 writes today+1 (local)
+          expected "2027-01-01"
+          actual   "2027-01-02"
+    FAIL  [AC7] days:1 response.date
+          expected "2027-01-01"
+          actual   "2027-01-02"
+    FAIL  [AC7] days:1 writes no Attempts property
+          expected {"Spaced Repetition":{"date":{"start":"2027-01-01"}}}
+          actual   {"Spaced Repetition":{"date":{"start":"2027-01-02"}}}
+    PASS  [AC7] Attempts on the page is untouched by Review Tomorrow
+    FAIL  [AC6] a Review-Tomorrow problem is NOT due today
+          expected 0
+          actual   1
+    FAIL  [AC6] …and no notification fires
+          expected 0
+          actual   1
+    PASS  [AC6] next local day, the filter has advanced one day
+    PASS  [AC6] …and the problem is due then
+  S7
+    PASS  [—] days:0 alone leaves the date untouched
+    PASS  [—] days:0 still writes Attempts
+    PASS  [—] days:0 PATCH body carries only Attempts
+    PASS  [—] days:0 response.date is null
+    PASS  [—] nothing to write -> no request at all
+    PASS  [—] nothing to write -> skipped:true
+  S8
+    FAIL  [AC3] section threw: bg.api.localDateInDays is not a function
+          expected "no exception"
+          actual   "bg.api.localDateInDays is not a function"
+
+==============================================================================
+Scenarios: 8   Assertions: 376   Failures: 196
+  AC1    24 pass  32 fail
+  AC3     2 pass  62 fail
+  AC4     0 pass  8 fail
+  AC5    40 pass  8 fail
+  AC6    52 pass  68 fail
+  AC7    14 pass  18 fail
+  —      48 pass  0 fail
+
+196 CHECK(S) FAILED
