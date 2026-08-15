@@ -495,6 +495,26 @@
                 Review Today
               </button>
             </div>
+            <!-- Off empties the "Spaced Repetition" date in Notion, taking the
+                 problem out of the review rotation; on re-queues it for today.
+                 Lives here rather than in the "Mark as Done" row because that
+                 row already ends with the Attempts control. -->
+            <div class="toggle-row quick-actions-toggle">
+              <input
+                type="checkbox"
+                id="input-spaced-repetition"
+                class="toggle-checkbox"
+                checked
+              />
+              <label
+                for="input-spaced-repetition"
+                class="toggle-switch"
+              ></label>
+              <span class="toggle-label">Spaced Repetition</span>
+              <span class="toggle-hint" id="spaced-repetition-hint"
+                >Due date set</span
+              >
+            </div>
           </article>
             <article class="card card-collapsible expanded" id="card-question">
   <div class="card-header" id="card-question-toggle">

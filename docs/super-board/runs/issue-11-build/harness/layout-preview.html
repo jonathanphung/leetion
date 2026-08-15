@@ -1,4 +1,8 @@
-/**
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>/**
  * Leetion Styles
  * Apple-inspired dark theme
  * @version 1.0.0
@@ -283,46 +287,6 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-/*
- * "Mark to-do" — pushed to the right edge of the problem header by the auto
- * margin, so the number and difficulty badge keep their natural left group.
- * Sized to the badge's type scale and given `white-space: nowrap` +
- * `flex-shrink: 0` so it can never wrap or squeeze the badge at the popup's
- * fixed 400px width.
- */
-.todo-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: auto;
-  flex-shrink: 0;
-  white-space: nowrap;
-  padding: 3px 8px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.todo-btn:hover:not(:disabled) {
-  background: var(--bg-elevated);
-  color: var(--text-primary);
-  border-color: var(--accent);
-}
-
-.todo-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.todo-btn svg {
-  flex-shrink: 0;
 }
 
 .difficulty-badge.easy {
@@ -1466,3 +1430,65 @@ body {
 .popup-footer a:hover {
   text-decoration: underline;
 }
+</style>
+    <style>
+      body { width: 400px; padding: 12px; }
+    </style>
+  </head>
+  <body>
+    <article class="card card-quick-actions" id="card-quick-actions">
+      <div class="quick-actions">
+        <button type="button" id="btn-mark-review" class="quick-btn" title="Set review for tomorrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+            <path d="M9 16l2 2 4-4" />
+          </svg>
+          Review Tomorrow
+        </button>
+        <button type="button" id="btn-revisit" class="quick-btn" title="Set review date to today">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 4v6h-6" />
+            <path d="M1 20v-6h6" />
+            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
+          </svg>
+          Review Today
+        </button>
+      </div>
+      <div class="toggle-row quick-actions-toggle">
+        <input type="checkbox" id="input-spaced-repetition" class="toggle-checkbox" checked />
+        <label for="input-spaced-repetition" class="toggle-switch"></label>
+        <span class="toggle-label">Spaced Repetition</span>
+        <span class="toggle-hint" id="spaced-repetition-hint">Due date set</span>
+      </div>
+    </article>
+
+    <article class="card card-quick-actions">
+      <div class="quick-actions">
+        <button type="button" class="quick-btn quick-btn-success">Review Tomorrow</button>
+        <button type="button" class="quick-btn">Review Today</button>
+      </div>
+      <div class="toggle-row quick-actions-toggle">
+        <input type="checkbox" id="off-toggle" class="toggle-checkbox" />
+        <label for="off-toggle" class="toggle-switch"></label>
+        <span class="toggle-label">Spaced Repetition</span>
+        <span class="toggle-hint">No reviews</span>
+      </div>
+    </article>
+
+    <article class="card" id="card-done">
+      <div class="toggle-row">
+        <input type="checkbox" id="input-done" class="toggle-checkbox" checked />
+        <label for="input-done" class="toggle-switch"></label>
+        <span class="toggle-label">Mark as Done</span>
+        <div class="attempts-control" id="attempts-control">
+          <label class="attempts-label" for="input-attempts">Attempts:</label>
+          <input type="number" id="input-attempts" class="attempts-input" value="12" />
+          <button type="button" class="attempts-plus">+</button>
+        </div>
+      </div>
+    </article>
+  </body>
+</html>
