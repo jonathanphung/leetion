@@ -1,0 +1,182 @@
+
+01-button-visible-new-problem.png  (AC1/AC2 — unsaved problem: the button sits right-aligned on the header row)
+   url          http://localhost:8212/?demo=none
+   button       hidden=false label="Mark to-do" disabled=false
+   header rects number={"x":25,"y":192,"w":39,"h":21,"right":64,"bottom":213,"cy":203}
+                badge ={"x":72,"y":191,"w":50,"h":23,"right":122,"bottom":214,"cy":203}
+                button={"x":288,"y":193,"w":87,"h":20,"right":375,"bottom":213,"cy":203}
+                header={"x":25,"y":191,"w":350,"h":23,"right":375,"bottom":214,"cy":203}
+   ui           save="Save to Notion" quickHidden=true attempts=0 done=true
+   toast        "" (status-message hidden)
+   creates      0
+
+02-button-hidden-existing-entry.png  (AC2 — the same problem already in Notion: no button)
+   url          http://localhost:8212/?seeded=1&demo=none
+   button       hidden=true label="Mark to-do" disabled=false
+   header rects number={"x":25,"y":207,"w":39,"h":21,"right":64,"bottom":228,"cy":218}
+                badge ={"x":72,"y":207,"w":50,"h":23,"right":122,"bottom":229,"cy":218}
+                button={"x":0,"y":0,"w":0,"h":0,"right":0,"bottom":0,"cy":0}
+                header={"x":25,"y":207,"w":350,"h":23,"right":375,"bottom":229,"cy":218}
+   ui           save="Update in Notion" quickHidden=false attempts=3 done=false
+   toast        "Found existing entry - will update on save" (status-message status-success)
+   creates      0
+   Notion row   SR=2026-09-30 Attempts=3 Done=false First=2026-07-01 Expertise=Medium body=0
+
+03-marked-todo.png  (AC3/AC5 — after the click: row queued, button gone, save reads Update in Notion)
+   url          http://localhost:8212/?demo=marked
+   button       hidden=true label="Mark to-do" disabled=false
+   header rects number={"x":25,"y":238,"w":39,"h":21,"right":64,"bottom":259,"cy":248}
+                badge ={"x":72,"y":237,"w":50,"h":23,"right":122,"bottom":259,"cy":248}
+                button={"x":0,"y":0,"w":0,"h":0,"right":0,"bottom":0,"cy":0}
+                header={"x":25,"y":237,"w":350,"h":23,"right":375,"bottom":259,"cy":248}
+   ui           save="Update in Notion" quickHidden=false attempts=0 done=false
+   toast        "Marked to-do - due for review today" (status-message status-success)
+   creates      1
+   Notion row   SR=2026-08-10 Attempts=0 Done=false First=(empty) Expertise=(empty) body=0
+
+04-update-after-attempt.png  (AC6 — the first real Update in Notion backfills the date and moves Attempts 0 → 1)
+   url          http://localhost:8212/?demo=update
+   button       hidden=true label="Mark to-do" disabled=false
+   header rects number={"x":25,"y":238,"w":39,"h":21,"right":64,"bottom":259,"cy":248}
+                badge ={"x":72,"y":237,"w":50,"h":23,"right":122,"bottom":259,"cy":248}
+                button={"x":0,"y":0,"w":0,"h":0,"right":0,"bottom":0,"cy":0}
+                header={"x":25,"y":237,"w":350,"h":23,"right":375,"bottom":259,"cy":248}
+   ui           save="Update in Notion" quickHidden=false attempts=1 done=true
+   toast        "Updated with new code/notes!" (status-message status-success)
+   creates      1
+   Notion row   SR=2026-08-17 Attempts=1 Done=true First=2026-08-10 Expertise=High body=4
+
+05-due-today-alarm.png  (AC7 — the hourly review check sees the queued row as due the same day)
+   url          http://localhost:8212/?demo=due
+   button       hidden=true label="Mark to-do" disabled=false
+   header rects number={"x":25,"y":253,"w":39,"h":21,"right":64,"bottom":274,"cy":263}
+                badge ={"x":72,"y":252,"w":50,"h":23,"right":122,"bottom":275,"cy":263}
+                button={"x":0,"y":0,"w":0,"h":0,"right":0,"bottom":0,"cy":0}
+                header={"x":25,"y":252,"w":350,"h":23,"right":375,"bottom":275,"cy":263}
+   ui           save="Update in Notion" quickHidden=false attempts=0 done=false
+   toast        "Marked to-do - due for review today" (status-message status-success)
+   creates      1
+   Notion row   SR=2026-08-10 Attempts=0 Done=false First=(empty) Expertise=(empty) body=0
+   alarm        You have 1 problem due for review today.
+
+06-failure-retry.png  (AC8 — a failed create surfaces the error and leaves the button clickable)
+   url          http://localhost:8212/?demo=marked&fail=1
+   button       hidden=false label="Mark to-do" disabled=false
+   header rects number={"x":25,"y":223,"w":39,"h":21,"right":64,"bottom":244,"cy":233}
+                badge ={"x":72,"y":222,"w":50,"h":23,"right":122,"bottom":244,"cy":233}
+                button={"x":288,"y":223,"w":87,"h":20,"right":375,"bottom":243,"cy":233}
+                header={"x":25,"y":222,"w":350,"h":23,"right":375,"bottom":244,"cy":233}
+   ui           save="Save to Notion" quickHidden=true attempts=0 done=true
+   toast        "QA forced Notion failure" (status-message status-error)
+   creates      0
+
+07-duplicate-guard.png  (AC9 — a row that appeared after the lookup is adopted, not duplicated)
+   url          http://localhost:8212/?demo=marked&race=1
+   button       hidden=true label="Mark to-do" disabled=false
+   header rects number={"x":25,"y":207,"w":39,"h":21,"right":64,"bottom":228,"cy":218}
+                badge ={"x":72,"y":207,"w":50,"h":23,"right":122,"bottom":229,"cy":218}
+                button={"x":0,"y":0,"w":0,"h":0,"right":0,"bottom":0,"cy":0}
+                header={"x":25,"y":207,"w":350,"h":23,"right":375,"bottom":229,"cy":218}
+   ui           save="Update in Notion" quickHidden=false attempts=2 done=false
+   toast        "Found existing entry - will update on save" (status-message status-success)
+   creates      0
+   Notion row   SR=2026-09-30 Attempts=2 Done=undefined First=(empty) Expertise=(empty) body=0
+
+08-layout-short-number.png  (AC1 — the other end of the layout range: shortest number, shortest badge)
+   url          http://localhost:8212/?number=1&difficulty=Easy&title=Two Sum&demo=none
+   button       hidden=false label="Mark to-do" disabled=false
+   header rects number={"x":25,"y":192,"w":16,"h":21,"right":41,"bottom":213,"cy":203}
+                badge ={"x":49,"y":191,"w":48,"h":23,"right":97,"bottom":214,"cy":203}
+                button={"x":288,"y":193,"w":87,"h":20,"right":375,"bottom":213,"cy":203}
+                header={"x":25,"y":191,"w":350,"h":23,"right":375,"bottom":214,"cy":203}
+   ui           save="Save to Notion" quickHidden=true attempts=0 done=true
+   toast        "" (status-message hidden)
+   creates      0
+
+09-notion-not-configured.png  (AC8 — Notion not configured: the button is never offered, so there is nothing to half-create)
+   url          http://localhost:8212/?nokey=1&demo=marked
+   button       hidden=true label="Mark to-do" disabled=false
+   header rects number={"x":0,"y":0,"w":0,"h":0,"right":0,"bottom":0,"cy":0}
+                badge ={"x":0,"y":0,"w":0,"h":0,"right":0,"bottom":0,"cy":0}
+                button={"x":0,"y":0,"w":0,"h":0,"right":0,"bottom":0,"cy":0}
+                header={"x":0,"y":0,"w":0,"h":0,"right":0,"bottom":0,"cy":0}
+   ui           save="Save to Notion" quickHidden=true attempts=0 done=true
+   toast        "Configure Notion settings first" (status-message status-error hidden)
+   creates      0
+
+browser-layer assertions
+  PASS [AC2] [long #/Hard] button visible for an unsaved problem
+  PASS [AC1] [long #/Hard] label reads "Mark to-do"
+  PASS [AC1] [long #/Hard] button is on the header row (vertically centred with the badge)
+  PASS [AC1] [long #/Hard] number and badge keep the left group, button is to their right
+  PASS [AC1] [long #/Hard] right-aligned to the header's content edge
+  PASS [AC1] [long #/Hard] header is one line — no taller than its tallest child
+  PASS [AC1] [long #/Hard] button does not wrap (white-space: nowrap, one line high)
+  PASS [AC1] [long #/Hard] popup body is still the fixed 400px panel
+  PASS [AC1] [long #/Hard] nothing overflows the popup horizontally
+  PASS [AC1] [long #/Hard] badge is not squeezed (keeps its natural width)
+  PASS [AC2] [long #/Hard] no row was created just by showing the button
+  PASS [AC2] button hidden when the problem already has a Notion row
+  PASS [AC2] save button reads Update in Notion
+  PASS [AC2] no row created
+  PASS [AC3] exactly one row created
+  PASS [AC3a] Spaced Repetition = local today
+  PASS [AC3a] …and not the UTC day
+  PASS [AC3b] Attempts = 0
+  PASS [AC3c] Date (of first attempt) empty
+  PASS [AC3d] Done unchecked
+  PASS [AC3e] My Expertise empty
+  PASS [AC4] no page content
+  PASS [AC5] button hidden after the create
+  PASS [AC5] save button now reads Update in Notion
+  PASS [AC5] Quick Actions card is visible
+  PASS [AC5] attempts display shows 0
+  PASS [AC5] Done toggle reset to match the row
+  PASS [AC5] success toast shown
+  PASS [AC5] toast styled as success
+  PASS [AC6] still exactly one row
+  PASS [AC6] Attempts 0 → 1 on the first real update
+  PASS [AC6] Date (of first attempt) backfilled to local today
+  PASS [AC6] expertise now written
+  PASS [AC6] notes written into the (previously empty) page body
+  PASS [AC6] popup asked for the backfill
+  PASS [AC6] popup asked for the increment
+  PASS [AC6] attempts field shows 1
+  PASS [AC7] the hourly review check fires for the queued problem
+  PASS [AC8] no row exists after a failed create
+  PASS [AC8] no row in the database at all
+  PASS [AC8] button still visible
+  PASS [AC8] button re-enabled for a retry
+  PASS [AC8] label restored
+  PASS [AC8] error surfaced in the status bar
+  PASS [AC8] toast styled as error
+  PASS [AC8] save button still reads Save to Notion (no half-created state)
+  PASS [AC8] Quick Actions stay hidden
+  PASS [AC9] no second row created
+  PASS [AC9] button hidden — the popup adopted the existing row
+  PASS [AC9] existing row's Attempts untouched
+  PASS [AC9] existing row's review date untouched
+  PASS [AC2] [short #/Easy] button visible for an unsaved problem
+  PASS [AC1] [short #/Easy] label reads "Mark to-do"
+  PASS [AC1] [short #/Easy] button is on the header row (vertically centred with the badge)
+  PASS [AC1] [short #/Easy] number and badge keep the left group, button is to their right
+  PASS [AC1] [short #/Easy] right-aligned to the header's content edge
+  PASS [AC1] [short #/Easy] header is one line — no taller than its tallest child
+  PASS [AC1] [short #/Easy] button does not wrap (white-space: nowrap, one line high)
+  PASS [AC1] [short #/Easy] popup body is still the fixed 400px panel
+  PASS [AC1] [short #/Easy] nothing overflows the popup horizontally
+  PASS [AC1] [short #/Easy] badge is not squeezed (keeps its natural width)
+  PASS [AC2] [short #/Easy] no row was created just by showing the button
+  PASS [AC8] unconfigured: no row created
+  PASS [AC8] unconfigured: no row in the database
+  PASS [AC8] unconfigured: the button is never offered (the lookup never resolves)
+  PASS [AC8] unconfigured: no markTodo request reached Notion
+  PASS [AC8] unconfigured: forcing the handler surfaces the settings prompt
+  PASS [AC8] unconfigured: toast styled as error
+  PASS [AC1] badge width identical with and without the button
+  PASS [AC1] number width identical with and without the button
+  PASS [AC1] badge x position unchanged by the button
+  PASS [AC1] header height unchanged by the button
+
+ALL GREEN: 72/72 browser assertions passed
+Captured 9 screenshots into C:\Users\jonat\repos\leetion\.worktrees\issue-12-qa\docs\super-board\runs\issue-12-qa-v1

@@ -1,0 +1,1591 @@
+{
+  "checks": [
+    {
+      "ac": "AC2",
+      "label": "[long #/Hard] button visible for an unsaved problem",
+      "pass": true,
+      "detail": "actual=false expected=false"
+    },
+    {
+      "ac": "AC1",
+      "label": "[long #/Hard] label reads \"Mark to-do\"",
+      "pass": true,
+      "detail": "actual=\"Mark to-do\" expected=\"Mark to-do\""
+    },
+    {
+      "ac": "AC1",
+      "label": "[long #/Hard] button is on the header row (vertically centred with the badge)",
+      "pass": true,
+      "detail": "button.cy=203 badge.cy=203"
+    },
+    {
+      "ac": "AC1",
+      "label": "[long #/Hard] number and badge keep the left group, button is to their right",
+      "pass": true,
+      "detail": "number.x=25 badge=[72,122] button.x=288"
+    },
+    {
+      "ac": "AC1",
+      "label": "[long #/Hard] right-aligned to the header's content edge",
+      "pass": true,
+      "detail": "header.right=375 button.right=375"
+    },
+    {
+      "ac": "AC1",
+      "label": "[long #/Hard] header is one line — no taller than its tallest child",
+      "pass": true,
+      "detail": "header.h=23 number.h=21 badge.h=23 button.h=20"
+    },
+    {
+      "ac": "AC1",
+      "label": "[long #/Hard] button does not wrap (white-space: nowrap, one line high)",
+      "pass": true,
+      "detail": "whiteSpace=nowrap h=20"
+    },
+    {
+      "ac": "AC1",
+      "label": "[long #/Hard] popup body is still the fixed 400px panel",
+      "pass": true,
+      "detail": "body width=400"
+    },
+    {
+      "ac": "AC1",
+      "label": "[long #/Hard] nothing overflows the popup horizontally",
+      "pass": true,
+      "detail": "app 400/400 card 374/374"
+    },
+    {
+      "ac": "AC1",
+      "label": "[long #/Hard] badge is not squeezed (keeps its natural width)",
+      "pass": true,
+      "detail": "badge.w=50"
+    },
+    {
+      "ac": "AC2",
+      "label": "[long #/Hard] no row was created just by showing the button",
+      "pass": true,
+      "detail": "actual=0 expected=0"
+    },
+    {
+      "ac": "AC2",
+      "label": "button hidden when the problem already has a Notion row",
+      "pass": true,
+      "detail": "actual=true expected=true"
+    },
+    {
+      "ac": "AC2",
+      "label": "save button reads Update in Notion",
+      "pass": true,
+      "detail": "actual=\"Update in Notion\" expected=\"Update in Notion\""
+    },
+    {
+      "ac": "AC2",
+      "label": "no row created",
+      "pass": true,
+      "detail": "actual=0 expected=0"
+    },
+    {
+      "ac": "AC3",
+      "label": "exactly one row created",
+      "pass": true,
+      "detail": "actual=1 expected=1"
+    },
+    {
+      "ac": "AC3a",
+      "label": "Spaced Repetition = local today",
+      "pass": true,
+      "detail": "actual=\"2026-08-10\" expected=\"2026-08-10\""
+    },
+    {
+      "ac": "AC3a",
+      "label": "…and not the UTC day",
+      "pass": true,
+      "detail": "utcDay=2026-08-11"
+    },
+    {
+      "ac": "AC3b",
+      "label": "Attempts = 0",
+      "pass": true,
+      "detail": "actual=0 expected=0"
+    },
+    {
+      "ac": "AC3c",
+      "label": "Date (of first attempt) empty",
+      "pass": true,
+      "detail": "actual=undefined expected=undefined"
+    },
+    {
+      "ac": "AC3d",
+      "label": "Done unchecked",
+      "pass": true,
+      "detail": "actual=false expected=false"
+    },
+    {
+      "ac": "AC3e",
+      "label": "My Expertise empty",
+      "pass": true,
+      "detail": "actual=undefined expected=undefined"
+    },
+    {
+      "ac": "AC4",
+      "label": "no page content",
+      "pass": true,
+      "detail": "actual=0 expected=0"
+    },
+    {
+      "ac": "AC5",
+      "label": "button hidden after the create",
+      "pass": true,
+      "detail": "actual=true expected=true"
+    },
+    {
+      "ac": "AC5",
+      "label": "save button now reads Update in Notion",
+      "pass": true,
+      "detail": "actual=\"Update in Notion\" expected=\"Update in Notion\""
+    },
+    {
+      "ac": "AC5",
+      "label": "Quick Actions card is visible",
+      "pass": true,
+      "detail": "actual=false expected=false"
+    },
+    {
+      "ac": "AC5",
+      "label": "attempts display shows 0",
+      "pass": true,
+      "detail": "actual=\"0\" expected=\"0\""
+    },
+    {
+      "ac": "AC5",
+      "label": "Done toggle reset to match the row",
+      "pass": true,
+      "detail": "actual=false expected=false"
+    },
+    {
+      "ac": "AC5",
+      "label": "success toast shown",
+      "pass": true,
+      "detail": "Marked to-do - due for review today"
+    },
+    {
+      "ac": "AC5",
+      "label": "toast styled as success",
+      "pass": true,
+      "detail": "status-message status-success"
+    },
+    {
+      "ac": "AC6",
+      "label": "still exactly one row",
+      "pass": true,
+      "detail": "actual=1 expected=1"
+    },
+    {
+      "ac": "AC6",
+      "label": "Attempts 0 → 1 on the first real update",
+      "pass": true,
+      "detail": "actual=1 expected=1"
+    },
+    {
+      "ac": "AC6",
+      "label": "Date (of first attempt) backfilled to local today",
+      "pass": true,
+      "detail": "actual=\"2026-08-10\" expected=\"2026-08-10\""
+    },
+    {
+      "ac": "AC6",
+      "label": "expertise now written",
+      "pass": true,
+      "detail": "{\"select\":{\"name\":\"High\"}}"
+    },
+    {
+      "ac": "AC6",
+      "label": "notes written into the (previously empty) page body",
+      "pass": true,
+      "detail": "children=4"
+    },
+    {
+      "ac": "AC6",
+      "label": "popup asked for the backfill",
+      "pass": true,
+      "detail": "actual=true expected=true"
+    },
+    {
+      "ac": "AC6",
+      "label": "popup asked for the increment",
+      "pass": true,
+      "detail": "actual=true expected=true"
+    },
+    {
+      "ac": "AC6",
+      "label": "attempts field shows 1",
+      "pass": true,
+      "detail": "actual=\"1\" expected=\"1\""
+    },
+    {
+      "ac": "AC7",
+      "label": "the hourly review check fires for the queued problem",
+      "pass": true,
+      "detail": "actual=\"You have 1 problem due for review today.\" expected=\"You have 1 problem due for review today.\""
+    },
+    {
+      "ac": "AC8",
+      "label": "no row exists after a failed create",
+      "pass": true,
+      "detail": "actual=0 expected=0"
+    },
+    {
+      "ac": "AC8",
+      "label": "no row in the database at all",
+      "pass": true,
+      "detail": "actual=null expected=null"
+    },
+    {
+      "ac": "AC8",
+      "label": "button still visible",
+      "pass": true,
+      "detail": "actual=false expected=false"
+    },
+    {
+      "ac": "AC8",
+      "label": "button re-enabled for a retry",
+      "pass": true,
+      "detail": "actual=false expected=false"
+    },
+    {
+      "ac": "AC8",
+      "label": "label restored",
+      "pass": true,
+      "detail": "actual=\"Mark to-do\" expected=\"Mark to-do\""
+    },
+    {
+      "ac": "AC8",
+      "label": "error surfaced in the status bar",
+      "pass": true,
+      "detail": "QA forced Notion failure"
+    },
+    {
+      "ac": "AC8",
+      "label": "toast styled as error",
+      "pass": true,
+      "detail": "status-message status-error"
+    },
+    {
+      "ac": "AC8",
+      "label": "save button still reads Save to Notion (no half-created state)",
+      "pass": true,
+      "detail": "actual=\"Save to Notion\" expected=\"Save to Notion\""
+    },
+    {
+      "ac": "AC8",
+      "label": "Quick Actions stay hidden",
+      "pass": true,
+      "detail": "actual=true expected=true"
+    },
+    {
+      "ac": "AC9",
+      "label": "no second row created",
+      "pass": true,
+      "detail": "actual=0 expected=0"
+    },
+    {
+      "ac": "AC9",
+      "label": "button hidden — the popup adopted the existing row",
+      "pass": true,
+      "detail": "actual=true expected=true"
+    },
+    {
+      "ac": "AC9",
+      "label": "existing row's Attempts untouched",
+      "pass": true,
+      "detail": "actual=2 expected=2"
+    },
+    {
+      "ac": "AC9",
+      "label": "existing row's review date untouched",
+      "pass": true,
+      "detail": "actual=\"2026-09-30\" expected=\"2026-09-30\""
+    },
+    {
+      "ac": "AC2",
+      "label": "[short #/Easy] button visible for an unsaved problem",
+      "pass": true,
+      "detail": "actual=false expected=false"
+    },
+    {
+      "ac": "AC1",
+      "label": "[short #/Easy] label reads \"Mark to-do\"",
+      "pass": true,
+      "detail": "actual=\"Mark to-do\" expected=\"Mark to-do\""
+    },
+    {
+      "ac": "AC1",
+      "label": "[short #/Easy] button is on the header row (vertically centred with the badge)",
+      "pass": true,
+      "detail": "button.cy=203 badge.cy=203"
+    },
+    {
+      "ac": "AC1",
+      "label": "[short #/Easy] number and badge keep the left group, button is to their right",
+      "pass": true,
+      "detail": "number.x=25 badge=[49,97] button.x=288"
+    },
+    {
+      "ac": "AC1",
+      "label": "[short #/Easy] right-aligned to the header's content edge",
+      "pass": true,
+      "detail": "header.right=375 button.right=375"
+    },
+    {
+      "ac": "AC1",
+      "label": "[short #/Easy] header is one line — no taller than its tallest child",
+      "pass": true,
+      "detail": "header.h=23 number.h=21 badge.h=23 button.h=20"
+    },
+    {
+      "ac": "AC1",
+      "label": "[short #/Easy] button does not wrap (white-space: nowrap, one line high)",
+      "pass": true,
+      "detail": "whiteSpace=nowrap h=20"
+    },
+    {
+      "ac": "AC1",
+      "label": "[short #/Easy] popup body is still the fixed 400px panel",
+      "pass": true,
+      "detail": "body width=400"
+    },
+    {
+      "ac": "AC1",
+      "label": "[short #/Easy] nothing overflows the popup horizontally",
+      "pass": true,
+      "detail": "app 400/400 card 374/374"
+    },
+    {
+      "ac": "AC1",
+      "label": "[short #/Easy] badge is not squeezed (keeps its natural width)",
+      "pass": true,
+      "detail": "badge.w=48"
+    },
+    {
+      "ac": "AC2",
+      "label": "[short #/Easy] no row was created just by showing the button",
+      "pass": true,
+      "detail": "actual=0 expected=0"
+    },
+    {
+      "ac": "AC8",
+      "label": "unconfigured: no row created",
+      "pass": true,
+      "detail": "actual=0 expected=0"
+    },
+    {
+      "ac": "AC8",
+      "label": "unconfigured: no row in the database",
+      "pass": true,
+      "detail": "actual=null expected=null"
+    },
+    {
+      "ac": "AC8",
+      "label": "unconfigured: the button is never offered (the lookup never resolves)",
+      "pass": true,
+      "detail": "actual=true expected=true"
+    },
+    {
+      "ac": "AC8",
+      "label": "unconfigured: no markTodo request reached Notion",
+      "pass": true,
+      "detail": "actual=0 expected=0"
+    },
+    {
+      "ac": "AC8",
+      "label": "unconfigured: forcing the handler surfaces the settings prompt",
+      "pass": true,
+      "detail": "Configure Notion settings first"
+    },
+    {
+      "ac": "AC8",
+      "label": "unconfigured: toast styled as error",
+      "pass": true,
+      "detail": "status-message status-error hidden"
+    },
+    {
+      "ac": "AC1",
+      "label": "badge width identical with and without the button",
+      "pass": true,
+      "detail": "actual=50 expected=50"
+    },
+    {
+      "ac": "AC1",
+      "label": "number width identical with and without the button",
+      "pass": true,
+      "detail": "actual=39 expected=39"
+    },
+    {
+      "ac": "AC1",
+      "label": "badge x position unchanged by the button",
+      "pass": true,
+      "detail": "actual=72 expected=72"
+    },
+    {
+      "ac": "AC1",
+      "label": "header height unchanged by the button",
+      "pass": true,
+      "detail": "actual=23 expected=23"
+    }
+  ],
+  "results": [
+    {
+      "file": "01-button-visible-new-problem.png",
+      "query": "?demo=none",
+      "why": "AC1/AC2 — unsaved problem: the button sits right-aligned on the header row",
+      "state": {
+        "localDay": "2026-08-10",
+        "utcDay": "2026-08-11",
+        "layout": {
+          "header": {
+            "x": 25,
+            "y": 191,
+            "w": 350,
+            "h": 23,
+            "right": 375,
+            "bottom": 214,
+            "cy": 203
+          },
+          "headerDisplay": "flex",
+          "number": {
+            "x": 25,
+            "y": 192,
+            "w": 39,
+            "h": 21,
+            "right": 64,
+            "bottom": 213,
+            "cy": 203
+          },
+          "badge": {
+            "x": 72,
+            "y": 191,
+            "w": 50,
+            "h": 23,
+            "right": 122,
+            "bottom": 214,
+            "cy": 203
+          },
+          "button": {
+            "x": 288,
+            "y": 193,
+            "w": 87,
+            "h": 20,
+            "right": 375,
+            "bottom": 213,
+            "cy": 203
+          },
+          "buttonHidden": false,
+          "buttonDisabled": false,
+          "buttonLabel": "Mark to-do",
+          "buttonWhiteSpace": "nowrap",
+          "docScrollW": 420,
+          "docClientW": 420,
+          "appScrollW": 400,
+          "appClientW": 400,
+          "bodyW": 400,
+          "cardScrollW": 374,
+          "cardClientW": 374
+        },
+        "ui": {
+          "saveLabel": "Save to Notion",
+          "quickActionsHidden": true,
+          "attempts": "0",
+          "doneChecked": true,
+          "status": "",
+          "statusClass": "status-message hidden",
+          "markTodoHidden": false,
+          "markTodoDisabled": false
+        },
+        "row": null,
+        "createCount": 0,
+        "createRequests": 0,
+        "sent": [
+          {
+            "action": "checkExisting",
+            "data": {
+              "problemNumber": 2846
+            }
+          }
+        ],
+        "dueMessage": null
+      }
+    },
+    {
+      "file": "02-button-hidden-existing-entry.png",
+      "query": "?seeded=1&demo=none",
+      "why": "AC2 — the same problem already in Notion: no button",
+      "state": {
+        "localDay": "2026-08-10",
+        "utcDay": "2026-08-11",
+        "layout": {
+          "header": {
+            "x": 25,
+            "y": 207,
+            "w": 350,
+            "h": 23,
+            "right": 375,
+            "bottom": 229,
+            "cy": 218
+          },
+          "headerDisplay": "flex",
+          "number": {
+            "x": 25,
+            "y": 207,
+            "w": 39,
+            "h": 21,
+            "right": 64,
+            "bottom": 228,
+            "cy": 218
+          },
+          "badge": {
+            "x": 72,
+            "y": 207,
+            "w": 50,
+            "h": 23,
+            "right": 122,
+            "bottom": 229,
+            "cy": 218
+          },
+          "button": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0,
+            "right": 0,
+            "bottom": 0,
+            "cy": 0
+          },
+          "buttonHidden": true,
+          "buttonDisabled": false,
+          "buttonLabel": "Mark to-do",
+          "buttonWhiteSpace": "nowrap",
+          "docScrollW": 420,
+          "docClientW": 420,
+          "appScrollW": 400,
+          "appClientW": 400,
+          "bodyW": 400,
+          "cardScrollW": 374,
+          "cardClientW": 374
+        },
+        "ui": {
+          "saveLabel": "Update in Notion",
+          "quickActionsHidden": false,
+          "attempts": "3",
+          "doneChecked": false,
+          "status": "Found existing entry - will update on save",
+          "statusClass": "status-message status-success",
+          "markTodoHidden": true,
+          "markTodoDisabled": false
+        },
+        "row": {
+          "id": "qa-existing-1",
+          "object": "page",
+          "properties": {
+            "S No.": {
+              "number": 2846
+            },
+            "Question": {
+              "title": [
+                {
+                  "text": {
+                    "content": "Minimum Edge Weight Equilibrium Queries in a Tree"
+                  }
+                }
+              ]
+            },
+            "Spaced Repetition": {
+              "date": {
+                "start": "2026-09-30"
+              }
+            },
+            "Attempts": {
+              "number": 3
+            },
+            "My Expertise": {
+              "select": {
+                "name": "Medium"
+              }
+            },
+            "Level": {
+              "select": {
+                "name": "Hard"
+              }
+            },
+            "Done": {
+              "checkbox": false
+            },
+            "Date (of first attempt)": {
+              "date": {
+                "start": "2026-07-01"
+              }
+            }
+          },
+          "children": [],
+          "last_edited_time": "2026-08-10T02:00:00.000Z"
+        },
+        "createCount": 0,
+        "createRequests": 0,
+        "sent": [
+          {
+            "action": "checkExisting",
+            "data": {
+              "problemNumber": 2846
+            }
+          }
+        ],
+        "dueMessage": null
+      }
+    },
+    {
+      "file": "03-marked-todo.png",
+      "query": "?demo=marked",
+      "why": "AC3/AC5 — after the click: row queued, button gone, save reads Update in Notion",
+      "state": {
+        "localDay": "2026-08-10",
+        "utcDay": "2026-08-11",
+        "layout": {
+          "header": {
+            "x": 25,
+            "y": 237,
+            "w": 350,
+            "h": 23,
+            "right": 375,
+            "bottom": 259,
+            "cy": 248
+          },
+          "headerDisplay": "flex",
+          "number": {
+            "x": 25,
+            "y": 238,
+            "w": 39,
+            "h": 21,
+            "right": 64,
+            "bottom": 259,
+            "cy": 248
+          },
+          "badge": {
+            "x": 72,
+            "y": 237,
+            "w": 50,
+            "h": 23,
+            "right": 122,
+            "bottom": 259,
+            "cy": 248
+          },
+          "button": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0,
+            "right": 0,
+            "bottom": 0,
+            "cy": 0
+          },
+          "buttonHidden": true,
+          "buttonDisabled": false,
+          "buttonLabel": "Mark to-do",
+          "buttonWhiteSpace": "nowrap",
+          "docScrollW": 420,
+          "docClientW": 420,
+          "appScrollW": 400,
+          "appClientW": 400,
+          "bodyW": 400,
+          "cardScrollW": 374,
+          "cardClientW": 374
+        },
+        "ui": {
+          "saveLabel": "Update in Notion",
+          "quickActionsHidden": false,
+          "attempts": "0",
+          "doneChecked": false,
+          "status": "Marked to-do - due for review today",
+          "statusClass": "status-message status-success",
+          "markTodoHidden": true,
+          "markTodoDisabled": false
+        },
+        "row": {
+          "id": "qa-created-1",
+          "object": "page",
+          "parent": {
+            "database_id": "qa-db-1"
+          },
+          "properties": {
+            "Question": {
+              "title": [
+                {
+                  "text": {
+                    "content": "Minimum Edge Weight Equilibrium Queries in a Tree"
+                  }
+                }
+              ]
+            },
+            "Done": {
+              "checkbox": false
+            },
+            "Attempts": {
+              "number": 0
+            },
+            "Spaced Repetition": {
+              "date": {
+                "start": "2026-08-10"
+              }
+            },
+            "S No.": {
+              "number": 2846
+            },
+            "Question Link": {
+              "url": "https://leetcode.com/problems/qa-problem/"
+            },
+            "Level": {
+              "select": {
+                "name": "Hard"
+              }
+            },
+            "Tag": {
+              "multi_select": [
+                {
+                  "name": "Trees"
+                },
+                {
+                  "name": "Graphs"
+                }
+              ]
+            }
+          },
+          "children": [],
+          "last_edited_time": "2026-08-11T02:00:00.000Z"
+        },
+        "createCount": 1,
+        "createRequests": 1,
+        "sent": [
+          {
+            "action": "checkExisting",
+            "data": {
+              "problemNumber": 2846
+            }
+          },
+          {
+            "action": "markTodo",
+            "data": {
+              "confirmSchemaChanges": false,
+              "problem": {
+                "number": 2846,
+                "title": "Minimum Edge Weight Equilibrium Queries in a Tree",
+                "difficulty": "Hard",
+                "url": "https://leetcode.com/problems/qa-problem/",
+                "tags": [
+                  "Trees",
+                  "Graphs"
+                ]
+              }
+            }
+          }
+        ],
+        "dueMessage": null
+      }
+    },
+    {
+      "file": "04-update-after-attempt.png",
+      "query": "?demo=update",
+      "why": "AC6 — the first real Update in Notion backfills the date and moves Attempts 0 → 1",
+      "state": {
+        "localDay": "2026-08-10",
+        "utcDay": "2026-08-11",
+        "layout": {
+          "header": {
+            "x": 25,
+            "y": 237,
+            "w": 350,
+            "h": 23,
+            "right": 375,
+            "bottom": 259,
+            "cy": 248
+          },
+          "headerDisplay": "flex",
+          "number": {
+            "x": 25,
+            "y": 238,
+            "w": 39,
+            "h": 21,
+            "right": 64,
+            "bottom": 259,
+            "cy": 248
+          },
+          "badge": {
+            "x": 72,
+            "y": 237,
+            "w": 50,
+            "h": 23,
+            "right": 122,
+            "bottom": 259,
+            "cy": 248
+          },
+          "button": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0,
+            "right": 0,
+            "bottom": 0,
+            "cy": 0
+          },
+          "buttonHidden": true,
+          "buttonDisabled": false,
+          "buttonLabel": "Mark to-do",
+          "buttonWhiteSpace": "nowrap",
+          "docScrollW": 420,
+          "docClientW": 420,
+          "appScrollW": 400,
+          "appClientW": 400,
+          "bodyW": 400,
+          "cardScrollW": 374,
+          "cardClientW": 374
+        },
+        "ui": {
+          "saveLabel": "Update in Notion",
+          "quickActionsHidden": false,
+          "attempts": "1",
+          "doneChecked": true,
+          "status": "Updated with new code/notes!",
+          "statusClass": "status-message status-success",
+          "markTodoHidden": true,
+          "markTodoDisabled": false
+        },
+        "row": {
+          "id": "qa-created-1",
+          "object": "page",
+          "parent": {
+            "database_id": "qa-db-1"
+          },
+          "properties": {
+            "Question": {
+              "title": [
+                {
+                  "text": {
+                    "content": "Minimum Edge Weight Equilibrium Queries in a Tree"
+                  }
+                }
+              ]
+            },
+            "Done": {
+              "checkbox": true
+            },
+            "Attempts": {
+              "number": 1
+            },
+            "Spaced Repetition": {
+              "date": {
+                "start": "2026-08-17"
+              }
+            },
+            "S No.": {
+              "number": 2846
+            },
+            "Question Link": {
+              "url": "https://leetcode.com/problems/qa-problem/"
+            },
+            "Level": {
+              "select": {
+                "name": "Hard"
+              }
+            },
+            "Tag": {
+              "multi_select": [
+                {
+                  "name": "Trees"
+                },
+                {
+                  "name": "Graphs"
+                }
+              ]
+            },
+            "My Expertise": {
+              "select": {
+                "name": "High"
+              }
+            },
+            "Date (of first attempt)": {
+              "date": {
+                "start": "2026-08-10"
+              }
+            }
+          },
+          "children": [
+            {
+              "object": "block",
+              "type": "heading_2",
+              "heading_2": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Solution(s)"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "object": "block",
+              "type": "code",
+              "code": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "class Solution:\n    def solve(self):\n        return 0"
+                    }
+                  }
+                ],
+                "language": "python",
+                "caption": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Python3"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "object": "block",
+              "type": "heading_2",
+              "heading_2": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Notes"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "object": "block",
+              "type": "paragraph",
+              "paragraph": {
+                "rich_text": [
+                  {
+                    "type": "text",
+                    "text": {
+                      "content": "Two pointers; watch the mid overflow."
+                    },
+                    "annotations": {
+                      "bold": false,
+                      "italic": false,
+                      "strikethrough": false,
+                      "underline": false,
+                      "code": false
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "last_edited_time": "2026-08-11T02:00:00.000Z"
+        },
+        "createCount": 1,
+        "createRequests": 1,
+        "sent": [
+          {
+            "action": "checkExisting",
+            "data": {
+              "problemNumber": 2846
+            }
+          },
+          {
+            "action": "markTodo",
+            "data": {
+              "confirmSchemaChanges": false,
+              "problem": {
+                "number": 2846,
+                "title": "Minimum Edge Weight Equilibrium Queries in a Tree",
+                "difficulty": "Hard",
+                "url": "https://leetcode.com/problems/qa-problem/",
+                "tags": [
+                  "Trees",
+                  "Graphs"
+                ]
+              }
+            }
+          },
+          {
+            "action": "saveToNotion",
+            "data": {
+              "existingPageId": "qa-created-1",
+              "incrementAttempts": true,
+              "backfillFirstAttemptDate": true,
+              "spacedRepetitionDays": 7,
+              "confirmSchemaChanges": false,
+              "problem": {
+                "number": 2846,
+                "title": "Minimum Edge Weight Equilibrium Queries in a Tree",
+                "difficulty": "Hard",
+                "code": "class Solution:\n    def solve(self):\n        return 0",
+                "language": "Python3",
+                "url": "https://leetcode.com/problems/qa-problem/",
+                "tags": [
+                  "Trees",
+                  "Graphs"
+                ],
+                "expertise": "High",
+                "notes": "Two pointers; watch the mid overflow.",
+                "remark": "",
+                "altMethods": "",
+                "done": true,
+                "timeComplexity": "",
+                "spaceComplexity": "",
+                "snapshots": [],
+                "saveQuestion": false,
+                "questionContent": {
+                  "content": "QA fixture problem statement.",
+                  "description": "QA fixture problem statement.",
+                  "examples": [],
+                  "constraints": []
+                }
+              }
+            }
+          }
+        ],
+        "dueMessage": null
+      }
+    },
+    {
+      "file": "05-due-today-alarm.png",
+      "query": "?demo=due",
+      "why": "AC7 — the hourly review check sees the queued row as due the same day",
+      "state": {
+        "localDay": "2026-08-10",
+        "utcDay": "2026-08-11",
+        "layout": {
+          "header": {
+            "x": 25,
+            "y": 252,
+            "w": 350,
+            "h": 23,
+            "right": 375,
+            "bottom": 275,
+            "cy": 263
+          },
+          "headerDisplay": "flex",
+          "number": {
+            "x": 25,
+            "y": 253,
+            "w": 39,
+            "h": 21,
+            "right": 64,
+            "bottom": 274,
+            "cy": 263
+          },
+          "badge": {
+            "x": 72,
+            "y": 252,
+            "w": 50,
+            "h": 23,
+            "right": 122,
+            "bottom": 275,
+            "cy": 263
+          },
+          "button": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0,
+            "right": 0,
+            "bottom": 0,
+            "cy": 0
+          },
+          "buttonHidden": true,
+          "buttonDisabled": false,
+          "buttonLabel": "Mark to-do",
+          "buttonWhiteSpace": "nowrap",
+          "docScrollW": 420,
+          "docClientW": 420,
+          "appScrollW": 400,
+          "appClientW": 400,
+          "bodyW": 400,
+          "cardScrollW": 374,
+          "cardClientW": 374
+        },
+        "ui": {
+          "saveLabel": "Update in Notion",
+          "quickActionsHidden": false,
+          "attempts": "0",
+          "doneChecked": false,
+          "status": "Marked to-do - due for review today",
+          "statusClass": "status-message status-success",
+          "markTodoHidden": true,
+          "markTodoDisabled": false
+        },
+        "row": {
+          "id": "qa-created-1",
+          "object": "page",
+          "parent": {
+            "database_id": "qa-db-1"
+          },
+          "properties": {
+            "Question": {
+              "title": [
+                {
+                  "text": {
+                    "content": "Minimum Edge Weight Equilibrium Queries in a Tree"
+                  }
+                }
+              ]
+            },
+            "Done": {
+              "checkbox": false
+            },
+            "Attempts": {
+              "number": 0
+            },
+            "Spaced Repetition": {
+              "date": {
+                "start": "2026-08-10"
+              }
+            },
+            "S No.": {
+              "number": 2846
+            },
+            "Question Link": {
+              "url": "https://leetcode.com/problems/qa-problem/"
+            },
+            "Level": {
+              "select": {
+                "name": "Hard"
+              }
+            },
+            "Tag": {
+              "multi_select": [
+                {
+                  "name": "Trees"
+                },
+                {
+                  "name": "Graphs"
+                }
+              ]
+            }
+          },
+          "children": [],
+          "last_edited_time": "2026-08-11T02:00:00.000Z"
+        },
+        "createCount": 1,
+        "createRequests": 1,
+        "sent": [
+          {
+            "action": "checkExisting",
+            "data": {
+              "problemNumber": 2846
+            }
+          },
+          {
+            "action": "markTodo",
+            "data": {
+              "confirmSchemaChanges": false,
+              "problem": {
+                "number": 2846,
+                "title": "Minimum Edge Weight Equilibrium Queries in a Tree",
+                "difficulty": "Hard",
+                "url": "https://leetcode.com/problems/qa-problem/",
+                "tags": [
+                  "Trees",
+                  "Graphs"
+                ]
+              }
+            }
+          }
+        ],
+        "dueMessage": "You have 1 problem due for review today."
+      }
+    },
+    {
+      "file": "06-failure-retry.png",
+      "query": "?demo=marked&fail=1",
+      "why": "AC8 — a failed create surfaces the error and leaves the button clickable",
+      "state": {
+        "localDay": "2026-08-10",
+        "utcDay": "2026-08-11",
+        "layout": {
+          "header": {
+            "x": 25,
+            "y": 222,
+            "w": 350,
+            "h": 23,
+            "right": 375,
+            "bottom": 244,
+            "cy": 233
+          },
+          "headerDisplay": "flex",
+          "number": {
+            "x": 25,
+            "y": 223,
+            "w": 39,
+            "h": 21,
+            "right": 64,
+            "bottom": 244,
+            "cy": 233
+          },
+          "badge": {
+            "x": 72,
+            "y": 222,
+            "w": 50,
+            "h": 23,
+            "right": 122,
+            "bottom": 244,
+            "cy": 233
+          },
+          "button": {
+            "x": 288,
+            "y": 223,
+            "w": 87,
+            "h": 20,
+            "right": 375,
+            "bottom": 243,
+            "cy": 233
+          },
+          "buttonHidden": false,
+          "buttonDisabled": false,
+          "buttonLabel": "Mark to-do",
+          "buttonWhiteSpace": "nowrap",
+          "docScrollW": 420,
+          "docClientW": 420,
+          "appScrollW": 400,
+          "appClientW": 400,
+          "bodyW": 400,
+          "cardScrollW": 374,
+          "cardClientW": 374
+        },
+        "ui": {
+          "saveLabel": "Save to Notion",
+          "quickActionsHidden": true,
+          "attempts": "0",
+          "doneChecked": true,
+          "status": "QA forced Notion failure",
+          "statusClass": "status-message status-error",
+          "markTodoHidden": false,
+          "markTodoDisabled": false
+        },
+        "row": null,
+        "createCount": 0,
+        "createRequests": 3,
+        "sent": [
+          {
+            "action": "checkExisting",
+            "data": {
+              "problemNumber": 2846
+            }
+          },
+          {
+            "action": "markTodo",
+            "data": {
+              "confirmSchemaChanges": false,
+              "problem": {
+                "number": 2846,
+                "title": "Minimum Edge Weight Equilibrium Queries in a Tree",
+                "difficulty": "Hard",
+                "url": "https://leetcode.com/problems/qa-problem/",
+                "tags": [
+                  "Trees",
+                  "Graphs"
+                ]
+              }
+            }
+          }
+        ],
+        "dueMessage": null
+      }
+    },
+    {
+      "file": "07-duplicate-guard.png",
+      "query": "?demo=marked&race=1",
+      "why": "AC9 — a row that appeared after the lookup is adopted, not duplicated",
+      "state": {
+        "localDay": "2026-08-10",
+        "utcDay": "2026-08-11",
+        "layout": {
+          "header": {
+            "x": 25,
+            "y": 207,
+            "w": 350,
+            "h": 23,
+            "right": 375,
+            "bottom": 229,
+            "cy": 218
+          },
+          "headerDisplay": "flex",
+          "number": {
+            "x": 25,
+            "y": 207,
+            "w": 39,
+            "h": 21,
+            "right": 64,
+            "bottom": 228,
+            "cy": 218
+          },
+          "badge": {
+            "x": 72,
+            "y": 207,
+            "w": 50,
+            "h": 23,
+            "right": 122,
+            "bottom": 229,
+            "cy": 218
+          },
+          "button": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0,
+            "right": 0,
+            "bottom": 0,
+            "cy": 0
+          },
+          "buttonHidden": true,
+          "buttonDisabled": false,
+          "buttonLabel": "Mark to-do",
+          "buttonWhiteSpace": "nowrap",
+          "docScrollW": 420,
+          "docClientW": 420,
+          "appScrollW": 400,
+          "appClientW": 400,
+          "bodyW": 400,
+          "cardScrollW": 374,
+          "cardClientW": 374
+        },
+        "ui": {
+          "saveLabel": "Update in Notion",
+          "quickActionsHidden": false,
+          "attempts": "2",
+          "doneChecked": false,
+          "status": "Found existing entry - will update on save",
+          "statusClass": "status-message status-success",
+          "markTodoHidden": true,
+          "markTodoDisabled": false
+        },
+        "row": {
+          "id": "qa-raced-1",
+          "object": "page",
+          "properties": {
+            "S No.": {
+              "number": 2846
+            },
+            "Question": {
+              "title": [
+                {
+                  "text": {
+                    "content": "Minimum Edge Weight Equilibrium Queries in a Tree"
+                  }
+                }
+              ]
+            },
+            "Attempts": {
+              "number": 2
+            },
+            "Spaced Repetition": {
+              "date": {
+                "start": "2026-09-30"
+              }
+            }
+          },
+          "children": [],
+          "last_edited_time": "2026-08-11T02:00:00.000Z"
+        },
+        "createCount": 0,
+        "createRequests": 0,
+        "sent": [
+          {
+            "action": "checkExisting",
+            "data": {
+              "problemNumber": 2846
+            }
+          },
+          {
+            "action": "markTodo",
+            "data": {
+              "confirmSchemaChanges": false,
+              "problem": {
+                "number": 2846,
+                "title": "Minimum Edge Weight Equilibrium Queries in a Tree",
+                "difficulty": "Hard",
+                "url": "https://leetcode.com/problems/qa-problem/",
+                "tags": [
+                  "Trees",
+                  "Graphs"
+                ]
+              }
+            }
+          },
+          {
+            "action": "checkExisting",
+            "data": {
+              "problemNumber": 2846
+            }
+          }
+        ],
+        "dueMessage": null
+      }
+    },
+    {
+      "file": "08-layout-short-number.png",
+      "query": "?number=1&difficulty=Easy&title=Two Sum&demo=none",
+      "why": "AC1 — the other end of the layout range: shortest number, shortest badge",
+      "state": {
+        "localDay": "2026-08-10",
+        "utcDay": "2026-08-11",
+        "layout": {
+          "header": {
+            "x": 25,
+            "y": 191,
+            "w": 350,
+            "h": 23,
+            "right": 375,
+            "bottom": 214,
+            "cy": 203
+          },
+          "headerDisplay": "flex",
+          "number": {
+            "x": 25,
+            "y": 192,
+            "w": 16,
+            "h": 21,
+            "right": 41,
+            "bottom": 213,
+            "cy": 203
+          },
+          "badge": {
+            "x": 49,
+            "y": 191,
+            "w": 48,
+            "h": 23,
+            "right": 97,
+            "bottom": 214,
+            "cy": 203
+          },
+          "button": {
+            "x": 288,
+            "y": 193,
+            "w": 87,
+            "h": 20,
+            "right": 375,
+            "bottom": 213,
+            "cy": 203
+          },
+          "buttonHidden": false,
+          "buttonDisabled": false,
+          "buttonLabel": "Mark to-do",
+          "buttonWhiteSpace": "nowrap",
+          "docScrollW": 420,
+          "docClientW": 420,
+          "appScrollW": 400,
+          "appClientW": 400,
+          "bodyW": 400,
+          "cardScrollW": 374,
+          "cardClientW": 374
+        },
+        "ui": {
+          "saveLabel": "Save to Notion",
+          "quickActionsHidden": true,
+          "attempts": "0",
+          "doneChecked": true,
+          "status": "",
+          "statusClass": "status-message hidden",
+          "markTodoHidden": false,
+          "markTodoDisabled": false
+        },
+        "row": null,
+        "createCount": 0,
+        "createRequests": 0,
+        "sent": [
+          {
+            "action": "checkExisting",
+            "data": {
+              "problemNumber": 1
+            }
+          }
+        ],
+        "dueMessage": null
+      }
+    },
+    {
+      "file": "09-notion-not-configured.png",
+      "query": "?nokey=1&demo=marked",
+      "why": "AC8 — Notion not configured: the button is never offered, so there is nothing to half-create",
+      "state": {
+        "localDay": "2026-08-10",
+        "utcDay": "2026-08-11",
+        "layout": {
+          "header": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0,
+            "right": 0,
+            "bottom": 0,
+            "cy": 0
+          },
+          "headerDisplay": "flex",
+          "number": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0,
+            "right": 0,
+            "bottom": 0,
+            "cy": 0
+          },
+          "badge": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0,
+            "right": 0,
+            "bottom": 0,
+            "cy": 0
+          },
+          "button": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0,
+            "right": 0,
+            "bottom": 0,
+            "cy": 0
+          },
+          "buttonHidden": true,
+          "buttonDisabled": false,
+          "buttonLabel": "Mark to-do",
+          "buttonWhiteSpace": "nowrap",
+          "docScrollW": 420,
+          "docClientW": 420,
+          "appScrollW": 400,
+          "appClientW": 400,
+          "bodyW": 400,
+          "cardScrollW": 0,
+          "cardClientW": 0
+        },
+        "ui": {
+          "saveLabel": "Save to Notion",
+          "quickActionsHidden": true,
+          "attempts": "0",
+          "doneChecked": true,
+          "status": "Configure Notion settings first",
+          "statusClass": "status-message status-error hidden",
+          "markTodoHidden": true,
+          "markTodoDisabled": false
+        },
+        "row": null,
+        "createCount": 0,
+        "createRequests": 0,
+        "sent": [],
+        "dueMessage": null
+      }
+    }
+  ]
+}

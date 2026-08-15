@@ -1,0 +1,325 @@
+background under test: C:/Users/jonat/AppData/Local/Temp/background.prefix.js
+
+FAIL  new-york-evening   TZ=America/New_York     local 2026-08-10 / UTC 2026-08-11  28/68
+        ✗ [AC3] S1 · created row properties · markTodo succeeded
+            expected "true"
+            actual   "false {\"success\":false,\"error\":\"Unknown action: markTodo\"}"
+        ✗ [AC3] S1 · created row properties · exactly one page created
+            expected 1
+            actual   0
+        ✗ [AC3] S1 · created row properties · row exists in Notion
+            expected "true"
+            actual   "false "
+        ✗ [AC3a] S1 · created row properties · Spaced Repetition = local today
+            expected "2026-08-10"
+            actual   undefined
+        ✗ [AC3b] S1 · created row properties · Attempts = 0
+            expected 0
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done = false
+            expected false
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done is written explicitly, not left to a Notion default
+            expected "true"
+            actual   "false "
+        ✗ [AC3f] S1 · created row properties · title populated
+            expected "Binary Search"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · S No. populated
+            expected 704
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Level populated
+            expected "Easy"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Question Link populated
+            expected "https://leetcode.com/problems/binary-search/"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Tag populated from scraped tags
+            expected ["Array","Binary Search"]
+            actual   undefined
+        ... 28 more
+FAIL  tokyo-morning      TZ=Asia/Tokyo           local 2026-08-11 / UTC 2026-08-10  28/68
+        ✗ [AC3] S1 · created row properties · markTodo succeeded
+            expected "true"
+            actual   "false {\"success\":false,\"error\":\"Unknown action: markTodo\"}"
+        ✗ [AC3] S1 · created row properties · exactly one page created
+            expected 1
+            actual   0
+        ✗ [AC3] S1 · created row properties · row exists in Notion
+            expected "true"
+            actual   "false "
+        ✗ [AC3a] S1 · created row properties · Spaced Repetition = local today
+            expected "2026-08-11"
+            actual   undefined
+        ✗ [AC3b] S1 · created row properties · Attempts = 0
+            expected 0
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done = false
+            expected false
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done is written explicitly, not left to a Notion default
+            expected "true"
+            actual   "false "
+        ✗ [AC3f] S1 · created row properties · title populated
+            expected "Binary Search"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · S No. populated
+            expected 704
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Level populated
+            expected "Easy"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Question Link populated
+            expected "https://leetcode.com/problems/binary-search/"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Tag populated from scraped tags
+            expected ["Array","Binary Search"]
+            actual   undefined
+        ... 28 more
+FAIL  midway-late        TZ=Pacific/Midway       local 2026-08-10 / UTC 2026-08-11  28/68
+        ✗ [AC3] S1 · created row properties · markTodo succeeded
+            expected "true"
+            actual   "false {\"success\":false,\"error\":\"Unknown action: markTodo\"}"
+        ✗ [AC3] S1 · created row properties · exactly one page created
+            expected 1
+            actual   0
+        ✗ [AC3] S1 · created row properties · row exists in Notion
+            expected "true"
+            actual   "false "
+        ✗ [AC3a] S1 · created row properties · Spaced Repetition = local today
+            expected "2026-08-10"
+            actual   undefined
+        ✗ [AC3b] S1 · created row properties · Attempts = 0
+            expected 0
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done = false
+            expected false
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done is written explicitly, not left to a Notion default
+            expected "true"
+            actual   "false "
+        ✗ [AC3f] S1 · created row properties · title populated
+            expected "Binary Search"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · S No. populated
+            expected 704
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Level populated
+            expected "Easy"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Question Link populated
+            expected "https://leetcode.com/problems/binary-search/"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Tag populated from scraped tags
+            expected ["Array","Binary Search"]
+            actual   undefined
+        ... 28 more
+FAIL  kiritimati-early   TZ=Pacific/Kiritimati   local 2026-08-11 / UTC 2026-08-10  28/68
+        ✗ [AC3] S1 · created row properties · markTodo succeeded
+            expected "true"
+            actual   "false {\"success\":false,\"error\":\"Unknown action: markTodo\"}"
+        ✗ [AC3] S1 · created row properties · exactly one page created
+            expected 1
+            actual   0
+        ✗ [AC3] S1 · created row properties · row exists in Notion
+            expected "true"
+            actual   "false "
+        ✗ [AC3a] S1 · created row properties · Spaced Repetition = local today
+            expected "2026-08-11"
+            actual   undefined
+        ✗ [AC3b] S1 · created row properties · Attempts = 0
+            expected 0
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done = false
+            expected false
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done is written explicitly, not left to a Notion default
+            expected "true"
+            actual   "false "
+        ✗ [AC3f] S1 · created row properties · title populated
+            expected "Binary Search"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · S No. populated
+            expected 704
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Level populated
+            expected "Easy"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Question Link populated
+            expected "https://leetcode.com/problems/binary-search/"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Tag populated from scraped tags
+            expected ["Array","Binary Search"]
+            actual   undefined
+        ... 28 more
+FAIL  utc-control        TZ=UTC                  local 2026-08-10 / UTC 2026-08-10  28/68
+        ✗ [AC3] S1 · created row properties · markTodo succeeded
+            expected "true"
+            actual   "false {\"success\":false,\"error\":\"Unknown action: markTodo\"}"
+        ✗ [AC3] S1 · created row properties · exactly one page created
+            expected 1
+            actual   0
+        ✗ [AC3] S1 · created row properties · row exists in Notion
+            expected "true"
+            actual   "false "
+        ✗ [AC3a] S1 · created row properties · Spaced Repetition = local today
+            expected "2026-08-10"
+            actual   undefined
+        ✗ [AC3b] S1 · created row properties · Attempts = 0
+            expected 0
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done = false
+            expected false
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done is written explicitly, not left to a Notion default
+            expected "true"
+            actual   "false "
+        ✗ [AC3f] S1 · created row properties · title populated
+            expected "Binary Search"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · S No. populated
+            expected 704
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Level populated
+            expected "Easy"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Question Link populated
+            expected "https://leetcode.com/problems/binary-search/"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Tag populated from scraped tags
+            expected ["Array","Binary Search"]
+            actual   undefined
+        ... 28 more
+FAIL  ny-dst-spring      TZ=America/New_York     local 2026-03-07 / UTC 2026-03-08  28/68
+        ✗ [AC3] S1 · created row properties · markTodo succeeded
+            expected "true"
+            actual   "false {\"success\":false,\"error\":\"Unknown action: markTodo\"}"
+        ✗ [AC3] S1 · created row properties · exactly one page created
+            expected 1
+            actual   0
+        ✗ [AC3] S1 · created row properties · row exists in Notion
+            expected "true"
+            actual   "false "
+        ✗ [AC3a] S1 · created row properties · Spaced Repetition = local today
+            expected "2026-03-07"
+            actual   undefined
+        ✗ [AC3b] S1 · created row properties · Attempts = 0
+            expected 0
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done = false
+            expected false
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done is written explicitly, not left to a Notion default
+            expected "true"
+            actual   "false "
+        ✗ [AC3f] S1 · created row properties · title populated
+            expected "Binary Search"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · S No. populated
+            expected 704
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Level populated
+            expected "Easy"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Question Link populated
+            expected "https://leetcode.com/problems/binary-search/"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Tag populated from scraped tags
+            expected ["Array","Binary Search"]
+            actual   undefined
+        ... 28 more
+FAIL  ny-dst-fall        TZ=America/New_York     local 2026-11-01 / UTC 2026-11-01  28/68
+        ✗ [AC3] S1 · created row properties · markTodo succeeded
+            expected "true"
+            actual   "false {\"success\":false,\"error\":\"Unknown action: markTodo\"}"
+        ✗ [AC3] S1 · created row properties · exactly one page created
+            expected 1
+            actual   0
+        ✗ [AC3] S1 · created row properties · row exists in Notion
+            expected "true"
+            actual   "false "
+        ✗ [AC3a] S1 · created row properties · Spaced Repetition = local today
+            expected "2026-11-01"
+            actual   undefined
+        ✗ [AC3b] S1 · created row properties · Attempts = 0
+            expected 0
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done = false
+            expected false
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done is written explicitly, not left to a Notion default
+            expected "true"
+            actual   "false "
+        ✗ [AC3f] S1 · created row properties · title populated
+            expected "Binary Search"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · S No. populated
+            expected 704
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Level populated
+            expected "Easy"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Question Link populated
+            expected "https://leetcode.com/problems/binary-search/"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Tag populated from scraped tags
+            expected ["Array","Binary Search"]
+            actual   undefined
+        ... 28 more
+FAIL  ny-year-rollover   TZ=America/New_York     local 2026-12-31 / UTC 2027-01-01  28/68
+        ✗ [AC3] S1 · created row properties · markTodo succeeded
+            expected "true"
+            actual   "false {\"success\":false,\"error\":\"Unknown action: markTodo\"}"
+        ✗ [AC3] S1 · created row properties · exactly one page created
+            expected 1
+            actual   0
+        ✗ [AC3] S1 · created row properties · row exists in Notion
+            expected "true"
+            actual   "false "
+        ✗ [AC3a] S1 · created row properties · Spaced Repetition = local today
+            expected "2026-12-31"
+            actual   undefined
+        ✗ [AC3b] S1 · created row properties · Attempts = 0
+            expected 0
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done = false
+            expected false
+            actual   undefined
+        ✗ [AC3d] S1 · created row properties · Done is written explicitly, not left to a Notion default
+            expected "true"
+            actual   "false "
+        ✗ [AC3f] S1 · created row properties · title populated
+            expected "Binary Search"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · S No. populated
+            expected 704
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Level populated
+            expected "Easy"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Question Link populated
+            expected "https://leetcode.com/problems/binary-search/"
+            actual   undefined
+        ✗ [AC3f] S1 · created row properties · Tag populated from scraped tags
+            expected ["Array","Binary Search"]
+            actual   undefined
+        ... 28 more
+
+per-AC totals
+  -         0 pass     8 fail
+  AC3       0 pass    24 fail
+  AC3a      8 pass     8 fail
+  AC3b      0 pass     8 fail
+  AC3c      8 pass     0 fail
+  AC3d      0 pass    16 fail
+  AC3e      8 pass     0 fail
+  AC3f      0 pass    40 fail
+  AC4      40 pass    16 fail
+  AC5       8 pass    32 fail
+  AC6       0 pass    32 fail
+  AC7       8 pass    40 fail
+  AC8      56 pass    72 fail
+  AC9      32 pass    24 fail
+  REG      56 pass     0 fail
+
+FAILURES: 224/544 assertions passed
