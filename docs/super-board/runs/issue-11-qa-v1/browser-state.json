@@ -1,0 +1,382 @@
+[
+  {
+    "file": "01-toggle-on-hydrated.png",
+    "query": "?demo=open&seed=dated",
+    "why": "AC2 — entry with a review date opens with the switch ON",
+    "state": {
+      "seed": "dated",
+      "localDay": "2026-08-15",
+      "utcDay": "2026-08-16",
+      "reviewDate": "2026-09-30",
+      "reviewProp": "{\"date\":{\"start\":\"2026-09-30\"}}",
+      "toggle": {
+        "present": true,
+        "checked": true,
+        "disabled": false
+      },
+      "hint": "Due date set",
+      "quickActionsHidden": false,
+      "successClasses": {
+        "revisit": false,
+        "tomorrow": false
+      },
+      "status": "Found existing entry - will update on save",
+      "statusClass": "status-message status-success",
+      "sent": [
+        {
+          "action": "checkExisting",
+          "data": {
+            "databaseId": "qa-db-1",
+            "problemNumber": 1
+          }
+        }
+      ],
+      "dueMessage": null,
+      "successBeforeClear": null
+    }
+  },
+  {
+    "file": "02-cleared.png",
+    "query": "?demo=clear&seed=dated",
+    "why": "AC1/AC8 — switching off empties the Notion date and toasts",
+    "state": {
+      "seed": "dated",
+      "localDay": "2026-08-15",
+      "utcDay": "2026-08-16",
+      "reviewDate": null,
+      "reviewProp": "{\"date\":null}",
+      "toggle": {
+        "present": true,
+        "checked": false,
+        "disabled": false
+      },
+      "hint": "No reviews",
+      "quickActionsHidden": false,
+      "successClasses": {
+        "revisit": false,
+        "tomorrow": false
+      },
+      "status": "Review cleared!",
+      "statusClass": "status-message status-success",
+      "sent": [
+        {
+          "action": "checkExisting",
+          "data": {
+            "databaseId": "qa-db-1",
+            "problemNumber": 1
+          }
+        },
+        {
+          "action": "updateSpacedRepetition",
+          "data": {
+            "pageId": "qa-page-1",
+            "clear": true
+          }
+        }
+      ],
+      "dueMessage": "(no notification)",
+      "successBeforeClear": null
+    }
+  },
+  {
+    "file": "03-reopened-still-off.png",
+    "query": "?demo=open&seed=empty",
+    "why": "AC2 — reopening on a cleared entry reads OFF",
+    "state": {
+      "seed": "empty",
+      "localDay": "2026-08-15",
+      "utcDay": "2026-08-16",
+      "reviewDate": null,
+      "reviewProp": "{\"date\":null}",
+      "toggle": {
+        "present": true,
+        "checked": false,
+        "disabled": false
+      },
+      "hint": "No reviews",
+      "quickActionsHidden": false,
+      "successClasses": {
+        "revisit": false,
+        "tomorrow": false
+      },
+      "status": "Found existing entry - will update on save",
+      "statusClass": "status-message status-success",
+      "sent": [
+        {
+          "action": "checkExisting",
+          "data": {
+            "databaseId": "qa-db-1",
+            "problemNumber": 1
+          }
+        }
+      ],
+      "dueMessage": null,
+      "successBeforeClear": null
+    }
+  },
+  {
+    "file": "04-re-enabled-today.png",
+    "query": "?demo=enable&seed=empty",
+    "why": "AC3 — switching back on re-queues it for TODAY",
+    "state": {
+      "seed": "empty",
+      "localDay": "2026-08-15",
+      "utcDay": "2026-08-16",
+      "reviewDate": "2026-08-15",
+      "reviewProp": "{\"date\":{\"start\":\"2026-08-15\"}}",
+      "toggle": {
+        "present": true,
+        "checked": true,
+        "disabled": false
+      },
+      "hint": "Due date set",
+      "quickActionsHidden": false,
+      "successClasses": {
+        "revisit": true,
+        "tomorrow": false
+      },
+      "status": "Review set for today!",
+      "statusClass": "status-message status-success",
+      "sent": [
+        {
+          "action": "checkExisting",
+          "data": {
+            "databaseId": "qa-db-1",
+            "problemNumber": 1
+          }
+        },
+        {
+          "action": "updateSpacedRepetition",
+          "data": {
+            "pageId": "qa-page-1",
+            "setToday": true
+          }
+        }
+      ],
+      "dueMessage": "You have 1 problem due for review today.",
+      "successBeforeClear": null
+    }
+  },
+  {
+    "file": "05-failure-rollback.png",
+    "query": "?demo=clear&seed=dated&fail=1",
+    "why": "AC7 — a Notion error reverts the switch and reports",
+    "state": {
+      "seed": "dated",
+      "localDay": "2026-08-15",
+      "utcDay": "2026-08-16",
+      "reviewDate": "2026-09-30",
+      "reviewProp": "{\"date\":{\"start\":\"2026-09-30\"}}",
+      "toggle": {
+        "present": true,
+        "checked": true,
+        "disabled": false
+      },
+      "hint": "Due date set",
+      "quickActionsHidden": false,
+      "successClasses": {
+        "revisit": false,
+        "tomorrow": false
+      },
+      "status": "Notion is unavailable",
+      "statusClass": "status-message status-error",
+      "sent": [
+        {
+          "action": "checkExisting",
+          "data": {
+            "databaseId": "qa-db-1",
+            "problemNumber": 1
+          }
+        },
+        {
+          "action": "updateSpacedRepetition",
+          "data": {
+            "pageId": "qa-page-1",
+            "clear": true
+          }
+        }
+      ],
+      "dueMessage": "(no notification)",
+      "successBeforeClear": null
+    }
+  },
+  {
+    "file": "06-gated-not-in-notion.png",
+    "query": "?demo=open&seed=none",
+    "why": "AC4 — the control is unreachable before the page exists",
+    "state": {
+      "seed": "none",
+      "localDay": "2026-08-15",
+      "utcDay": "2026-08-16",
+      "reviewDate": null,
+      "reviewProp": "null",
+      "toggle": {
+        "present": true,
+        "checked": true,
+        "disabled": false
+      },
+      "hint": "Due date set",
+      "quickActionsHidden": true,
+      "successClasses": {
+        "revisit": false,
+        "tomorrow": false
+      },
+      "status": "",
+      "statusClass": "status-message hidden",
+      "sent": [
+        {
+          "action": "checkExisting",
+          "data": {
+            "databaseId": "qa-db-1",
+            "problemNumber": 1
+          }
+        }
+      ],
+      "dueMessage": null,
+      "successBeforeClear": null
+    }
+  },
+  {
+    "file": "07-save-keeps-it-cleared.png",
+    "query": "?demo=save&seed=empty",
+    "why": "AC6 — a later plain save does not re-add a date",
+    "state": {
+      "seed": "empty",
+      "localDay": "2026-08-15",
+      "utcDay": "2026-08-16",
+      "reviewDate": null,
+      "reviewProp": "{\"date\":null}",
+      "toggle": {
+        "present": true,
+        "checked": false,
+        "disabled": false
+      },
+      "hint": "No reviews",
+      "quickActionsHidden": false,
+      "successClasses": {
+        "revisit": false,
+        "tomorrow": false
+      },
+      "status": "Updated properties (code/notes preserved)",
+      "statusClass": "status-message status-success",
+      "sent": [
+        {
+          "action": "checkExisting",
+          "data": {
+            "databaseId": "qa-db-1",
+            "problemNumber": 1
+          }
+        },
+        {
+          "action": "saveToNotion",
+          "data": {
+            "databaseId": "qa-db-1",
+            "existingPageId": "qa-page-1",
+            "incrementAttempts": true,
+            "spacedRepetitionDays": 3,
+            "clearSpacedRepetition": true,
+            "confirmSchemaChanges": false
+          }
+        }
+      ],
+      "dueMessage": "(no notification)",
+      "successBeforeClear": null
+    }
+  },
+  {
+    "file": "08-revisit-flips-switch-on.png",
+    "query": "?demo=revisit&seed=empty",
+    "why": "Notes/#10 — Review Today on a cleared problem flips the switch ON",
+    "state": {
+      "seed": "empty",
+      "localDay": "2026-08-15",
+      "utcDay": "2026-08-16",
+      "reviewDate": "2026-08-15",
+      "reviewProp": "{\"date\":{\"start\":\"2026-08-15\"}}",
+      "toggle": {
+        "present": true,
+        "checked": true,
+        "disabled": false
+      },
+      "hint": "Due date set",
+      "quickActionsHidden": false,
+      "successClasses": {
+        "revisit": true,
+        "tomorrow": false
+      },
+      "status": "Reset! Due today",
+      "statusClass": "status-message status-success",
+      "sent": [
+        {
+          "action": "checkExisting",
+          "data": {
+            "databaseId": "qa-db-1",
+            "problemNumber": 1
+          }
+        },
+        {
+          "action": "updateSpacedRepetition",
+          "data": {
+            "pageId": "qa-page-1",
+            "setToday": true
+          }
+        }
+      ],
+      "dueMessage": null,
+      "successBeforeClear": null
+    }
+  },
+  {
+    "file": "09-clear-drops-highlight.png",
+    "query": "?demo=revisit-then-clear&seed=empty",
+    "why": "Notes/#10 — clearing drops the stale Review-Today highlight",
+    "state": {
+      "seed": "empty",
+      "localDay": "2026-08-15",
+      "utcDay": "2026-08-16",
+      "reviewDate": null,
+      "reviewProp": "{\"date\":null}",
+      "toggle": {
+        "present": true,
+        "checked": false,
+        "disabled": false
+      },
+      "hint": "No reviews",
+      "quickActionsHidden": false,
+      "successClasses": {
+        "revisit": false,
+        "tomorrow": false
+      },
+      "status": "Review cleared!",
+      "statusClass": "status-message status-success",
+      "sent": [
+        {
+          "action": "checkExisting",
+          "data": {
+            "databaseId": "qa-db-1",
+            "problemNumber": 1
+          }
+        },
+        {
+          "action": "updateSpacedRepetition",
+          "data": {
+            "pageId": "qa-page-1",
+            "setToday": true
+          }
+        },
+        {
+          "action": "updateSpacedRepetition",
+          "data": {
+            "pageId": "qa-page-1",
+            "clear": true
+          }
+        }
+      ],
+      "dueMessage": "(no notification)",
+      "successBeforeClear": {
+        "revisit": true,
+        "tomorrow": false
+      }
+    }
+  }
+]

@@ -1,0 +1,89 @@
+
+01-toggle-on-hydrated.png  (AC2 — entry with a review date opens with the switch ON)
+   url            http://localhost:8211/?demo=open&seed=dated
+   local/UTC day  2026-08-15 / 2026-08-16
+   Notion page    "Spaced Repetition" = {"date":{"start":"2026-09-30"}}
+   switch         {"present":true,"checked":true,"disabled":false}  hint="Due date set"  quickActionsHidden=false
+   toast          "Found existing entry - will update on save"  (status-message status-success)
+   success class  {"revisit":false,"tomorrow":false}
+   sent           [{"action":"checkExisting","data":{"databaseId":"qa-db-1","problemNumber":1}}]
+
+02-cleared.png  (AC1/AC8 — switching off empties the Notion date and toasts)
+   url            http://localhost:8211/?demo=clear&seed=dated
+   local/UTC day  2026-08-15 / 2026-08-16
+   Notion page    "Spaced Repetition" = {"date":null}
+   switch         {"present":true,"checked":false,"disabled":false}  hint="No reviews"  quickActionsHidden=false
+   toast          "Review cleared!"  (status-message status-success)
+   success class  {"revisit":false,"tomorrow":false}
+   sent           [{"action":"checkExisting","data":{"databaseId":"qa-db-1","problemNumber":1}},{"action":"updateSpacedRepetition","data":{"pageId":"qa-page-1","clear":true}}]
+   hourly alarm   (no notification)
+
+03-reopened-still-off.png  (AC2 — reopening on a cleared entry reads OFF)
+   url            http://localhost:8211/?demo=open&seed=empty
+   local/UTC day  2026-08-15 / 2026-08-16
+   Notion page    "Spaced Repetition" = {"date":null}
+   switch         {"present":true,"checked":false,"disabled":false}  hint="No reviews"  quickActionsHidden=false
+   toast          "Found existing entry - will update on save"  (status-message status-success)
+   success class  {"revisit":false,"tomorrow":false}
+   sent           [{"action":"checkExisting","data":{"databaseId":"qa-db-1","problemNumber":1}}]
+
+04-re-enabled-today.png  (AC3 — switching back on re-queues it for TODAY)
+   url            http://localhost:8211/?demo=enable&seed=empty
+   local/UTC day  2026-08-15 / 2026-08-16
+   Notion page    "Spaced Repetition" = {"date":{"start":"2026-08-15"}}
+   switch         {"present":true,"checked":true,"disabled":false}  hint="Due date set"  quickActionsHidden=false
+   toast          "Review set for today!"  (status-message status-success)
+   success class  {"revisit":true,"tomorrow":false}
+   sent           [{"action":"checkExisting","data":{"databaseId":"qa-db-1","problemNumber":1}},{"action":"updateSpacedRepetition","data":{"pageId":"qa-page-1","setToday":true}}]
+   hourly alarm   You have 1 problem due for review today.
+
+05-failure-rollback.png  (AC7 — a Notion error reverts the switch and reports)
+   url            http://localhost:8211/?demo=clear&seed=dated&fail=1
+   local/UTC day  2026-08-15 / 2026-08-16
+   Notion page    "Spaced Repetition" = {"date":{"start":"2026-09-30"}}
+   switch         {"present":true,"checked":true,"disabled":false}  hint="Due date set"  quickActionsHidden=false
+   toast          "Notion is unavailable"  (status-message status-error)
+   success class  {"revisit":false,"tomorrow":false}
+   sent           [{"action":"checkExisting","data":{"databaseId":"qa-db-1","problemNumber":1}},{"action":"updateSpacedRepetition","data":{"pageId":"qa-page-1","clear":true}}]
+   hourly alarm   (no notification)
+
+06-gated-not-in-notion.png  (AC4 — the control is unreachable before the page exists)
+   url            http://localhost:8211/?demo=open&seed=none
+   local/UTC day  2026-08-15 / 2026-08-16
+   Notion page    "Spaced Repetition" = null
+   switch         {"present":true,"checked":true,"disabled":false}  hint="Due date set"  quickActionsHidden=true
+   toast          ""  (status-message hidden)
+   success class  {"revisit":false,"tomorrow":false}
+   sent           [{"action":"checkExisting","data":{"databaseId":"qa-db-1","problemNumber":1}}]
+
+07-save-keeps-it-cleared.png  (AC6 — a later plain save does not re-add a date)
+   url            http://localhost:8211/?demo=save&seed=empty
+   local/UTC day  2026-08-15 / 2026-08-16
+   Notion page    "Spaced Repetition" = {"date":null}
+   switch         {"present":true,"checked":false,"disabled":false}  hint="No reviews"  quickActionsHidden=false
+   toast          "Updated properties (code/notes preserved)"  (status-message status-success)
+   success class  {"revisit":false,"tomorrow":false}
+   sent           [{"action":"checkExisting","data":{"databaseId":"qa-db-1","problemNumber":1}},{"action":"saveToNotion","data":{"databaseId":"qa-db-1","existingPageId":"qa-page-1","incrementAttempts":true,"spacedRepetitionDays":3,"clearSpacedRepetition":true,"confirmSchemaChanges":false}}]
+   hourly alarm   (no notification)
+
+08-revisit-flips-switch-on.png  (Notes/#10 — Review Today on a cleared problem flips the switch ON)
+   url            http://localhost:8211/?demo=revisit&seed=empty
+   local/UTC day  2026-08-15 / 2026-08-16
+   Notion page    "Spaced Repetition" = {"date":{"start":"2026-08-15"}}
+   switch         {"present":true,"checked":true,"disabled":false}  hint="Due date set"  quickActionsHidden=false
+   toast          "Reset! Due today"  (status-message status-success)
+   success class  {"revisit":true,"tomorrow":false}
+   sent           [{"action":"checkExisting","data":{"databaseId":"qa-db-1","problemNumber":1}},{"action":"updateSpacedRepetition","data":{"pageId":"qa-page-1","setToday":true}}]
+
+09-clear-drops-highlight.png  (Notes/#10 — clearing drops the stale Review-Today highlight)
+   url            http://localhost:8211/?demo=revisit-then-clear&seed=empty
+   local/UTC day  2026-08-15 / 2026-08-16
+   Notion page    "Spaced Repetition" = {"date":null}
+   switch         {"present":true,"checked":false,"disabled":false}  hint="No reviews"  quickActionsHidden=false
+   toast          "Review cleared!"  (status-message status-success)
+   success class  {"revisit":false,"tomorrow":false}
+   sent           [{"action":"checkExisting","data":{"databaseId":"qa-db-1","problemNumber":1}},{"action":"updateSpacedRepetition","data":{"pageId":"qa-page-1","setToday":true}},{"action":"updateSpacedRepetition","data":{"pageId":"qa-page-1","clear":true}}]
+   before clear   {"revisit":true,"tomorrow":false}
+   hourly alarm   (no notification)
+
+Captured 9 screenshots into C:\Users\jonat\repos\leetion\.worktrees\issue-11-qa\docs\super-board\runs\issue-11-qa-v1
