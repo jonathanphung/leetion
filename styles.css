@@ -285,6 +285,46 @@ body {
   letter-spacing: 0.5px;
 }
 
+/*
+ * "Mark to-do" — pushed to the right edge of the problem header by the auto
+ * margin, so the number and difficulty badge keep their natural left group.
+ * Sized to the badge's type scale and given `white-space: nowrap` +
+ * `flex-shrink: 0` so it can never wrap or squeeze the badge at the popup's
+ * fixed 400px width.
+ */
+.todo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 3px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.todo-btn:hover:not(:disabled) {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.todo-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.todo-btn svg {
+  flex-shrink: 0;
+}
+
 .difficulty-badge.easy {
   background: rgba(48, 209, 88, 0.15);
   color: var(--easy);
