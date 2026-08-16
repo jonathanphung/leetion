@@ -23,6 +23,10 @@ npm-debug.log*
 dist/
 build/
 *.zip
+*.xpi
+web-ext-artifacts/
+# signed dev builds (tools/dev-build) — never commit, see LICENSE
+.dev-build/
 
 # Dependencies (if you add npm later)
 node_modules/
