@@ -1,0 +1,5919 @@
+{
+  "background": "C:\\Users\\jonat\\repos\\leetion\\.worktrees\\issue-12-qa\\background.js",
+  "total": 648,
+  "failed": 0,
+  "rows": [
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "markTodo succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "exactly one page created",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "row exists in Notion",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition = local today",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition is NOT the UTC day when they differ",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3b",
+      "label": "Attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3c",
+      "label": "Date (of first attempt) absent",
+      "pass": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done is written explicitly, not left to a Notion default",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3e",
+      "label": "My Expertise absent",
+      "pass": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "title populated",
+      "pass": true,
+      "actual": "Binary Search",
+      "expected": "Binary Search"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "S No. populated",
+      "pass": true,
+      "actual": 704,
+      "expected": 704
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Level populated",
+      "pass": true,
+      "actual": "Easy",
+      "expected": "Easy"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Question Link populated",
+      "pass": true,
+      "actual": "https://leetcode.com/problems/binary-search/",
+      "expected": "https://leetcode.com/problems/binary-search/"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Tag populated from scraped tags",
+      "pass": true,
+      "actual": [
+        "Array",
+        "Binary Search"
+      ],
+      "expected": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "page body is empty (no children)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Remark not written",
+      "pass": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Alternative Method Tags not written",
+      "pass": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Time Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Space Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "property set is exactly the queue set",
+      "pass": true,
+      "actual": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ],
+      "expected": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ]
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "no block-append call was made",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.pageId is the created row",
+      "pass": true,
+      "actual": "qa-created-1",
+      "expected": "qa-created-1"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.updated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.todo = true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.contentUpdated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "no second row created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "reports alreadyExists",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "hands back the existing pageId",
+      "pass": true,
+      "actual": "existing-page",
+      "expected": "existing-page"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Attempts)",
+      "pass": true,
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Spaced Repetition)",
+      "pass": true,
+      "actual": "2026-12-01",
+      "expected": "2026-12-01"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "stale popup lookup still cannot double-create",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "adopts the raced row",
+      "pass": true,
+      "actual": "raced-page",
+      "expected": "raced-page"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports 0 attempts (not 1)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no first-attempt date",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports Done unchecked",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no expertise",
+      "pass": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update was not blocked by the queue create",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts 0 → 1 (not double-counted)",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "response.attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Date (of first attempt) backfilled to local today",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "My Expertise now set",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Done now true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Remark now written",
+      "pass": true,
+      "actual": "tricky bounds",
+      "expected": "tricky bounds"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Time Complexity now written",
+      "pass": true,
+      "actual": "O(log n)",
+      "expected": "O(log n)"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "page body now has content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Spaced Repetition moved to today + interval",
+      "pass": true,
+      "actual": "2026-08-13",
+      "expected": "2026-08-13"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "second update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts still 1 on a same-session re-update",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "first-attempt date unchanged by later updates",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "hourly review check fires one notification",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification title",
+      "pass": true,
+      "actual": "LeetCode Review Due",
+      "expected": "LeetCode Review Due"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification counts the queued problem",
+      "pass": true,
+      "actual": "You have 1 problem due for review today.",
+      "expected": "You have 1 problem due for review today."
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter uses the local day",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it as due",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it in the total",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "failure is reported, not swallowed",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "error message surfaced to the popup",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no row was created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no page id handed back",
+      "pass": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry after the failure creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry created exactly one row",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retried row still has Attempts 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "missing columns ask for confirmation",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "nothing created before the user confirms",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "the missing columns are named",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "confirming creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and still queues it unattempted",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "with today's local review date",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "wrong column type blocks the queue write",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and says which column",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "no row created on a type mismatch",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still succeeds",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes Attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes first-attempt date = local today",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes expertise",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still uses today + interval for review",
+      "pass": true,
+      "actual": "2026-08-13",
+      "expected": "2026-08-13"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes page content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save reports attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "markTodo succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "exactly one page created",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "row exists in Notion",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition = local today",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition is NOT the UTC day when they differ",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3b",
+      "label": "Attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3c",
+      "label": "Date (of first attempt) absent",
+      "pass": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done is written explicitly, not left to a Notion default",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3e",
+      "label": "My Expertise absent",
+      "pass": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "title populated",
+      "pass": true,
+      "actual": "Binary Search",
+      "expected": "Binary Search"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "S No. populated",
+      "pass": true,
+      "actual": 704,
+      "expected": 704
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Level populated",
+      "pass": true,
+      "actual": "Easy",
+      "expected": "Easy"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Question Link populated",
+      "pass": true,
+      "actual": "https://leetcode.com/problems/binary-search/",
+      "expected": "https://leetcode.com/problems/binary-search/"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Tag populated from scraped tags",
+      "pass": true,
+      "actual": [
+        "Array",
+        "Binary Search"
+      ],
+      "expected": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "page body is empty (no children)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Remark not written",
+      "pass": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Alternative Method Tags not written",
+      "pass": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Time Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Space Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "property set is exactly the queue set",
+      "pass": true,
+      "actual": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ],
+      "expected": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ]
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "no block-append call was made",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.pageId is the created row",
+      "pass": true,
+      "actual": "qa-created-1",
+      "expected": "qa-created-1"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.updated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.todo = true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.contentUpdated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "no second row created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "reports alreadyExists",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "hands back the existing pageId",
+      "pass": true,
+      "actual": "existing-page",
+      "expected": "existing-page"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Attempts)",
+      "pass": true,
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Spaced Repetition)",
+      "pass": true,
+      "actual": "2026-12-01",
+      "expected": "2026-12-01"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "stale popup lookup still cannot double-create",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "adopts the raced row",
+      "pass": true,
+      "actual": "raced-page",
+      "expected": "raced-page"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports 0 attempts (not 1)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no first-attempt date",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports Done unchecked",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no expertise",
+      "pass": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update was not blocked by the queue create",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts 0 → 1 (not double-counted)",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "response.attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Date (of first attempt) backfilled to local today",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "My Expertise now set",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Done now true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Remark now written",
+      "pass": true,
+      "actual": "tricky bounds",
+      "expected": "tricky bounds"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Time Complexity now written",
+      "pass": true,
+      "actual": "O(log n)",
+      "expected": "O(log n)"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "page body now has content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Spaced Repetition moved to today + interval",
+      "pass": true,
+      "actual": "2026-08-14",
+      "expected": "2026-08-14"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "second update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts still 1 on a same-session re-update",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "first-attempt date unchanged by later updates",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "hourly review check fires one notification",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification title",
+      "pass": true,
+      "actual": "LeetCode Review Due",
+      "expected": "LeetCode Review Due"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification counts the queued problem",
+      "pass": true,
+      "actual": "You have 1 problem due for review today.",
+      "expected": "You have 1 problem due for review today."
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter uses the local day",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it as due",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it in the total",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "failure is reported, not swallowed",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "error message surfaced to the popup",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no row was created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no page id handed back",
+      "pass": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry after the failure creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry created exactly one row",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retried row still has Attempts 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "missing columns ask for confirmation",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "nothing created before the user confirms",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "the missing columns are named",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "confirming creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and still queues it unattempted",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "with today's local review date",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "wrong column type blocks the queue write",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and says which column",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "no row created on a type mismatch",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still succeeds",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes Attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes first-attempt date = local today",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes expertise",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still uses today + interval for review",
+      "pass": true,
+      "actual": "2026-08-14",
+      "expected": "2026-08-14"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes page content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save reports attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "markTodo succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "exactly one page created",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "row exists in Notion",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition = local today",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition is NOT the UTC day when they differ",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3b",
+      "label": "Attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3c",
+      "label": "Date (of first attempt) absent",
+      "pass": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done is written explicitly, not left to a Notion default",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3e",
+      "label": "My Expertise absent",
+      "pass": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "title populated",
+      "pass": true,
+      "actual": "Binary Search",
+      "expected": "Binary Search"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "S No. populated",
+      "pass": true,
+      "actual": 704,
+      "expected": 704
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Level populated",
+      "pass": true,
+      "actual": "Easy",
+      "expected": "Easy"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Question Link populated",
+      "pass": true,
+      "actual": "https://leetcode.com/problems/binary-search/",
+      "expected": "https://leetcode.com/problems/binary-search/"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Tag populated from scraped tags",
+      "pass": true,
+      "actual": [
+        "Array",
+        "Binary Search"
+      ],
+      "expected": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "page body is empty (no children)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Remark not written",
+      "pass": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Alternative Method Tags not written",
+      "pass": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Time Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Space Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "property set is exactly the queue set",
+      "pass": true,
+      "actual": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ],
+      "expected": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ]
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "no block-append call was made",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.pageId is the created row",
+      "pass": true,
+      "actual": "qa-created-1",
+      "expected": "qa-created-1"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.updated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.todo = true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.contentUpdated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "no second row created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "reports alreadyExists",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "hands back the existing pageId",
+      "pass": true,
+      "actual": "existing-page",
+      "expected": "existing-page"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Attempts)",
+      "pass": true,
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Spaced Repetition)",
+      "pass": true,
+      "actual": "2026-12-01",
+      "expected": "2026-12-01"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "stale popup lookup still cannot double-create",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "adopts the raced row",
+      "pass": true,
+      "actual": "raced-page",
+      "expected": "raced-page"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports 0 attempts (not 1)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no first-attempt date",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports Done unchecked",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no expertise",
+      "pass": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update was not blocked by the queue create",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts 0 → 1 (not double-counted)",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "response.attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Date (of first attempt) backfilled to local today",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "My Expertise now set",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Done now true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Remark now written",
+      "pass": true,
+      "actual": "tricky bounds",
+      "expected": "tricky bounds"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Time Complexity now written",
+      "pass": true,
+      "actual": "O(log n)",
+      "expected": "O(log n)"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "page body now has content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Spaced Repetition moved to today + interval",
+      "pass": true,
+      "actual": "2026-08-13",
+      "expected": "2026-08-13"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "second update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts still 1 on a same-session re-update",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "first-attempt date unchanged by later updates",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "hourly review check fires one notification",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification title",
+      "pass": true,
+      "actual": "LeetCode Review Due",
+      "expected": "LeetCode Review Due"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification counts the queued problem",
+      "pass": true,
+      "actual": "You have 1 problem due for review today.",
+      "expected": "You have 1 problem due for review today."
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter uses the local day",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it as due",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it in the total",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "failure is reported, not swallowed",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "error message surfaced to the popup",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no row was created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no page id handed back",
+      "pass": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry after the failure creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry created exactly one row",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retried row still has Attempts 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "missing columns ask for confirmation",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "nothing created before the user confirms",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "the missing columns are named",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "confirming creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and still queues it unattempted",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "with today's local review date",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "wrong column type blocks the queue write",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and says which column",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "no row created on a type mismatch",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still succeeds",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes Attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes first-attempt date = local today",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes expertise",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still uses today + interval for review",
+      "pass": true,
+      "actual": "2026-08-13",
+      "expected": "2026-08-13"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes page content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save reports attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "markTodo succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "exactly one page created",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "row exists in Notion",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition = local today",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition is NOT the UTC day when they differ",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3b",
+      "label": "Attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3c",
+      "label": "Date (of first attempt) absent",
+      "pass": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done is written explicitly, not left to a Notion default",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3e",
+      "label": "My Expertise absent",
+      "pass": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "title populated",
+      "pass": true,
+      "actual": "Binary Search",
+      "expected": "Binary Search"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "S No. populated",
+      "pass": true,
+      "actual": 704,
+      "expected": 704
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Level populated",
+      "pass": true,
+      "actual": "Easy",
+      "expected": "Easy"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Question Link populated",
+      "pass": true,
+      "actual": "https://leetcode.com/problems/binary-search/",
+      "expected": "https://leetcode.com/problems/binary-search/"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Tag populated from scraped tags",
+      "pass": true,
+      "actual": [
+        "Array",
+        "Binary Search"
+      ],
+      "expected": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "page body is empty (no children)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Remark not written",
+      "pass": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Alternative Method Tags not written",
+      "pass": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Time Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Space Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "property set is exactly the queue set",
+      "pass": true,
+      "actual": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ],
+      "expected": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ]
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "no block-append call was made",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.pageId is the created row",
+      "pass": true,
+      "actual": "qa-created-1",
+      "expected": "qa-created-1"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.updated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.todo = true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.contentUpdated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "no second row created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "reports alreadyExists",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "hands back the existing pageId",
+      "pass": true,
+      "actual": "existing-page",
+      "expected": "existing-page"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Attempts)",
+      "pass": true,
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Spaced Repetition)",
+      "pass": true,
+      "actual": "2026-12-01",
+      "expected": "2026-12-01"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "stale popup lookup still cannot double-create",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "adopts the raced row",
+      "pass": true,
+      "actual": "raced-page",
+      "expected": "raced-page"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports 0 attempts (not 1)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no first-attempt date",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports Done unchecked",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no expertise",
+      "pass": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update was not blocked by the queue create",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts 0 → 1 (not double-counted)",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "response.attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Date (of first attempt) backfilled to local today",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "My Expertise now set",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Done now true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Remark now written",
+      "pass": true,
+      "actual": "tricky bounds",
+      "expected": "tricky bounds"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Time Complexity now written",
+      "pass": true,
+      "actual": "O(log n)",
+      "expected": "O(log n)"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "page body now has content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Spaced Repetition moved to today + interval",
+      "pass": true,
+      "actual": "2026-08-14",
+      "expected": "2026-08-14"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "second update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts still 1 on a same-session re-update",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "first-attempt date unchanged by later updates",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "hourly review check fires one notification",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification title",
+      "pass": true,
+      "actual": "LeetCode Review Due",
+      "expected": "LeetCode Review Due"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification counts the queued problem",
+      "pass": true,
+      "actual": "You have 1 problem due for review today.",
+      "expected": "You have 1 problem due for review today."
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter uses the local day",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it as due",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it in the total",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "failure is reported, not swallowed",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "error message surfaced to the popup",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no row was created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no page id handed back",
+      "pass": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry after the failure creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry created exactly one row",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retried row still has Attempts 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "missing columns ask for confirmation",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "nothing created before the user confirms",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "the missing columns are named",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "confirming creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and still queues it unattempted",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "with today's local review date",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "wrong column type blocks the queue write",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and says which column",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "no row created on a type mismatch",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still succeeds",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes Attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes first-attempt date = local today",
+      "pass": true,
+      "actual": "2026-08-11",
+      "expected": "2026-08-11"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes expertise",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still uses today + interval for review",
+      "pass": true,
+      "actual": "2026-08-14",
+      "expected": "2026-08-14"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes page content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save reports attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "markTodo succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "exactly one page created",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "row exists in Notion",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition = local today",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition is NOT the UTC day when they differ",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3b",
+      "label": "Attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3c",
+      "label": "Date (of first attempt) absent",
+      "pass": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done is written explicitly, not left to a Notion default",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3e",
+      "label": "My Expertise absent",
+      "pass": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "title populated",
+      "pass": true,
+      "actual": "Binary Search",
+      "expected": "Binary Search"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "S No. populated",
+      "pass": true,
+      "actual": 704,
+      "expected": 704
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Level populated",
+      "pass": true,
+      "actual": "Easy",
+      "expected": "Easy"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Question Link populated",
+      "pass": true,
+      "actual": "https://leetcode.com/problems/binary-search/",
+      "expected": "https://leetcode.com/problems/binary-search/"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Tag populated from scraped tags",
+      "pass": true,
+      "actual": [
+        "Array",
+        "Binary Search"
+      ],
+      "expected": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "page body is empty (no children)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Remark not written",
+      "pass": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Alternative Method Tags not written",
+      "pass": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Time Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Space Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "property set is exactly the queue set",
+      "pass": true,
+      "actual": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ],
+      "expected": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ]
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "no block-append call was made",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.pageId is the created row",
+      "pass": true,
+      "actual": "qa-created-1",
+      "expected": "qa-created-1"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.updated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.todo = true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.contentUpdated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "no second row created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "reports alreadyExists",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "hands back the existing pageId",
+      "pass": true,
+      "actual": "existing-page",
+      "expected": "existing-page"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Attempts)",
+      "pass": true,
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Spaced Repetition)",
+      "pass": true,
+      "actual": "2026-12-01",
+      "expected": "2026-12-01"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "stale popup lookup still cannot double-create",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "adopts the raced row",
+      "pass": true,
+      "actual": "raced-page",
+      "expected": "raced-page"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports 0 attempts (not 1)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no first-attempt date",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports Done unchecked",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no expertise",
+      "pass": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update was not blocked by the queue create",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts 0 → 1 (not double-counted)",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "response.attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Date (of first attempt) backfilled to local today",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "My Expertise now set",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Done now true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Remark now written",
+      "pass": true,
+      "actual": "tricky bounds",
+      "expected": "tricky bounds"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Time Complexity now written",
+      "pass": true,
+      "actual": "O(log n)",
+      "expected": "O(log n)"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "page body now has content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Spaced Repetition moved to today + interval",
+      "pass": true,
+      "actual": "2026-08-13",
+      "expected": "2026-08-13"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "second update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts still 1 on a same-session re-update",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "first-attempt date unchanged by later updates",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "hourly review check fires one notification",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification title",
+      "pass": true,
+      "actual": "LeetCode Review Due",
+      "expected": "LeetCode Review Due"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification counts the queued problem",
+      "pass": true,
+      "actual": "You have 1 problem due for review today.",
+      "expected": "You have 1 problem due for review today."
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter uses the local day",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it as due",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it in the total",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "failure is reported, not swallowed",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "error message surfaced to the popup",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no row was created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no page id handed back",
+      "pass": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry after the failure creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry created exactly one row",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retried row still has Attempts 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "missing columns ask for confirmation",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "nothing created before the user confirms",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "the missing columns are named",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "confirming creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and still queues it unattempted",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "with today's local review date",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "wrong column type blocks the queue write",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and says which column",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "no row created on a type mismatch",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still succeeds",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes Attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes first-attempt date = local today",
+      "pass": true,
+      "actual": "2026-08-10",
+      "expected": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes expertise",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still uses today + interval for review",
+      "pass": true,
+      "actual": "2026-08-13",
+      "expected": "2026-08-13"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes page content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save reports attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "markTodo succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "exactly one page created",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "row exists in Notion",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition = local today",
+      "pass": true,
+      "actual": "2026-03-07",
+      "expected": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition is NOT the UTC day when they differ",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3b",
+      "label": "Attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3c",
+      "label": "Date (of first attempt) absent",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done is written explicitly, not left to a Notion default",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3e",
+      "label": "My Expertise absent",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "title populated",
+      "pass": true,
+      "actual": "Binary Search",
+      "expected": "Binary Search"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "S No. populated",
+      "pass": true,
+      "actual": 704,
+      "expected": 704
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Level populated",
+      "pass": true,
+      "actual": "Easy",
+      "expected": "Easy"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Question Link populated",
+      "pass": true,
+      "actual": "https://leetcode.com/problems/binary-search/",
+      "expected": "https://leetcode.com/problems/binary-search/"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Tag populated from scraped tags",
+      "pass": true,
+      "actual": [
+        "Array",
+        "Binary Search"
+      ],
+      "expected": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "page body is empty (no children)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Remark not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Alternative Method Tags not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Time Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Space Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "property set is exactly the queue set",
+      "pass": true,
+      "actual": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ],
+      "expected": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ]
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "no block-append call was made",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.pageId is the created row",
+      "pass": true,
+      "actual": "qa-created-1",
+      "expected": "qa-created-1"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.updated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.todo = true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.contentUpdated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "no second row created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "reports alreadyExists",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "hands back the existing pageId",
+      "pass": true,
+      "actual": "existing-page",
+      "expected": "existing-page"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Attempts)",
+      "pass": true,
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Spaced Repetition)",
+      "pass": true,
+      "actual": "2026-12-01",
+      "expected": "2026-12-01"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "stale popup lookup still cannot double-create",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "adopts the raced row",
+      "pass": true,
+      "actual": "raced-page",
+      "expected": "raced-page"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports 0 attempts (not 1)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no first-attempt date",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports Done unchecked",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no expertise",
+      "pass": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update was not blocked by the queue create",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts 0 → 1 (not double-counted)",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "response.attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Date (of first attempt) backfilled to local today",
+      "pass": true,
+      "actual": "2026-03-07",
+      "expected": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "My Expertise now set",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Done now true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Remark now written",
+      "pass": true,
+      "actual": "tricky bounds",
+      "expected": "tricky bounds"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Time Complexity now written",
+      "pass": true,
+      "actual": "O(log n)",
+      "expected": "O(log n)"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "page body now has content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Spaced Repetition moved to today + interval",
+      "pass": true,
+      "actual": "2026-03-10",
+      "expected": "2026-03-10"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "second update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts still 1 on a same-session re-update",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "first-attempt date unchanged by later updates",
+      "pass": true,
+      "actual": "2026-03-07",
+      "expected": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "hourly review check fires one notification",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification title",
+      "pass": true,
+      "actual": "LeetCode Review Due",
+      "expected": "LeetCode Review Due"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification counts the queued problem",
+      "pass": true,
+      "actual": "You have 1 problem due for review today.",
+      "expected": "You have 1 problem due for review today."
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter uses the local day",
+      "pass": true,
+      "actual": "2026-03-07",
+      "expected": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it as due",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it in the total",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "failure is reported, not swallowed",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "error message surfaced to the popup",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no row was created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no page id handed back",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry after the failure creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry created exactly one row",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retried row still has Attempts 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "missing columns ask for confirmation",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "nothing created before the user confirms",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "the missing columns are named",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "confirming creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and still queues it unattempted",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "with today's local review date",
+      "pass": true,
+      "actual": "2026-03-07",
+      "expected": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "wrong column type blocks the queue write",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and says which column",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "no row created on a type mismatch",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still succeeds",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes Attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes first-attempt date = local today",
+      "pass": true,
+      "actual": "2026-03-07",
+      "expected": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes expertise",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still uses today + interval for review",
+      "pass": true,
+      "actual": "2026-03-10",
+      "expected": "2026-03-10"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes page content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save reports attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "markTodo succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "exactly one page created",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "row exists in Notion",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition = local today",
+      "pass": true,
+      "actual": "2026-11-01",
+      "expected": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition is NOT the UTC day when they differ",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3b",
+      "label": "Attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3c",
+      "label": "Date (of first attempt) absent",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done is written explicitly, not left to a Notion default",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3e",
+      "label": "My Expertise absent",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "title populated",
+      "pass": true,
+      "actual": "Binary Search",
+      "expected": "Binary Search"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "S No. populated",
+      "pass": true,
+      "actual": 704,
+      "expected": 704
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Level populated",
+      "pass": true,
+      "actual": "Easy",
+      "expected": "Easy"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Question Link populated",
+      "pass": true,
+      "actual": "https://leetcode.com/problems/binary-search/",
+      "expected": "https://leetcode.com/problems/binary-search/"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Tag populated from scraped tags",
+      "pass": true,
+      "actual": [
+        "Array",
+        "Binary Search"
+      ],
+      "expected": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "page body is empty (no children)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Remark not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Alternative Method Tags not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Time Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Space Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "property set is exactly the queue set",
+      "pass": true,
+      "actual": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ],
+      "expected": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ]
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "no block-append call was made",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.pageId is the created row",
+      "pass": true,
+      "actual": "qa-created-1",
+      "expected": "qa-created-1"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.updated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.todo = true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.contentUpdated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "no second row created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "reports alreadyExists",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "hands back the existing pageId",
+      "pass": true,
+      "actual": "existing-page",
+      "expected": "existing-page"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Attempts)",
+      "pass": true,
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Spaced Repetition)",
+      "pass": true,
+      "actual": "2026-12-01",
+      "expected": "2026-12-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "stale popup lookup still cannot double-create",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "adopts the raced row",
+      "pass": true,
+      "actual": "raced-page",
+      "expected": "raced-page"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports 0 attempts (not 1)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no first-attempt date",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports Done unchecked",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no expertise",
+      "pass": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update was not blocked by the queue create",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts 0 → 1 (not double-counted)",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "response.attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Date (of first attempt) backfilled to local today",
+      "pass": true,
+      "actual": "2026-11-01",
+      "expected": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "My Expertise now set",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Done now true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Remark now written",
+      "pass": true,
+      "actual": "tricky bounds",
+      "expected": "tricky bounds"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Time Complexity now written",
+      "pass": true,
+      "actual": "O(log n)",
+      "expected": "O(log n)"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "page body now has content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Spaced Repetition moved to today + interval",
+      "pass": true,
+      "actual": "2026-11-04",
+      "expected": "2026-11-04"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "second update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts still 1 on a same-session re-update",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "first-attempt date unchanged by later updates",
+      "pass": true,
+      "actual": "2026-11-01",
+      "expected": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "hourly review check fires one notification",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification title",
+      "pass": true,
+      "actual": "LeetCode Review Due",
+      "expected": "LeetCode Review Due"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification counts the queued problem",
+      "pass": true,
+      "actual": "You have 1 problem due for review today.",
+      "expected": "You have 1 problem due for review today."
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter uses the local day",
+      "pass": true,
+      "actual": "2026-11-01",
+      "expected": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it as due",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it in the total",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "failure is reported, not swallowed",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "error message surfaced to the popup",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no row was created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no page id handed back",
+      "pass": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry after the failure creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry created exactly one row",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retried row still has Attempts 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "missing columns ask for confirmation",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "nothing created before the user confirms",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "the missing columns are named",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "confirming creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and still queues it unattempted",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "with today's local review date",
+      "pass": true,
+      "actual": "2026-11-01",
+      "expected": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "wrong column type blocks the queue write",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and says which column",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "no row created on a type mismatch",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still succeeds",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes Attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes first-attempt date = local today",
+      "pass": true,
+      "actual": "2026-11-01",
+      "expected": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes expertise",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still uses today + interval for review",
+      "pass": true,
+      "actual": "2026-11-04",
+      "expected": "2026-11-04"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes page content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save reports attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "markTodo succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "exactly one page created",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3",
+      "label": "row exists in Notion",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition = local today",
+      "pass": true,
+      "actual": "2026-12-31",
+      "expected": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3a",
+      "label": "Spaced Repetition is NOT the UTC day when they differ",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3b",
+      "label": "Attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3c",
+      "label": "Date (of first attempt) absent",
+      "pass": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3d",
+      "label": "Done is written explicitly, not left to a Notion default",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3e",
+      "label": "My Expertise absent",
+      "pass": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "title populated",
+      "pass": true,
+      "actual": "Binary Search",
+      "expected": "Binary Search"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "S No. populated",
+      "pass": true,
+      "actual": 704,
+      "expected": 704
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Level populated",
+      "pass": true,
+      "actual": "Easy",
+      "expected": "Easy"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Question Link populated",
+      "pass": true,
+      "actual": "https://leetcode.com/problems/binary-search/",
+      "expected": "https://leetcode.com/problems/binary-search/"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S1 · created row properties",
+      "ac": "AC3f",
+      "label": "Tag populated from scraped tags",
+      "pass": true,
+      "actual": [
+        "Array",
+        "Binary Search"
+      ],
+      "expected": [
+        "Array",
+        "Binary Search"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "page body is empty (no children)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Remark not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Alternative Method Tags not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Time Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "Space Complexity not written",
+      "pass": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "property set is exactly the queue set",
+      "pass": true,
+      "actual": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ],
+      "expected": [
+        "Attempts",
+        "Done",
+        "Level",
+        "Question",
+        "Question Link",
+        "S No.",
+        "Spaced Repetition",
+        "Tag"
+      ]
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S2 · no solution content",
+      "ac": "AC4",
+      "label": "no block-append call was made",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.pageId is the created row",
+      "pass": true,
+      "actual": "qa-created-1",
+      "expected": "qa-created-1"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.attempts = 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.updated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.todo = true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S3 · response contract",
+      "ac": "AC5",
+      "label": "response.contentUpdated = false",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "no second row created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "reports alreadyExists",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "hands back the existing pageId",
+      "pass": true,
+      "actual": "existing-page",
+      "expected": "existing-page"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Attempts)",
+      "pass": true,
+      "actual": 4,
+      "expected": 4
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "existing row untouched (Spaced Repetition)",
+      "pass": true,
+      "actual": "2026-12-01",
+      "expected": "2026-12-01"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "stale popup lookup still cannot double-create",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S4 · duplicate guard",
+      "ac": "AC9",
+      "label": "adopts the raced row",
+      "pass": true,
+      "actual": "raced-page",
+      "expected": "raced-page"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports 0 attempts (not 1)",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no first-attempt date",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports Done unchecked",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "checkExisting reports no expertise",
+      "pass": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "update was not blocked by the queue create",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts 0 → 1 (not double-counted)",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "response.attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Date (of first attempt) backfilled to local today",
+      "pass": true,
+      "actual": "2026-12-31",
+      "expected": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "My Expertise now set",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Done now true",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Remark now written",
+      "pass": true,
+      "actual": "tricky bounds",
+      "expected": "tricky bounds"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Time Complexity now written",
+      "pass": true,
+      "actual": "O(log n)",
+      "expected": "O(log n)"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "page body now has content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Spaced Repetition moved to today + interval",
+      "pass": true,
+      "actual": "2027-01-03",
+      "expected": "2027-01-03"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "second update succeeded",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "Attempts still 1 on a same-session re-update",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S5 · queue → attempt → update round-trip",
+      "ac": "AC6",
+      "label": "first-attempt date unchanged by later updates",
+      "pass": true,
+      "actual": "2026-12-31",
+      "expected": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "hourly review check fires one notification",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification title",
+      "pass": true,
+      "actual": "LeetCode Review Due",
+      "expected": "LeetCode Review Due"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "notification counts the queued problem",
+      "pass": true,
+      "actual": "You have 1 problem due for review today.",
+      "expected": "You have 1 problem due for review today."
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter uses the local day",
+      "pass": true,
+      "actual": "2026-12-31",
+      "expected": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it as due",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "popup stats count it in the total",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "failure is reported, not swallowed",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "error message surfaced to the popup",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no row was created",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "no page id handed back",
+      "pass": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry after the failure creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retry created exactly one row",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S7 · failure path leaves no half-created state",
+      "ac": "AC8",
+      "label": "retried row still has Attempts 0",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "missing columns ask for confirmation",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "nothing created before the user confirms",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "the missing columns are named",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "confirming creates the row",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and still queues it unattempted",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "with today's local review date",
+      "pass": true,
+      "actual": "2026-12-31",
+      "expected": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "wrong column type blocks the queue write",
+      "pass": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "and says which column",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S8 · schema guards apply to the queue path too",
+      "ac": "AC8",
+      "label": "no row created on a type mismatch",
+      "pass": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still succeeds",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes Attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes first-attempt date = local today",
+      "pass": true,
+      "actual": "2026-12-31",
+      "expected": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes expertise",
+      "pass": true,
+      "actual": "Medium",
+      "expected": "Medium"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still uses today + interval for review",
+      "pass": true,
+      "actual": "2027-01-03",
+      "expected": "2027-01-03"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save still writes page content",
+      "pass": true,
+      "actual": "true",
+      "expected": "true"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S9 · normal save path unchanged",
+      "ac": "REG",
+      "label": "plain save reports attempts = 1",
+      "pass": true,
+      "actual": 1,
+      "expected": 1
+    }
+  ]
+}

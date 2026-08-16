@@ -132,6 +132,24 @@ let pendingAttempts = null;
  */
 let attemptSessionIncremented = false;
 
+/**
+ * @type {boolean} Whether the Notion row has no "Date (of first attempt)".
+ * True for a row created by "Mark to-do" (queued, never attempted) and for
+ * any pre-existing row Notion reports the property empty on. The background
+ * only writes that date when creating a page, so the next "Update in Notion"
+ * carries this flag to backfill it — otherwise a to-do row would stay dateless
+ * forever.
+ */
+let firstAttemptDateMissing = false;
+
+/**
+ * @type {"save"|"todo"} Which action opened the missing-columns confirmation.
+ * "Add columns & save" must resume the action the user actually started — a
+ * to-do create must not fall through to a full save (which would write
+ * Attempts = 1 and today's first-attempt date).
+ */
+let pendingSchemaAction = "save";
+
 // DOM ELEMENT REFERENCES
 
 const DOM = {
@@ -182,6 +200,7 @@ const DOM = {
     refreshQuestionEmptyBtn: document.getElementById(
       "btn-refresh-question-empty",
     ),
+    markTodoBtn: document.getElementById("btn-mark-todo"),
     saveQuestionToggle: document.getElementById("input-save-question"),
     codeDetectedIcon: document.getElementById("code-detected-icon"),
     cardCode: document.getElementById("card-code"),
@@ -982,6 +1001,8 @@ async function checkExistingEntry() {
 
     if (response?.exists) {
       existingPageId = response.pageId;
+      setMarkTodoVisible(false);
+      firstAttemptDateMissing = response.hasFirstAttemptDate === false;
 
       // Hydrate/reconcile the snapshot list from the Notion page so every
       // machine sees the same solutions (Notion is the source of truth).
@@ -1015,7 +1036,9 @@ async function checkExistingEntry() {
 
       DOM.quickActions.card?.classList.remove("hidden");
 
-      if (response.attempts) {
+      // `typeof`, not truthiness: a to-do row reports 0 attempts, and a
+      // falsy check would leave the display on a stale count.
+      if (typeof response.attempts === "number") {
         userAttemptCount = response.attempts;
       }
       updateProblemStats();
@@ -1052,10 +1075,158 @@ async function checkExistingEntry() {
           : "Found existing entry - will update on save",
         "success",
       );
+    } else {
+      // Nothing in Notion for this problem yet, so offer to queue it.
+      // Gated on the resolved lookup rather than shown optimistically at
+      // popup-open, so the button never flashes for a problem that is
+      // already saved.
+      setMarkTodoVisible(true);
     }
   } catch (error) {
     console.error("Error checking existing:", error);
   }
+}
+
+/**
+ * Shows or hides the header's "Mark to-do" button.
+ * Only ever visible for a problem with no Notion row — once `existingPageId`
+ * is set there is nothing left to queue, and "Update in Notion" is the path.
+ * @param {boolean} visible
+ */
+function setMarkTodoVisible(visible) {
+  DOM.problem.markTodoBtn?.classList.toggle(
+    "hidden",
+    !visible || !!existingPageId,
+  );
+}
+
+/**
+ * Queues an unattempted problem: creates its Notion row with Spaced
+ * Repetition = today, Attempts = 0, Done unchecked, no expertise and no
+ * first-attempt date, and no solution content.
+ *
+ * The real values land later, when the user actually attempts the problem and
+ * presses "Update in Notion": that update increments Attempts 0 → 1
+ * server-fresh and backfills "Date (of first attempt)" with that day.
+ * `attemptSessionIncremented` is deliberately NOT set here — queuing a
+ * problem is not an attempt at it.
+ * @param {boolean} confirmSchemaChanges - True only when the user has just
+ *   confirmed the missing-columns warning.
+ */
+async function markTodo(confirmSchemaChanges = false) {
+  if (existingPageId) {
+    setMarkTodoVisible(false);
+    return;
+  }
+  hideSchemaConfirmation();
+
+  const settings = await chrome.storage.sync.get([
+    "notionApiKey",
+    "notionDatabaseId",
+  ]);
+
+  if (!settings.notionApiKey || !settings.notionDatabaseId) {
+    showStatus(DOM.save.status, "Configure Notion settings first", "error");
+    showView("settings");
+    return;
+  }
+
+  if (!problemData.title) {
+    showStatus(DOM.save.status, "No problem data. Try refreshing.", "error");
+    return;
+  }
+
+  setMarkTodoLoading(true);
+
+  try {
+    const response = await chrome.runtime.sendMessage({
+      action: "markTodo",
+      data: {
+        apiKey: settings.notionApiKey,
+        databaseId: settings.notionDatabaseId,
+        confirmSchemaChanges: confirmSchemaChanges === true,
+        problem: {
+          number: problemData.number,
+          title: problemData.title,
+          difficulty: problemData.difficulty,
+          url: problemData.url,
+          tags: selectedTags,
+        },
+      },
+    });
+
+    if (response?.alreadyExists) {
+      // The lookup that revealed the button was stale (or errored into "not
+      // found"). No second row was created; adopt the existing one instead.
+      existingPageId = response.pageId;
+      setMarkTodoVisible(false);
+      showStatus(DOM.save.status, "Already in Notion - loading entry", "error");
+      await checkExistingEntry();
+      return;
+    }
+
+    if (response?.success) {
+      existingPageId = response.pageId;
+      setMarkTodoVisible(false);
+      firstAttemptDateMissing = true;
+      userAttemptCount = 0;
+      pendingAttempts = null;
+
+      // The row was created with Done unchecked, but the markup ships the
+      // toggle checked. Without this the popup would contradict Notion, and
+      // the user's first "Update in Notion" would silently flip Done to true.
+      if (DOM.form.done) DOM.form.done.checked = false;
+      await persistFormState();
+
+      let message = "Marked to-do - due for review today";
+      if (response.schemaCreated?.length > 0) {
+        message += ` Added ${response.schemaCreated.length} column${
+          response.schemaCreated.length === 1 ? "" : "s"
+        }: ${response.schemaCreated.join(", ")}`;
+      }
+      if (response.schemaWarning) {
+        console.warn("Leetion: Schema warning:", response.schemaWarning);
+        message += " (column check warning - see extension console)";
+      }
+      showStatus(DOM.save.status, message, "success");
+
+      updateSaveButton(true);
+      DOM.quickActions.card?.classList.remove("hidden");
+      updateProblemStats();
+      showAttemptsControl();
+    } else if (response?.needsSchemaConfirmation) {
+      pendingSchemaAction = "todo";
+      showSchemaConfirmation(response.missingColumns || []);
+    } else {
+      // Nothing was created: the button stays visible and enabled to retry.
+      showStatus(DOM.save.status, response?.error || "Failed", "error");
+    }
+  } catch (error) {
+    console.error("Mark to-do error:", error);
+    showStatus(DOM.save.status, "Error connecting to Notion", "error");
+  } finally {
+    setMarkTodoLoading(false);
+  }
+}
+
+/**
+ * Disables the "Mark to-do" button while its create is in flight, so a double
+ * click cannot fire two creates. Restores the label either way — on failure
+ * the button must stay clickable to retry.
+ * @param {boolean} loading
+ */
+function setMarkTodoLoading(loading) {
+  const btn = DOM.problem.markTodoBtn;
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.innerHTML = loading
+    ? "Adding..."
+    : `
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      Mark to-do
+    `;
 }
 
 /**
@@ -1065,6 +1236,7 @@ async function checkExistingEntry() {
  */
 async function saveToNotion(confirmSchemaChanges = false) {
   hideSchemaConfirmation();
+  pendingSchemaAction = "save";
 
   const settings = await chrome.storage.sync.get([
     "notionApiKey",
@@ -1121,6 +1293,10 @@ async function saveToNotion(confirmSchemaChanges = false) {
         databaseId: settings.notionDatabaseId,
         existingPageId,
         incrementAttempts: shouldIncrementAttempts,
+        // A row queued by "Mark to-do" was created without a first-attempt
+        // date; this update is that first attempt, so ask the background to
+        // fill it in. No-op for a create, and for a row that already has one.
+        backfillFirstAttemptDate: !!existingPageId && firstAttemptDateMissing,
         ...(stagedAttempts !== null ? { attempts: stagedAttempts } : {}),
         spacedRepetitionDays: spacedRepDays,
         confirmSchemaChanges: confirmSchemaChanges === true,
@@ -1196,6 +1372,10 @@ async function saveToNotion(confirmSchemaChanges = false) {
         updateSaveButton(true);
         DOM.quickActions.card?.classList.remove("hidden");
       }
+      // The row now has a first-attempt date: written on create, or
+      // backfilled by the update just above.
+      firstAttemptDateMissing = false;
+      setMarkTodoVisible(false);
 
       // Per-popup-session attempt accounting: a first save wrote
       // Attempts = 1 (this session's attempt); an update incremented
@@ -1414,15 +1594,22 @@ function setupEventListeners() {
   // Save (wrapped so the click event isn't passed as confirmSchemaChanges)
   DOM.save.btn?.addEventListener("click", () => saveToNotion());
 
-  // Schema confirmation (missing Notion columns warning)
+  // Mark to-do (header row) - queue an unattempted problem
+  DOM.problem.markTodoBtn?.addEventListener("click", () => markTodo());
+
+  // Schema confirmation (missing Notion columns warning). Resumes whichever
+  // action raised it, so confirming from a to-do create does not fall through
+  // to a full save.
   DOM.save.schemaCreateBtn?.addEventListener("click", () =>
-    saveToNotion(true),
+    pendingSchemaAction === "todo" ? markTodo(true) : saveToNotion(true),
   );
   DOM.save.schemaCancelBtn?.addEventListener("click", () => {
     hideSchemaConfirmation();
     showStatus(
       DOM.save.status,
-      "Save canceled — no columns were added",
+      pendingSchemaAction === "todo"
+        ? "Mark to-do canceled — no columns were added"
+        : "Save canceled — no columns were added",
       "error",
     );
   });

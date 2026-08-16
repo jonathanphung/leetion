@@ -1,0 +1,28 @@
+background under test: C:\Users\jonat\repos\leetion\.worktrees\issue-12-qa\background.js
+
+PASS  new-york-evening   TZ=America/New_York     local 2026-08-10 / UTC 2026-08-11  81/81
+PASS  tokyo-morning      TZ=Asia/Tokyo           local 2026-08-11 / UTC 2026-08-10  81/81
+PASS  midway-late        TZ=Pacific/Midway       local 2026-08-10 / UTC 2026-08-11  81/81
+PASS  kiritimati-early   TZ=Pacific/Kiritimati   local 2026-08-11 / UTC 2026-08-10  81/81
+PASS  utc-control        TZ=UTC                  local 2026-08-10 / UTC 2026-08-10  81/81
+PASS  ny-dst-spring      TZ=America/New_York     local 2026-03-07 / UTC 2026-03-08  81/81
+PASS  ny-dst-fall        TZ=America/New_York     local 2026-11-01 / UTC 2026-11-01  81/81
+PASS  ny-year-rollover   TZ=America/New_York     local 2026-12-31 / UTC 2027-01-01  81/81
+
+per-AC totals
+  AC3      24 pass     0 fail
+  AC3a     16 pass     0 fail
+  AC3b      8 pass     0 fail
+  AC3c      8 pass     0 fail
+  AC3d     16 pass     0 fail
+  AC3e      8 pass     0 fail
+  AC3f     40 pass     0 fail
+  AC4      56 pass     0 fail
+  AC5      40 pass     0 fail
+  AC6     144 pass     0 fail
+  AC7      48 pass     0 fail
+  AC8     128 pass     0 fail
+  AC9      56 pass     0 fail
+  REG      56 pass     0 fail
+
+ALL GREEN: 648/648 assertions passed

@@ -1,0 +1,8 @@
+== node --check ==
+PASS popup.js
+PASS background.js
+PASS content.js
+PASS onboarding.js
+
+== build.sh ==
+Done! Created leetion.zip
