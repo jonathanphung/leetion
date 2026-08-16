@@ -7,19 +7,53 @@ OK onboarding.js
 $ bash build.sh
 Done! Created leetion.zip
 
-$ git diff main...HEAD -- manifest.json   (expect: empty)
+$ git diff origin/main...HEAD -- manifest.json   (expect: empty)
 (empty)
 
 $ node docs/super-board/runs/issue-5-build/harness/submissions-check.js
+issue #5 - Submissions sync, builder harness
+
+Leetion: Background service worker loaded
   PASS  A1 DATABASE_SCHEMA has Submissions as a plain number column
+Leetion: Background service worker loaded
   PASS  A2 Attempts is still its own, unchanged schema entry
+Leetion: Background service worker loaded
   PASS  A3 README table lists exactly the DATABASE_SCHEMA columns (#4 invariant)
+Leetion: Background service worker loaded
+Leetion: Submissions synced to Notion: 42
   PASS  B1 a successful sync PATCHes Submissions and nothing else (Attempts untouched)
+Leetion: Background service worker loaded
+Leetion: Submissions synced to Notion: 0
   PASS  B2 a genuine zero is written (0 submissions is a real answer)
+Leetion: Background service worker loaded
+Leetion: Background service worker loaded
+Leetion: Background service worker loaded
+Leetion: Background service worker loaded
+Leetion: Background service worker loaded
   PASS  B3 a non-numeric count is refused before any request
+Leetion: Background service worker loaded
   PASS  B4 no pageId is refused before any request
+Leetion: Background service worker loaded
   PASS  B5 missing Submissions column reports it instead of writing
+Leetion: Background service worker loaded
   PASS  B6 wrong Submissions column type is reported instead of writing
+Leetion: Background service worker loaded
+Leetion: Request failed (attempt 1). Retrying... Error: Submissions is not a property that exists
+    at notionRequest (eval at loadBackground (C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:106:19), <anonymous>:1141:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async Object.updateSubmissions (eval at loadBackground (C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:106:19), <anonymous>:1479:5)
+    at async C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:413:18
+    at async C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:631:7
+Leetion: Request failed (attempt 2). Retrying... Error: Submissions is not a property that exists
+    at notionRequest (eval at loadBackground (C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:106:19), <anonymous>:1141:15)
+    at async Object.updateSubmissions (eval at loadBackground (C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:106:19), <anonymous>:1479:5)
+    at async C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:413:18
+    at async C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:631:7
+Leetion: Failed to update Submissions: Error: Submissions is not a property that exists
+    at notionRequest (eval at loadBackground (C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:106:19), <anonymous>:1141:15)
+    at async Object.updateSubmissions (eval at loadBackground (C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:106:19), <anonymous>:1479:5)
+    at async C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:413:18
+    at async C:\Users\jonat\repos\leetion\.worktrees\pr17-test\docs\super-board\runs\issue-5-build\harness\submissions-check.js:631:7
   PASS  B7 a Notion API failure surfaces the error, never a silent success
   PASS  C1 single short page: count is the number of submissions, not capped
   PASS  C2 request is same-origin JSON with the csrf token attached
@@ -35,6 +69,7 @@ $ node docs/super-board/runs/issue-5-build/harness/submissions-check.js
   PASS  C12 leetcode.cn is excluded outright - no request is made
   PASS  C13 slug falls back to the page URL when the popup sends none
   PASS  C14 missing csrf cookie still sends the request (header is empty, not undefined)
+
 24/24 PASS
 
 $ node docs/super-board/runs/issue-5-qa-v1/harness/popup-submissions-qa.js
@@ -52,8 +87,15 @@ $ node docs/super-board/runs/issue-5-qa-v1/harness/popup-submissions-qa.js
   PASS  Q12 a missing content script is reported as a reload hint, not a crash
   PASS  Q13 a Notion-side failure keeps the number unstored and unpersisted
   PASS  Q14 sync is refused before Notion is connected
+Leetion: Background service worker loaded
+Leetion Background: Handling action: updateSubmissions
+Leetion: Submissions synced to Notion: 41
   PASS  Q15 end-to-end: one click pages LeetCode, counts, and PATCHes Submissions only
+Leetion: Background service worker loaded
   PASS  Q16 end-to-end on leetcode.cn: the content script refuses and nothing is written
+Leetion: Background service worker loaded
+Leetion: Background service worker loaded
   PASS  Q17 README schema table and DATABASE_SCHEMA agree, both carrying Submissions
   PASS  Q18 manifest.json is byte-identical to the base branch (no new permissions)
+
 18/18 PASS
