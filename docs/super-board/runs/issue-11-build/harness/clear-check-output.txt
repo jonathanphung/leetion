@@ -1,0 +1,82 @@
+Leetion: Background service worker loaded
+TZ=America/New_York  frozen at 2026-08-15T15:00:00Z  (local day 2026-08-15)
+
+Leetion: Clearing Spaced Repetition
+Leetion: Spaced repetition updated successfully
+PASS  AC1 clear:true PATCHes date:null
+        expected {"Spaced Repetition":{"date":null}}
+        actual   {"Spaced Repetition":{"date":null}}
+PASS  AC1 clear reports success + cleared
+        expected [true,true,null]
+        actual   [true,true,null]
+Leetion: Clearing Spaced Repetition
+Leetion: Spaced repetition updated successfully
+PASS  AC1 clear wins over setToday + days
+        expected {"date":null}
+        actual   {"date":null}
+Leetion: Clearing Spaced Repetition
+Leetion: Updating Attempts to: 5
+Leetion: Spaced repetition updated successfully
+PASS  clear + attempts write in one PATCH
+        expected {"Spaced Repetition":{"date":null},"Attempts":{"number":5}}
+        actual   {"Spaced Repetition":{"date":null},"Attempts":{"number":5}}
+Leetion: Setting Spaced Repetition to today: 2026-08-15
+Leetion: Spaced repetition updated successfully
+PASS  regression setToday still writes today
+        expected {"Spaced Repetition":{"date":{"start":"2026-08-15"}}}
+        actual   {"Spaced Repetition":{"date":{"start":"2026-08-15"}}}
+Leetion: Updating Spaced Repetition to: 2026-08-16
+Leetion: Spaced repetition updated successfully
+PASS  regression days:1 still writes tomorrow
+        expected {"Spaced Repetition":{"date":{"start":"2026-08-16"}}}
+        actual   {"Spaced Repetition":{"date":{"start":"2026-08-16"}}}
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+PASS  regression days:0 alone still skips the request (NOT a clear)
+        expected [true,0]
+        actual   [true,0]
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Spaced Repetition toggled off - writing empty date
+PASS  AC6 save with the switch off writes date:null
+        expected {"date":null}
+        actual   {"date":null}
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+PASS  AC6 regression: switch on still schedules today+interval
+        expected {"date":{"start":"2026-08-18"}}
+        actual   {"date":{"start":"2026-08-18"}}
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+PASS  AC6 regression: days:0 without the flag still omits the property
+        expected undefined
+        actual   undefined
+Leetion: spacedRepetitionDays received: 7 number
+Leetion: Spaced Repetition toggled off - writing empty date
+PASS  AC6 clear flag wins over a non-zero interval
+        expected {"date":null}
+        actual   {"date":null}
+PASS  AC2 a scheduled entry reports its date
+        expected "2026-08-20"
+        actual   "2026-08-20"
+PASS  AC2 a cleared entry reports null
+        expected null
+        actual   null
+checkDueReviews started
+Settings loaded: { hasApiKey: true, hasDbId: true }
+Querying for date: 2026-08-15
+Notion response: {
+  results: [
+    {
+      id: 'page-1',
+      last_edited_time: '2026-08-15T10:00:00.000Z',
+      properties: [Object]
+    }
+  ],
+  has_more: false
+}
+Due count: 1
+PASS  AC5 due query filters out empty dates
+        expected {"and":[{"property":"Spaced Repetition","date":{"is_not_empty":true}},{"property":"Spaced Repetition","date":{"on_or_before":"2026-08-15"}}]}
+        actual   {"and":[{"property":"Spaced Repetition","date":{"is_not_empty":true}},{"property":"Spaced Repetition","date":{"on_or_before":"2026-08-15"}}]}
+
+ALL CHECKS PASSED

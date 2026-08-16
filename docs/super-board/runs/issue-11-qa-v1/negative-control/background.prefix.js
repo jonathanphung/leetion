@@ -420,10 +420,6 @@ async function checkExistingProblem(data) {
       // back on the first real update so the date gets backfilled — see
       // updatePageContent's backfillFirstAttemptDate.
       hasFirstAttemptDate: !!props["Date (of first attempt)"]?.date?.start,
-      // The stored review date, or null when the property is empty. The popup
-      // hydrates its "Spaced Repetition" toggle from this, so an entry the
-      // user took out of the rotation still reads as off after a reopen.
-      spacedRepetition: props["Spaced Repetition"]?.date?.start || null,
       hasQuestion: existingContent.hasQuestion,
     };
   } catch (error) {
@@ -646,7 +642,6 @@ async function saveToNotion(data) {
     problem,
     existingPageId,
     spacedRepetitionDays,
-    clearSpacedRepetition,
     incrementAttempts,
     attempts,
     confirmSchemaChanges,
@@ -690,9 +685,6 @@ async function saveToNotion(data) {
   }
 
   const cleanedCode = cleanCode(problem.code);
-  // A to-do create writes its own property set (Spaced Repetition = today,
-  // Attempts 0, nothing else), so the clear-review-date flag does not apply
-  // to it — that control is only offered for rows already in Notion.
   const properties = todo
     ? buildTodoProperties(problem, titlePropertyName)
     : buildProperties(
@@ -700,7 +692,6 @@ async function saveToNotion(data) {
         existingPageId,
         spacedRepetitionDays,
         titlePropertyName,
-        clearSpacedRepetition,
       );
 
   if (schema.ok) {
@@ -775,7 +766,6 @@ async function saveToNotion(data) {
         incrementAttempts,
         attempts,
         backfillFirstAttemptDate,
-        clearSpacedRepetition,
       );
       pageId = updateResult.pageId;
       return { ...updateResult, schemaCreated, schemaWarning };
@@ -814,7 +804,6 @@ async function updatePageContent(
   incrementAttempts,
   attempts,
   backfillFirstAttemptDate,
-  clearSpacedRepetition,
 ) {
   try {
     const cleanedCode = cleanCode(problem.code);
@@ -823,7 +812,6 @@ async function updatePageContent(
       existingPageId,
       spacedRepetitionDays,
       titlePropertyName,
-      clearSpacedRepetition,
     );
 
     // buildProperties only writes "Date (of first attempt)" on create, so a
@@ -1179,22 +1167,11 @@ function splitRichText(text, maxLength = NOTION_RICH_TEXT_LIMIT) {
   return chunks;
 }
 
-/**
- * Builds the Notion property payload for a save/update.
- *
- * `clearSpacedRepetition` is the popup's "Spaced Repetition" toggle in the off
- * position: this problem is out of the review rotation, so the save writes an
- * explicit empty date instead of silently re-scheduling it from the expertise
- * interval. It is deliberately a separate flag from `spacedRepetitionDays`,
- * whose 0 value already means "reviews are disabled for this expertise level —
- * leave whatever date is there alone" (issue #3).
- */
 function buildProperties(
   problem,
   existingPageId,
   spacedRepetitionDays,
   titlePropertyName = "Question",
-  clearSpacedRepetition = false,
 ) {
   const properties = {
     // The title is written to the database's actual title column, which may
@@ -1267,10 +1244,7 @@ function buildProperties(
     spacedRepetitionDays,
     typeof spacedRepetitionDays,
   );
-  if (clearSpacedRepetition) {
-    console.log("Leetion: Spaced Repetition toggled off - writing empty date");
-    properties["Spaced Repetition"] = { date: null };
-  } else if (spacedRepetitionDays && spacedRepetitionDays > 0) {
+  if (spacedRepetitionDays && spacedRepetitionDays > 0) {
     const dateStr = localDateInDays(spacedRepetitionDays);
     console.log("Leetion: Setting Spaced Repetition to:", dateStr);
     properties["Spaced Repetition"] = { date: { start: dateStr } };
@@ -1344,31 +1318,22 @@ async function fetchCurrentAttempts(apiKey, pageId) {
  * because "no date change" and "due today" are different intents that a
  * `days` value alone cannot express:
  *
- *   - `clear: true`    — EMPTY the date ("take this problem out of the review
- *     rotation"). Highest precedence. Distinct from `days: 0` on purpose:
- *     `days: 0` means "this expertise level has reviews disabled, leave the
- *     stored date alone" (issue #3), which cannot express a deletion.
  *   - `setToday: true` — write TODAY's local calendar day ("review this now").
  *     Takes precedence over `days` and never consults the expertise interval.
  *   - `days > 0`       — write today + `days` (Review Tomorrow, save path).
- *   - none of them     — leave the date untouched; reviews are disabled for
+ *   - neither          — leave the date untouched; reviews are disabled for
  *                        that expertise level, matching the `> 0` guard in
  *                        buildProperties.
  */
 async function updateSpacedRepetition(data) {
-  const { apiKey, pageId, days, attempts, setToday, clear } = data;
+  const { apiKey, pageId, days, attempts, setToday } = data;
 
   try {
     const properties = {};
     let dateStr = null;
 
     // Set new spaced repetition date
-    if (clear) {
-      // Notion empties a date property when it is set to null.
-      properties["Spaced Repetition"] = { date: null };
-
-      console.log("Leetion: Clearing Spaced Repetition");
-    } else if (setToday) {
+    if (setToday) {
       dateStr = localDateString();
       properties["Spaced Repetition"] = { date: { start: dateStr } };
 
@@ -1398,7 +1363,7 @@ async function updateSpacedRepetition(data) {
     await notionRequest(`pages/${pageId}`, apiKey, "PATCH", { properties });
 
     console.log("Leetion: Spaced repetition updated successfully");
-    return { success: true, date: dateStr, cleared: !!clear };
+    return { success: true, date: dateStr };
   } catch (error) {
     console.error("Leetion: Failed to update spaced repetition:", error);
     return { success: false, error: error.message };
@@ -2005,21 +1970,11 @@ async function checkDueReviews() {
       settings.notionApiKey,
       "POST",
       {
-        // A problem the user took out of the rotation has an EMPTY review
-        // date. `on_or_before` already skips empty dates, but the guard is
-        // written out so the "cleared problems never notify" contract is
-        // visible here rather than inferred from Notion's filter semantics.
         filter: {
-          and: [
-            {
-              property: "Spaced Repetition",
-              date: { is_not_empty: true },
-            },
-            {
-              property: "Spaced Repetition",
-              date: { on_or_before: today },
-            },
-          ],
+          property: "Spaced Repetition",
+          date: {
+            on_or_before: today,
+          },
         },
       },
     );

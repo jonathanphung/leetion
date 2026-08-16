@@ -1,0 +1,540 @@
+Leetion: Background service worker loaded
+background.js : docs/super-board/runs/issue-11-qa-v1/negative-control/background.prefix.js
+frozen clock  : 2026-08-16T02:00:00Z
+local day     : 2026-08-15   (UTC day 2026-08-16)
+
+── S1 · AC1 — clear writes an explicit empty date, and only that
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: true }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+
+── S2 · AC3 + #3/#10 regressions — intent precedence
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: true }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: true, setToday: true }
+Leetion: Setting Spaced Repetition to today: 2026-08-15
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-15' }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: true, days: 7 }
+Leetion: Updating Spaced Repetition to: 2026-08-22
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-22' }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: {
+  apiKey: 'qa-key',
+  pageId: 'qa-page-1',
+  clear: true,
+  setToday: true,
+  days: 7
+}
+Leetion: Setting Spaced Repetition to today: 2026-08-15
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-15' }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: false, setToday: true }
+Leetion: Setting Spaced Repetition to today: 2026-08-15
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-15' }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: false, days: 1 }
+Leetion: Updating Spaced Repetition to: 2026-08-16
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-16' }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', setToday: true }
+Leetion: Setting Spaced Repetition to today: 2026-08-15
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-15' }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', days: 1 }
+Leetion: Updating Spaced Repetition to: 2026-08-16
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-16' }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', days: 0 }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1' }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: true, attempts: 5 }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Updating Attempts to: 5
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: null }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', days: 0 }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+
+── S3 · AC2 — the popup's hydration source reports real Notion state
+Leetion: Background service worker loaded
+Leetion Background: Received action: checkExisting
+Leetion Background: Handling action: checkExisting
+Leetion Background: Sending response: {
+  exists: true,
+  pageId: 'qa-page-1',
+  lastEdited: null,
+  tags: [],
+  expertise: 'Medium',
+  remark: '',
+  altMethods: [],
+  done: false,
+  notes: '',
+  codeBlocks: [],
+  remoteSnapshots: [],
+  timeComplexity: '',
+  spaceComplexity: '',
+  attempts: 3,
+  hasFirstAttemptDate: false,
+  hasQuestion: false
+}
+Leetion: Background service worker loaded
+Leetion Background: Received action: checkExisting
+Leetion Background: Handling action: checkExisting
+Leetion Background: Sending response: {
+  exists: true,
+  pageId: 'qa-page-1',
+  lastEdited: null,
+  tags: [],
+  expertise: 'Medium',
+  remark: '',
+  altMethods: [],
+  done: false,
+  notes: '',
+  codeBlocks: [],
+  remoteSnapshots: [],
+  timeComplexity: '',
+  spaceComplexity: '',
+  attempts: 3,
+  hasFirstAttemptDate: false,
+  hasQuestion: false
+}
+Leetion: Background service worker loaded
+Leetion Background: Received action: checkExisting
+Leetion Background: Handling action: checkExisting
+Leetion Background: Sending response: {
+  exists: true,
+  pageId: 'qa-page-1',
+  lastEdited: null,
+  tags: [],
+  expertise: 'Medium',
+  remark: '',
+  altMethods: [],
+  done: false,
+  notes: '',
+  codeBlocks: [],
+  remoteSnapshots: [],
+  timeComplexity: '',
+  spaceComplexity: '',
+  attempts: 3,
+  hasFirstAttemptDate: false,
+  hasQuestion: false
+}
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: true }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+Leetion Background: Received action: checkExisting
+Leetion Background: Handling action: checkExisting
+Leetion Background: Sending response: {
+  exists: true,
+  pageId: 'qa-page-1',
+  lastEdited: null,
+  tags: [],
+  expertise: 'Medium',
+  remark: '',
+  altMethods: [],
+  done: false,
+  notes: '',
+  codeBlocks: [],
+  remoteSnapshots: [],
+  timeComplexity: '',
+  spaceComplexity: '',
+  attempts: 3,
+  hasFirstAttemptDate: false,
+  hasQuestion: false
+}
+
+── S4 · AC6 — a later plain save does not re-add a review date
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-created-2',
+  updated: false,
+  todo: false,
+  contentUpdated: true,
+  attempts: 1,
+  schemaCreated: [],
+  schemaWarning: null
+}
+Leetion: Background service worker loaded
+Leetion: spacedRepetitionDays received: 7 number
+Leetion: Setting Spaced Repetition to: 2026-08-22
+Leetion: spacedRepetitionDays received: 7 number
+Leetion: Setting Spaced Repetition to: 2026-08-22
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+Leetion: spacedRepetitionDays received: 7 number
+Leetion: Setting Spaced Repetition to: 2026-08-22
+
+── S5 · AC5 — a cleared problem never appears in the due query or notifies
+Leetion: Background service worker loaded
+checkDueReviews started
+Settings loaded: { hasApiKey: true, hasDbId: true }
+Querying for date: 2026-08-15
+Notion response: {
+  results: [
+    { id: 'page-due', object: 'page', properties: [Object] },
+    { id: 'page-overdue', object: 'page', properties: [Object] }
+  ],
+  has_more: false
+}
+Due count: 2
+Notification created: reviewReminder-2026-08-15
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'page-due', clear: true }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'page-overdue', clear: true }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+checkDueReviews started
+Settings loaded: { hasApiKey: true, hasDbId: true }
+Querying for date: 2026-08-15
+Notion response: {
+  results: [
+    { id: 'page-due', object: 'page', properties: [Object] },
+    { id: 'page-overdue', object: 'page', properties: [Object] }
+  ],
+  has_more: false
+}
+Due count: 2
+Notification created: reviewReminder-2026-08-15
+Leetion Background: Received action: getStats
+Leetion Background: Handling action: getStats
+Leetion Background: Sending response: {
+  success: true,
+  total: 5,
+  easy: 2,
+  medium: 1,
+  hard: 2,
+  dueForReview: 2
+}
+
+── S6 · the card's manual round-trip: set → clear → reopen → re-enable
+Leetion: Background service worker loaded
+Leetion Background: Received action: checkExisting
+Leetion Background: Handling action: checkExisting
+Leetion Background: Sending response: {
+  exists: true,
+  pageId: 'qa-page-1',
+  lastEdited: null,
+  tags: [],
+  expertise: 'Medium',
+  remark: '',
+  altMethods: [],
+  done: false,
+  notes: '',
+  codeBlocks: [],
+  remoteSnapshots: [],
+  timeComplexity: '',
+  spaceComplexity: '',
+  attempts: 3,
+  hasFirstAttemptDate: false,
+  hasQuestion: false
+}
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', setToday: true }
+Leetion: Setting Spaced Repetition to today: 2026-08-15
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-15' }
+Leetion Background: Received action: checkExisting
+Leetion Background: Handling action: checkExisting
+Leetion Background: Sending response: {
+  exists: true,
+  pageId: 'qa-page-1',
+  lastEdited: 1786856838304,
+  tags: [],
+  expertise: 'Medium',
+  remark: '',
+  altMethods: [],
+  done: false,
+  notes: '',
+  codeBlocks: [],
+  remoteSnapshots: [],
+  timeComplexity: '',
+  spaceComplexity: '',
+  attempts: 3,
+  hasFirstAttemptDate: false,
+  hasQuestion: false
+}
+checkDueReviews started
+Settings loaded: { hasApiKey: true, hasDbId: true }
+Querying for date: 2026-08-15
+Notion response: {
+  results: [
+    {
+      id: 'qa-page-1',
+      object: 'page',
+      properties: [Object],
+      last_edited_time: '2026-08-16T05:07:18.304Z'
+    }
+  ],
+  has_more: false
+}
+Due count: 1
+Notification created: reviewReminder-2026-08-15
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: true }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+Leetion Background: Received action: checkExisting
+Leetion Background: Handling action: checkExisting
+Leetion Background: Sending response: {
+  exists: true,
+  pageId: 'qa-page-1',
+  lastEdited: 1786856838304,
+  tags: [],
+  expertise: 'Medium',
+  remark: '',
+  altMethods: [],
+  done: false,
+  notes: '',
+  codeBlocks: [],
+  remoteSnapshots: [],
+  timeComplexity: '',
+  spaceComplexity: '',
+  attempts: 3,
+  hasFirstAttemptDate: false,
+  hasQuestion: false
+}
+checkDueReviews started
+Settings loaded: { hasApiKey: true, hasDbId: true }
+Querying for date: 2026-08-15
+Notion response: {
+  results: [
+    {
+      id: 'qa-page-1',
+      object: 'page',
+      properties: [Object],
+      last_edited_time: '2026-08-16T05:07:18.304Z'
+    }
+  ],
+  has_more: false
+}
+Due count: 1
+Notification created: reviewReminder-2026-08-15
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', setToday: true }
+Leetion: Setting Spaced Repetition to today: 2026-08-15
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-15' }
+Leetion Background: Received action: checkExisting
+Leetion Background: Handling action: checkExisting
+Leetion Background: Sending response: {
+  exists: true,
+  pageId: 'qa-page-1',
+  lastEdited: 1786856838305,
+  tags: [ 'Array' ],
+  expertise: 'Medium',
+  remark: '',
+  altMethods: [],
+  done: false,
+  notes: '',
+  codeBlocks: [],
+  remoteSnapshots: [],
+  timeComplexity: '',
+  spaceComplexity: '',
+  attempts: 3,
+  hasFirstAttemptDate: false,
+  hasQuestion: false
+}
+checkDueReviews started
+Settings loaded: { hasApiKey: true, hasDbId: true }
+Querying for date: 2026-08-15
+Notion response: {
+  results: [
+    {
+      id: 'qa-page-1',
+      object: 'page',
+      properties: [Object],
+      last_edited_time: '2026-08-16T05:07:18.305Z'
+    }
+  ],
+  has_more: false
+}
+Due count: 1
+Notification created: reviewReminder-2026-08-15
+
+── S7 · AC7 — a Notion failure leaves the page alone and reports the error
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: true }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-key', pageId: 'qa-page-1', clear: true }
+Leetion: Spaced repetition disabled for this level - leaving date untouched
+Leetion: Nothing to update, skipping request
+Leetion Background: Sending response: { success: true, date: null, skipped: true }
+
+──────────────────────────────────────────────────────────────────────
+FAIL — 39/73 assertions green, 34 failed:
+
+  ✗ S1 · AC1 — clear writes an explicit empty date, and only that · exactly one PATCH — expected 1, got 0
+  ✗ S1 · AC1 — clear writes an explicit empty date, and only that · PATCH body is the payload the card names — expected {"properties":{"Spaced Repetition":{"date":null}}}, got undefined
+  ✗ S1 · AC1 — clear writes an explicit empty date, and only that · stored property is {date:null} — expected {"date":null}, got {"date":{"start":"2026-09-30"}}
+  ✗ S1 · AC1 — clear writes an explicit empty date, and only that · page holds no review date — expected null, got "2026-09-30"
+  ✗ S1 · AC1 — clear writes an explicit empty date, and only that · seeded date is gone — expected false, got true
+  ✗ S1 · AC1 — clear writes an explicit empty date, and only that · response.cleared — expected true, got undefined
+  ✗ S2 · AC3 + #3/#10 regressions — intent precedence · clear alone — expected null, got "2026-09-30"
+  ✗ S2 · AC3 + #3/#10 regressions — intent precedence · clear beats setToday — expected null, got "2026-08-15"
+  ✗ S2 · AC3 + #3/#10 regressions — intent precedence · clear beats days:7 — expected null, got "2026-08-22"
+  ✗ S2 · AC3 + #3/#10 regressions — intent precedence · clear beats both — expected null, got "2026-08-15"
+  ✗ S2 · AC3 + #3/#10 regressions — intent precedence · clear + attempts → both written — expected {"properties":{"Spaced Repetition":{"date":null},"Attempts":{"number":5}}}, got {"properties":{"Attempts":{"number":5}}}
+  ✗ S2 · AC3 + #3/#10 regressions — intent precedence · clear + attempts → date empty — expected null, got "2026-09-30"
+  ✗ S3 · AC2 — the popup's hydration source reports real Notion state · entry with a date → the date — expected "2026-09-30", got undefined
+  ✗ S3 · AC2 — the popup's hydration source reports real Notion state · …and it is truthy, so the switch reads on — expected true, got false
+  ✗ S3 · AC2 — the popup's hydration source reports real Notion state · entry with an emptied date → null — expected null, got undefined
+  ✗ S3 · AC2 — the popup's hydration source reports real Notion state · entry that never had the property → null — expected null, got undefined
+  ✗ S3 · AC2 — the popup's hydration source reports real Notion state · after a clear, a reopen hydrates off — expected null, got undefined
+  ✗ S4 · AC6 — a later plain save does not re-add a review date · save writes an empty date, not today+3 — expected {"date":null}, got {"date":{"start":"2026-08-18"}}
+  ✗ S4 · AC6 — a later plain save does not re-add a review date · page still has no review date — expected null, got "2026-08-18"
+  ✗ S4 · AC6 — a later plain save does not re-add a review date · clear + interval 0 → emptied, not left alone — expected null, got "2026-09-30"
+  ✗ S4 · AC6 — a later plain save does not re-add a review date · buildProperties: clear wins over days 7 — expected {"date":null}, got {"date":{"start":"2026-08-22"}}
+  ✗ S5 · AC5 — a cleared problem never appears in the due query or notifies · the due filter guards on a non-empty date — filter was {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-15"}}
+  ✗ S5 · AC5 — a cleared problem never appears in the due query or notifies · the due filter is the documented compound shape — expected {"and":[{"property":"Spaced Repetition","date":{"is_not_empty":true}},{"property":"Spaced Repetition","date":{"on_or_before":"2026-08-15"}}]}, got {"property":"Spaced Repetition","date":{"on_or_before":"2026-08-15"}}
+  ✗ S5 · AC5 — a cleared problem never appears in the due query or notifies · the due filter uses the LOCAL day — expected "2026-08-15", got undefined
+  ✗ S5 · AC5 — a cleared problem never appears in the due query or notifies · after clearing both, the alarm fires nothing — expected 0, got 1
+  ✗ S5 · AC5 — a cleared problem never appears in the due query or notifies · getStats counts no reviews due — expected 0, got 2
+  ✗ S6 · the card's manual round-trip: set → clear → reopen → re-enable · 1 · switched on → due today — expected "2026-08-15", got undefined
+  ✗ S6 · the card's manual round-trip: set → clear → reopen → re-enable · 2 · switched off → no date on the page — expected null, got "2026-08-15"
+  ✗ S6 · the card's manual round-trip: set → clear → reopen → re-enable · 2 · the alarm no longer sees it — expected 0, got 1
+  ✗ S6 · the card's manual round-trip: set → clear → reopen → re-enable · 3 · an ordinary save keeps it out of the rotation — expected null, got "2026-08-18"
+  ✗ S6 · the card's manual round-trip: set → clear → reopen → re-enable · 4 · switched back on → due today again — expected "2026-08-15", got undefined
+  ✗ S7 · AC7 — a Notion failure leaves the page alone and reports the error · clear reports failure — expected false, got true
+  ✗ S7 · AC7 — a Notion failure leaves the page alone and reports the error · …with an error string for showStatus
+  ✗ S7 · AC7 — a Notion failure leaves the page alone and reports the error · 401 also reports failure — expected false, got true

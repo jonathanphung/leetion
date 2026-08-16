@@ -214,6 +214,8 @@ const DOM = {
     card: document.getElementById("card-quick-actions"),
     markReview: document.getElementById("btn-mark-review"),
     revisit: document.getElementById("btn-revisit"),
+    spacedRepetition: document.getElementById("input-spaced-repetition"),
+    spacedRepetitionHint: document.getElementById("spaced-repetition-hint"),
   },
   attempts: {
     control: document.getElementById("attempts-control"),
@@ -1041,6 +1043,9 @@ async function checkExistingEntry() {
       if (typeof response.attempts === "number") {
         userAttemptCount = response.attempts;
       }
+      // Notion is the only source for this switch — there is no local draft of
+      // it, so it is hydrated regardless of the draft-freshness gate above.
+      setSpacedRepetitionToggle(!!response.spacedRepetition);
       updateProblemStats();
       showAttemptsControl();
 
@@ -1286,6 +1291,11 @@ async function saveToNotion(confirmSchemaChanges = false) {
     const shouldIncrementAttempts =
       !!existingPageId && !attemptSessionIncremented && stagedAttempts === null;
 
+    // A problem the user switched out of the review rotation must stay out: an
+    // ordinary "Update in Notion" would otherwise re-schedule it from the
+    // expertise interval and quietly undo the clear.
+    const clearSpacedRepetition = !!existingPageId && !isSpacedRepetitionOn();
+
     const response = await chrome.runtime.sendMessage({
       action: "saveToNotion",
       data: {
@@ -1299,6 +1309,7 @@ async function saveToNotion(confirmSchemaChanges = false) {
         backfillFirstAttemptDate: !!existingPageId && firstAttemptDateMissing,
         ...(stagedAttempts !== null ? { attempts: stagedAttempts } : {}),
         spacedRepetitionDays: spacedRepDays,
+        clearSpacedRepetition,
         confirmSchemaChanges: confirmSchemaChanges === true,
         problem: {
           number: problemData.number,
@@ -1376,6 +1387,17 @@ async function saveToNotion(confirmSchemaChanges = false) {
       // backfilled by the update just above.
       firstAttemptDateMissing = false;
       setMarkTodoVisible(false);
+
+      // Resync the switch to what this save actually wrote. A first save only
+      // schedules a review when the expertise interval is non-zero; an update
+      // either cleared the date or re-scheduled it.
+      if (wasFirstSave) {
+        setSpacedRepetitionToggle(spacedRepDays > 0);
+      } else if (clearSpacedRepetition) {
+        setSpacedRepetitionToggle(false);
+      } else if (spacedRepDays > 0) {
+        setSpacedRepetitionToggle(true);
+      }
 
       // Per-popup-session attempt accounting: a first save wrote
       // Attempts = 1 (this session's attempt); an update incremented
@@ -1549,6 +1571,10 @@ function setupEventListeners() {
   // Quick Actions
   DOM.quickActions.markReview?.addEventListener("click", markForReviewTomorrow);
   DOM.quickActions.revisit?.addEventListener("click", revisitProblem);
+  DOM.quickActions.spacedRepetition?.addEventListener(
+    "change",
+    toggleSpacedRepetition,
+  );
 
   // Manual +1 attempt (stats row, existing entries only)
   DOM.attempts.plus?.addEventListener("click", addManualAttempt);
@@ -1772,6 +1798,8 @@ async function markForReviewTomorrow() {
     if (response?.success) {
       DOM.quickActions.markReview.classList.add("quick-btn-success");
       DOM.quickActions.revisit.classList.remove("quick-btn-success");
+      // A date now exists, so the on/off switch must read "on".
+      setSpacedRepetitionToggle(true);
       showStatus(DOM.save.status, "Review set for tomorrow!", "success");
     } else {
       showStatus(
@@ -1837,6 +1865,8 @@ async function revisitProblem() {
     if (response?.success) {
       DOM.quickActions.revisit.classList.add("quick-btn-success");
       DOM.quickActions.markReview.classList.remove("quick-btn-success");
+      // A date now exists, so the on/off switch must read "on".
+      setSpacedRepetitionToggle(true);
       showStatus(DOM.save.status, "Reset! Due today", "success");
     } else {
       showStatus(
@@ -1857,6 +1887,105 @@ async function revisitProblem() {
       </svg>
       Review Today
     `;
+  }
+}
+
+/**
+ * True when the "Spaced Repetition" switch is on. Missing element (older
+ * popup markup) reads as on so the save path keeps its historic behaviour.
+ */
+function isSpacedRepetitionOn() {
+  return DOM.quickActions.spacedRepetition?.checked !== false;
+}
+
+/**
+ * Drives the switch from known Notion state (never from a guess) and keeps the
+ * hint beside it in sync.
+ */
+function setSpacedRepetitionToggle(on) {
+  if (DOM.quickActions.spacedRepetition) {
+    DOM.quickActions.spacedRepetition.checked = on;
+  }
+  if (DOM.quickActions.spacedRepetitionHint) {
+    DOM.quickActions.spacedRepetitionHint.textContent = on
+      ? "Due date set"
+      : "No reviews";
+  }
+}
+
+/**
+ * Takes the problem out of the review rotation, or puts it back.
+ *
+ * Off writes an empty date to Notion, which is the only thing that stops the
+ * hourly due-review query (and its notification) from matching the page. On
+ * re-queues it for TODAY — the same rule "Review Today" uses (issue #10), and
+ * for the same reason: turning the switch back on is an explicit "I want to
+ * see this again" and should not be silently deferred by an expertise interval
+ * that may be days out, or 0 (which writes nothing at all).
+ *
+ * The switch is optimistic in the DOM only because the browser flips a
+ * checkbox before the handler runs; a failed write puts it straight back, so
+ * it never shows a clear that did not happen.
+ */
+async function toggleSpacedRepetition() {
+  const toggle = DOM.quickActions.spacedRepetition;
+  if (!toggle) return;
+
+  const turningOn = toggle.checked;
+
+  if (!existingPageId) {
+    // Nothing to write to yet. The card is hidden until the problem exists in
+    // Notion, so this is a defensive revert rather than a reachable path.
+    setSpacedRepetitionToggle(!turningOn);
+    return;
+  }
+
+  const settings = await chrome.storage.sync.get(["notionApiKey"]);
+  if (!settings.notionApiKey) {
+    setSpacedRepetitionToggle(!turningOn);
+    showStatus(DOM.save.status, "Configure API key first", "error");
+    return;
+  }
+
+  try {
+    toggle.disabled = true;
+
+    const response = await chrome.runtime.sendMessage({
+      action: "updateSpacedRepetition",
+      data: {
+        apiKey: settings.notionApiKey,
+        pageId: existingPageId,
+        ...(turningOn ? { setToday: true } : { clear: true }),
+      },
+    });
+
+    if (response?.success) {
+      setSpacedRepetitionToggle(turningOn);
+      if (turningOn) {
+        DOM.quickActions.revisit?.classList.add("quick-btn-success");
+        DOM.quickActions.markReview?.classList.remove("quick-btn-success");
+        showStatus(DOM.save.status, "Review set for today!", "success");
+      } else {
+        // There is no date left, so a lingering "review scheduled" highlight
+        // on either button would be a lie.
+        DOM.quickActions.revisit?.classList.remove("quick-btn-success");
+        DOM.quickActions.markReview?.classList.remove("quick-btn-success");
+        showStatus(DOM.save.status, "Review cleared!", "success");
+      }
+    } else {
+      setSpacedRepetitionToggle(!turningOn);
+      showStatus(
+        DOM.save.status,
+        response?.error || "Failed to update",
+        "error",
+      );
+    }
+  } catch (error) {
+    console.error("Leetion: Error in toggleSpacedRepetition:", error);
+    setSpacedRepetitionToggle(!turningOn);
+    showStatus(DOM.save.status, "Failed to update", "error");
+  } finally {
+    toggle.disabled = false;
   }
 }
 
