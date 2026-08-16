@@ -293,9 +293,15 @@ async function runScenario(name) {
       q.notion.reset();
       await q.bg.api.checkDueReviews();
       const query = q.notion.requestsFor(/\/query$/)[0];
+      // #11 replaced the flat filter with a compound `and:` — a cleared review
+      // date must not read as due. Assert the whole new shape, so this suite
+      // keeps pinning the local-day contract AND now also guards #11's
+      // is_not_empty leg.
       check("S5", "AC6", `checkDueReviews at ${label} filters on the local today`, query.body.filter, {
-        property: "Spaced Repetition",
-        date: { on_or_before: s.today },
+        and: [
+          { property: "Spaced Repetition", date: { is_not_empty: true } },
+          { property: "Spaced Repetition", date: { on_or_before: s.today } },
+        ],
       });
       const due = (await (await q.notion.fetch("https://api.notion.com/v1/databases/qa-db/query", {
         method: "POST",
@@ -349,7 +355,7 @@ async function runScenario(name) {
     tomorrowQ.notion.reset();
     await tomorrowQ.bg.api.checkDueReviews();
     const tomorrowFilter = tomorrowQ.notion.requestsFor(/\/query$/)[0].body.filter;
-    check("S6", "AC6", "next local day, the filter has advanced one day", tomorrowFilter.date.on_or_before, s.tomorrow);
+    check("S6", "AC6", "next local day, the filter has advanced one day", tomorrowFilter.and[1].date.on_or_before, s.tomorrow);
     const dueTomorrow = (await (await tomorrowQ.notion.fetch("https://api.notion.com/v1/databases/qa-db/query", {
       method: "POST",
       body: JSON.stringify({ filter: tomorrowFilter }),

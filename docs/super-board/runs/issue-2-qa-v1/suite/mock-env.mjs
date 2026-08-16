@@ -39,6 +39,10 @@ const READ_DB_PROPERTIES = {
   "Time Complexity": { type: "select" },
   "Space Complexity": { type: "select" },
   Attempts: { type: "number" },
+  // Added by #5. This fixture stands for a fully provisioned database, so it
+  // has to track DATABASE_SCHEMA — without it every save here trips #4's
+  // missing-column confirmation and reports "Error connecting to Notion".
+  Submissions: { type: "number" },
 };
 
 function normalizeRichTextArray(arr) {
