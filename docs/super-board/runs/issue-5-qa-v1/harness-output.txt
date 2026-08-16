@@ -1,0 +1,59 @@
+$ node --check background.js popup.js content.js onboarding.js
+OK background.js
+OK popup.js
+OK content.js
+OK onboarding.js
+
+$ bash build.sh
+Done! Created leetion.zip
+
+$ git diff main...HEAD -- manifest.json   (expect: empty)
+(empty)
+
+$ node docs/super-board/runs/issue-5-build/harness/submissions-check.js
+  PASS  A1 DATABASE_SCHEMA has Submissions as a plain number column
+  PASS  A2 Attempts is still its own, unchanged schema entry
+  PASS  A3 README table lists exactly the DATABASE_SCHEMA columns (#4 invariant)
+  PASS  B1 a successful sync PATCHes Submissions and nothing else (Attempts untouched)
+  PASS  B2 a genuine zero is written (0 submissions is a real answer)
+  PASS  B3 a non-numeric count is refused before any request
+  PASS  B4 no pageId is refused before any request
+  PASS  B5 missing Submissions column reports it instead of writing
+  PASS  B6 wrong Submissions column type is reported instead of writing
+  PASS  B7 a Notion API failure surfaces the error, never a silent success
+  PASS  C1 single short page: count is the number of submissions, not capped
+  PASS  C2 request is same-origin JSON with the csrf token attached
+  PASS  C3 paging: follows hasNext across pages and sums them
+  PASS  C4 cap: stops at 5 pages / 100 submissions and flags the count as capped
+  PASS  C5 duplicate submission ids across pages are counted once
+  PASS  C6 logged out (GraphQL auth error): signedIn false, no count
+  PASS  C7 logged out (HTTP 403): signedIn false, no count
+  PASS  C8 schema drift fails closed - no count is guessed
+  PASS  C9 a mid-paging failure aborts - never returns a partial count
+  PASS  C10 network error is reported, not swallowed
+  PASS  C11 non-JSON response (LeetCode error page) is reported, not parsed
+  PASS  C12 leetcode.cn is excluded outright - no request is made
+  PASS  C13 slug falls back to the page URL when the popup sends none
+  PASS  C14 missing csrf cookie still sends the request (header is empty, not undefined)
+24/24 PASS
+
+$ node docs/super-board/runs/issue-5-qa-v1/harness/popup-submissions-qa.js
+  PASS  Q1 popup markup: Submissions renders as <output>, with no input or editable affordance
+  PASS  Q2 the Attempts control is still the only editable counter in the popup
+  PASS  Q3 clicking Sync submissions asks the content script for the count for this slug
+  PASS  Q4 the slug comes from the tab URL, and .cn tabs never enable sync
+  PASS  Q5 the fetched number is on screen before the Notion write is issued
+  PASS  Q6 Save / Update in Notion never triggers a LeetCode fetch
+  PASS  Q7 a full sync leaves every Attempts-related value and control alone
+  PASS  Q8 provenance note distinguishes never-synced / from-Notion / synced-here / stale
+  PASS  Q9 a capped count renders 100+, says the real total is higher, and writes 100
+  PASS  Q10 logged out: hint shown, action disabled, nothing written, no console errors
+  PASS  Q11 every fetch-side failure aborts before the Notion write and keeps the old number
+  PASS  Q12 a missing content script is reported as a reload hint, not a crash
+  PASS  Q13 a Notion-side failure keeps the number unstored and unpersisted
+  PASS  Q14 sync is refused before Notion is connected
+  PASS  Q15 end-to-end: one click pages LeetCode, counts, and PATCHes Submissions only
+  PASS  Q16 end-to-end on leetcode.cn: the content script refuses and nothing is written
+  PASS  Q17 README schema table and DATABASE_SCHEMA agree, both carrying Submissions
+  PASS  Q18 manifest.json is byte-identical to the base branch (no new permissions)
+18/18 PASS
