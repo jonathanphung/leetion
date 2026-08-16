@@ -42,11 +42,237 @@
       sendResponse({ success: true });
     } else if (request.action === "getProblemData") {
       sendResponse(extractProblemData());
+    } else if (request.action === "getSubmissionCount") {
+      // Async branch: the listener keeps returning true below, which holds the
+      // message port open until the promise settles.
+      fetchSubmissionCount(request.slug)
+        .then(sendResponse)
+        .catch((error) =>
+          sendResponse({
+            success: false,
+            error: error?.message || "Submission sync failed",
+          }),
+        );
     } else {
       sendResponse({ success: false });
     }
     return true;
   });
+
+  // LEETCODE SUBMISSION COUNT
+  //
+  // Counting submissions for a problem runs here, in the content script,
+  // rather than in the service worker: the request is same-origin, so the
+  // user's LeetCode session cookie is attached by the browser itself. That
+  // works identically in Chrome and Firefox, whereas background-context cookie
+  // attachment via host permissions is Chrome-specific.
+  //
+  // The API is unofficial and has no count field — `questionSubmissionList`
+  // pages through submissions with a `hasNext` flag, so a count means paging.
+  // Paging is capped (see below) and every unexpected response shape fails
+  // closed: the caller gets an error, never a guessed or partial number.
+
+  /** Page size requested from LeetCode (its own list UI uses 20). */
+  const SUBMISSION_PAGE_SIZE = 20;
+
+  /** Hard cap on pages fetched per sync. 5 x 20 = 100 submissions. */
+  const SUBMISSION_PAGE_CAP = 5;
+
+  /** Highest exact number a sync can report; beyond this it reports "capped". */
+  const SUBMISSION_COUNT_CAP = SUBMISSION_PAGE_SIZE * SUBMISSION_PAGE_CAP;
+
+  /**
+   * Pinned to the minimum the count needs (id for de-duplication, status so a
+   * future filter does not need a second query shape). Requesting less makes
+   * the query less likely to break when LeetCode changes the schema.
+   */
+  const SUBMISSION_LIST_QUERY = `query leetionSubmissionList($offset: Int!, $limit: Int!, $questionSlug: String!) {
+  questionSubmissionList(offset: $offset, limit: $limit, questionSlug: $questionSlug) {
+    hasNext
+    submissions {
+      id
+      statusDisplay
+    }
+  }
+}`;
+
+  /** Error text that means "not logged in" rather than "something broke". */
+  const AUTH_ERROR_PATTERN =
+    /authenticat|not logged in|log ?in|sign ?in|permission|credential/i;
+
+  /** Only leetcode.com is supported; leetcode.cn runs a different backend. */
+  function isSubmissionSyncHost() {
+    const host = window.location.hostname;
+    return host === "leetcode.com" || host === "www.leetcode.com";
+  }
+
+  function problemSlugFromPath(pathname) {
+    const match = /\/problems\/([^/?#]+)/.exec(pathname || "");
+    return match ? match[1] : null;
+  }
+
+  function readCookie(name) {
+    const match = document.cookie.match(
+      new RegExp("(?:^|; )" + name + "=([^;]*)"),
+    );
+    return match ? decodeURIComponent(match[1]) : "";
+  }
+
+  /**
+   * Counts the logged-in user's submissions for a problem slug.
+   *
+   * @param {string} [requestedSlug] Slug the popup derived from the tab URL.
+   *   Falls back to this page's own location.
+   * @returns {Promise<Object>} `{ success: true, count, capped, ... }` or
+   *   `{ success: false, ... }` with `signedIn: false` for the logged-out case.
+   */
+  async function fetchSubmissionCount(requestedSlug) {
+    if (!isSubmissionSyncHost()) {
+      return {
+        success: false,
+        unsupportedHost: true,
+        error: "Submission sync is only available on leetcode.com.",
+      };
+    }
+
+    const slug = requestedSlug || problemSlugFromPath(window.location.pathname);
+    if (!slug) {
+      return {
+        success: false,
+        error: "Could not read the problem slug from the page URL.",
+      };
+    }
+
+    const seen = new Set();
+    let pagesFetched = 0;
+    let hasNext = true;
+
+    while (hasNext && pagesFetched < SUBMISSION_PAGE_CAP) {
+      const page = await requestSubmissionPage(
+        slug,
+        pagesFetched * SUBMISSION_PAGE_SIZE,
+      );
+      // Any page-level failure aborts the whole count. Returning what was
+      // collected so far would hand the caller a partial number that looks
+      // exact.
+      if (!page.success) return page;
+
+      page.ids.forEach((id) => seen.add(id));
+      pagesFetched += 1;
+      hasNext = page.hasNext && page.ids.length > 0;
+    }
+
+    return {
+      success: true,
+      signedIn: true,
+      slug,
+      count: Math.min(seen.size, SUBMISSION_COUNT_CAP),
+      // True when LeetCode still had more pages when the cap stopped us: the
+      // count is a floor, not an exact total.
+      capped: hasNext,
+      pagesFetched,
+      pageCap: SUBMISSION_PAGE_CAP,
+      countCap: SUBMISSION_COUNT_CAP,
+    };
+  }
+
+  /**
+   * Fetches one page of submissions. Same-origin, so the session cookie rides
+   * along; `x-csrftoken` is read from the readable csrftoken cookie.
+   */
+  async function requestSubmissionPage(slug, offset) {
+    let response;
+    try {
+      response = await fetch(`${window.location.origin}/graphql/`, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+          "x-csrftoken": readCookie("csrftoken"),
+        },
+        body: JSON.stringify({
+          operationName: "leetionSubmissionList",
+          query: SUBMISSION_LIST_QUERY,
+          variables: {
+            offset,
+            limit: SUBMISSION_PAGE_SIZE,
+            questionSlug: slug,
+          },
+        }),
+      });
+    } catch (error) {
+      return {
+        success: false,
+        error: `Could not reach LeetCode: ${error?.message || "network error"}`,
+      };
+    }
+
+    if (response.status === 401 || response.status === 403) {
+      return {
+        success: false,
+        signedIn: false,
+        error: "Log in to LeetCode to sync submissions.",
+      };
+    }
+    if (!response.ok) {
+      return {
+        success: false,
+        error: `LeetCode returned HTTP ${response.status}.`,
+      };
+    }
+
+    let payload;
+    try {
+      payload = await response.json();
+    } catch (error) {
+      return {
+        success: false,
+        error: "LeetCode returned a response Leetion could not read.",
+      };
+    }
+
+    if (Array.isArray(payload?.errors) && payload.errors.length > 0) {
+      const message = payload.errors
+        .map((entry) => entry?.message || "")
+        .join("; ");
+      if (AUTH_ERROR_PATTERN.test(message)) {
+        return {
+          success: false,
+          signedIn: false,
+          error: "Log in to LeetCode to sync submissions.",
+        };
+      }
+      return {
+        success: false,
+        schemaDrift: true,
+        error: `LeetCode rejected the query: ${message.slice(0, 200)}`,
+      };
+    }
+
+    const list = payload?.data?.questionSubmissionList;
+    // Fail closed on schema drift: an unrecognised shape must not be counted.
+    if (
+      !list ||
+      !Array.isArray(list.submissions) ||
+      typeof list.hasNext !== "boolean"
+    ) {
+      return {
+        success: false,
+        schemaDrift: true,
+        error:
+          "LeetCode's submission API returned an unexpected shape - nothing was written.",
+      };
+    }
+
+    return {
+      success: true,
+      // Positional fallback keeps two id-less entries from collapsing into one.
+      ids: list.submissions.map((entry, index) =>
+        String(entry?.id ?? `offset-${offset + index}`),
+      ),
+      hasNext: list.hasNext,
+    };
+  }
 
   // CANVAS MANAGEMENT
 

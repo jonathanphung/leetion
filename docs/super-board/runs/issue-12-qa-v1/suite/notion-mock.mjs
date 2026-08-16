@@ -42,6 +42,12 @@ export const FULL_SCHEMA = {
   "Time Complexity": { type: "select", select: { options: [] } },
   "Space Complexity": { type: "select", select: { options: [] } },
   Attempts: { type: "number", number: { format: "number" } },
+  // Added by #5. FULL_SCHEMA means "a database carrying every column Leetion
+  // needs", so it has to track DATABASE_SCHEMA — otherwise every save in this
+  // suite trips #4's missing-column confirmation instead of exercising the
+  // path under test. The deliberate missing-column scenarios below build from
+  // this object and delete their own targets, so they are unaffected.
+  Submissions: { type: "number", number: { format: "number" } },
 };
 
 export function createNotionMock(seed = {}, options = {}) {

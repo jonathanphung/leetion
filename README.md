@@ -83,6 +83,7 @@ These are the exact column names and types Leetion uses:
 | Time Complexity         | Select                    |
 | Space Complexity        | Select                    |
 | Attempts                | Number                    |
+| Submissions             | Number                    |
 
 If you add these yourself, the names must match exactly — a column with a
 different name (even the same type) is treated as a separate column. The

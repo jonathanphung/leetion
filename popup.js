@@ -150,6 +150,37 @@ let firstAttemptDateMissing = false;
  */
 let pendingSchemaAction = "save";
 
+/** Storage key prefix for this browser's last submission sync, per problem. */
+const SUBMISSION_SYNC_PREFIX = "submissions_sync_";
+
+/**
+ * @type {{count: number|null, capped: boolean, syncedAt: number|null,
+ *         source: "notion"|"leetcode"|null}}
+ * What the Submissions row is showing and where it came from. `syncedAt` is
+ * only set for a sync performed by THIS browser — a number carried over from
+ * Notion has no local timestamp, and the note says so rather than implying
+ * freshness the popup cannot vouch for.
+ */
+let submissionState = {
+  count: null,
+  capped: false,
+  syncedAt: null,
+  source: null,
+};
+
+/** @type {number|null} Tab id of the LeetCode page the popup is attached to. */
+let currentTabId = null;
+
+/** @type {string|null} Problem slug derived from the tab URL. */
+let currentProblemSlug = null;
+
+/**
+ * @type {boolean} Whether submission sync is available for this tab.
+ * leetcode.cn runs a different backend with a different submission API, so the
+ * feature is excluded there outright rather than shipped half-working.
+ */
+let submissionSyncSupported = false;
+
 // DOM ELEMENT REFERENCES
 
 const DOM = {
@@ -221,6 +252,12 @@ const DOM = {
     control: document.getElementById("attempts-control"),
     input: document.getElementById("input-attempts"),
     plus: document.getElementById("btn-attempt-plus"),
+  },
+  submissions: {
+    card: document.getElementById("card-submissions"),
+    value: document.getElementById("submissions-value"),
+    note: document.getElementById("submissions-note"),
+    syncBtn: document.getElementById("btn-sync-submissions"),
   },
   complexity: {
     time: document.getElementById("input-time-complexity"),
@@ -489,6 +526,11 @@ async function checkCurrentTab() {
       url.includes("leetcode.cn/problems/");
 
     if (isLeetCode) {
+      currentTabId = tab.id;
+      currentProblemSlug = problemSlugFromUrl(url);
+      // Sync is a leetcode.com-only feature (see submissionSyncSupported).
+      submissionSyncSupported =
+        url.includes("leetcode.com/problems/") && !!currentProblemSlug;
       showView("main");
       await scrapeProblemData(tab.id);
     } else {
@@ -521,6 +563,7 @@ async function scrapeProblemData(tabId) {
 
       await loadSnapshots(problemData.number);
       await loadPersistedFormState(problemData.number);
+      await loadSubmissionSync(problemData.number);
 
       await checkExistingEntry();
     }
@@ -1048,6 +1091,7 @@ async function checkExistingEntry() {
       setSpacedRepetitionToggle(!!response.spacedRepetition);
       updateProblemStats();
       showAttemptsControl();
+      showSubmissionsControl(response.submissions ?? null);
 
       if (useNotionData) {
         if (response.timeComplexity && DOM.complexity.time) {
@@ -1382,6 +1426,10 @@ async function saveToNotion(confirmSchemaChanges = false) {
         existingPageId = response.pageId;
         updateSaveButton(true);
         DOM.quickActions.card?.classList.remove("hidden");
+        // A save never writes Submissions, so a page created just now has no
+        // value for it — the row appears explicitly unsynced. On updates the
+        // row is already visible from checkExistingEntry with Notion's value.
+        showSubmissionsControl(null);
       }
       // The row now has a first-attempt date: written on create, or
       // backfilled by the update just above.
@@ -1575,6 +1623,9 @@ function setupEventListeners() {
     "change",
     toggleSpacedRepetition,
   );
+
+  // Submissions sync (leetcode.com, existing entries only)
+  DOM.submissions.syncBtn?.addEventListener("click", syncSubmissions);
 
   // Manual +1 attempt (stats row, existing entries only)
   DOM.attempts.plus?.addEventListener("click", addManualAttempt);
@@ -2066,6 +2117,280 @@ function updateAttemptDisplay() {
 
   const attSpan = DOM.problem.statAttempts?.querySelector("span:last-child");
   if (attSpan) attSpan.textContent = count.toString();
+}
+
+// SUBMISSIONS SYNC
+//
+// Submissions is the sync-only twin of Attempts: LeetCode owns the number,
+// Leetion mirrors it into Notion on an explicit action. Nothing on this path
+// reads or writes Attempts, pendingAttempts, or attemptSessionIncremented -
+// saving and syncing stay completely separate operations.
+
+/**
+ * Extracts the problem slug from a LeetCode URL.
+ * @param {string} url
+ * @returns {string|null}
+ */
+function problemSlugFromUrl(url) {
+  const match = /leetcode\.(?:com|cn)\/problems\/([^/?#]+)/i.exec(url || "");
+  return match ? match[1] : null;
+}
+
+/** Resolves after the browser has painted, so a value is on screen. */
+function nextPaint() {
+  return new Promise((resolve) =>
+    requestAnimationFrame(() => requestAnimationFrame(resolve)),
+  );
+}
+
+/**
+ * Loads this browser's last sync record for a problem. Only the timestamp is
+ * authoritative here - the number itself is re-read from Notion.
+ * @param {number} problemNumber
+ */
+async function loadSubmissionSync(problemNumber) {
+  submissionState = { count: null, capped: false, syncedAt: null, source: null };
+  if (!problemNumber) return;
+
+  try {
+    const key = `${SUBMISSION_SYNC_PREFIX}${problemNumber}`;
+    const stored = await chrome.storage.local.get([key]);
+    const record = stored[key];
+    if (record && typeof record.count === "number") {
+      submissionState = {
+        count: record.count,
+        capped: !!record.capped,
+        syncedAt: record.syncedAt || null,
+        source: "leetcode",
+      };
+    }
+  } catch (error) {
+    console.error("Error loading submission sync record:", error);
+  }
+}
+
+/**
+ * Persists the sync record so a reopened popup can say when the number was
+ * last refreshed instead of showing a bare number that looks live.
+ */
+async function persistSubmissionSync(problemNumber) {
+  if (!problemNumber) return;
+  try {
+    await chrome.storage.local.set({
+      [`${SUBMISSION_SYNC_PREFIX}${problemNumber}`]: {
+        count: submissionState.count,
+        capped: submissionState.capped,
+        syncedAt: submissionState.syncedAt,
+      },
+    });
+  } catch (error) {
+    console.error("Error saving submission sync record:", error);
+  }
+}
+
+/**
+ * Reveals the Submissions card. Gated on an existing Notion entry (there is no
+ * page to write to before the first save) and on a supported host.
+ *
+ * Notion is the source of truth for the number; this browser's stored record
+ * only supplies the "when". A local record that no longer matches Notion
+ * (another device synced since, or the value was cleared) is dropped rather
+ * than used to date a number it did not produce.
+ *
+ * @param {number|null} notionCount - Value stored in Notion, `null` if none.
+ */
+function showSubmissionsControl(notionCount) {
+  if (!existingPageId || !submissionSyncSupported) return;
+
+  DOM.submissions.card?.classList.remove("hidden");
+
+  if (notionCount === null) {
+    submissionState = {
+      count: null,
+      capped: false,
+      syncedAt: null,
+      source: null,
+    };
+  } else if (submissionState.count !== notionCount) {
+    submissionState = {
+      count: notionCount,
+      capped: false,
+      syncedAt: null,
+      source: "notion",
+    };
+  }
+
+  updateSubmissionDisplay();
+}
+
+/**
+ * Renders the count plus a freshness note. The note is the whole point: a
+ * number with no provenance is indistinguishable from a live one.
+ * @param {string} [overrideNote] - Transient note (e.g. mid-sync state).
+ * @param {boolean} [isError]
+ */
+function updateSubmissionDisplay(overrideNote, isError = false) {
+  const { count, capped, syncedAt, source } = submissionState;
+
+  if (DOM.submissions.value) {
+    DOM.submissions.value.textContent =
+      count === null ? "--" : capped ? `${count}+` : `${count}`;
+    DOM.submissions.value.classList.toggle(
+      "is-pending",
+      source === "leetcode" && syncedAt === null && count !== null,
+    );
+  }
+
+  if (!DOM.submissions.note) return;
+
+  let note;
+  if (overrideNote) {
+    note = overrideNote;
+  } else if (count === null) {
+    note = "Not synced yet";
+  } else if (syncedAt) {
+    note = `Synced ${formatRelativeTime(syncedAt)}`;
+    if (capped) {
+      note += ` · stopped at the ${count}-submission cap, the real total is higher`;
+    }
+  } else {
+    note = "Value stored in Notion · sync to refresh";
+  }
+
+  DOM.submissions.note.textContent = note;
+  DOM.submissions.note.classList.toggle("is-error", !!isError);
+}
+
+/**
+ * Coarse relative time - enough to tell "just now" from "days ago", which is
+ * all the staleness question needs.
+ * @param {number} timestamp
+ */
+function formatRelativeTime(timestamp) {
+  const seconds = Math.max(0, Math.round((Date.now() - timestamp) / 1000));
+  if (seconds < 60) return "just now";
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.round(hours / 24)}d ago`;
+}
+
+/**
+ * Counts submissions on LeetCode and writes the result to the Notion
+ * `Submissions` property. The only path that writes that property.
+ *
+ * Order matters: the fetched number is rendered and painted BEFORE the Notion
+ * write is issued, so the user sees what is about to be stored. Every failure
+ * mode returns before the write, leaving the stored value untouched.
+ */
+async function syncSubmissions() {
+  if (!existingPageId || !submissionSyncSupported) return;
+
+  const btn = DOM.submissions.syncBtn;
+  const originalLabel = btn?.innerHTML;
+  // Only the logged-out case leaves the button disabled after the run.
+  let keepDisabled = false;
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "Syncing...";
+  }
+
+  try {
+    let fetched;
+    try {
+      fetched = await chrome.tabs.sendMessage(currentTabId, {
+        action: "getSubmissionCount",
+        slug: currentProblemSlug,
+      });
+    } catch (error) {
+      // No content script in the tab - almost always a page that was already
+      // open when the extension was installed or updated.
+      updateSubmissionDisplay(
+        "Reload the LeetCode tab, then try syncing again.",
+        true,
+      );
+      return;
+    }
+
+    if (!fetched?.success) {
+      if (fetched?.signedIn === false) {
+        // Logged out: disable the action and say why. Nothing is written.
+        keepDisabled = true;
+        updateSubmissionDisplay("Log in to LeetCode to sync submissions.", true);
+        return;
+      }
+      updateSubmissionDisplay(
+        fetched?.error || "Could not read submissions from LeetCode.",
+        true,
+      );
+      return;
+    }
+
+    // Show the number before it is written.
+    submissionState = {
+      count: fetched.count,
+      capped: !!fetched.capped,
+      syncedAt: null,
+      source: "leetcode",
+    };
+    updateSubmissionDisplay(
+      fetched.capped
+        ? `Found ${fetched.count}+ (paging cap) - saving to Notion...`
+        : `Found ${fetched.count} - saving to Notion...`,
+    );
+    await nextPaint();
+
+    const settings = await chrome.storage.sync.get([
+      "notionApiKey",
+      "notionDatabaseId",
+    ]);
+    if (!settings.notionApiKey || !settings.notionDatabaseId) {
+      updateSubmissionDisplay(
+        "Connect Notion in settings before syncing.",
+        true,
+      );
+      return;
+    }
+
+    const written = await chrome.runtime.sendMessage({
+      action: "updateSubmissions",
+      data: {
+        apiKey: settings.notionApiKey,
+        databaseId: settings.notionDatabaseId,
+        pageId: existingPageId,
+        count: fetched.count,
+      },
+    });
+
+    if (!written?.success) {
+      // The fetched number stays on screen, flagged as not stored.
+      updateSubmissionDisplay(
+        written?.error || "Could not write Submissions to Notion.",
+        true,
+      );
+      return;
+    }
+
+    submissionState.syncedAt = Date.now();
+    await persistSubmissionSync(problemData.number);
+    updateSubmissionDisplay();
+    showStatus(
+      DOM.save.status,
+      fetched.capped
+        ? `Submissions synced (${fetched.count}+)`
+        : `Submissions synced (${fetched.count})`,
+      "success",
+    );
+  } catch (error) {
+    console.error("Error syncing submissions:", error);
+    updateSubmissionDisplay("Submission sync failed - Notion unchanged.", true);
+  } finally {
+    if (btn && originalLabel !== undefined) {
+      btn.innerHTML = originalLabel;
+      btn.disabled = keepDisabled;
+    }
+  }
 }
 
 // COMPLEXITY SUGGESTIONS

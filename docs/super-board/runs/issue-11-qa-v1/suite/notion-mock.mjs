@@ -166,6 +166,11 @@ export function createNotionMock(seed = {}) {
           "Time Complexity": { type: "select" },
           "Space Complexity": { type: "select" },
           Attempts: { type: "number" },
+          // Added by #5 — this fixture stands for a fully provisioned
+          // database, so it has to track DATABASE_SCHEMA. Without it every
+          // save here trips #4's missing-column confirmation instead of
+          // reaching the clear-review-date path under test.
+          Submissions: { type: "number" },
         },
       });
     }
