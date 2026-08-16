@@ -359,16 +359,36 @@
       "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       }
     },
     {
@@ -400,16 +420,36 @@
       "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       }
     },
     {
@@ -441,16 +481,36 @@
       "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       }
     },
     {
@@ -1008,16 +1068,36 @@
       "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       }
     },
     {
@@ -1049,16 +1129,36 @@
       "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       }
     },
     {
@@ -1090,16 +1190,36 @@
       "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       }
     },
     {
@@ -1657,16 +1777,36 @@
       "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       }
     },
     {
@@ -1698,16 +1838,36 @@
       "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       }
     },
     {
@@ -1739,16 +1899,36 @@
       "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       }
     },
     {
@@ -2306,16 +2486,36 @@
       "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       }
     },
     {
@@ -2347,16 +2547,36 @@
       "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       }
     },
     {
@@ -2388,16 +2608,36 @@
       "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-11"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-11"
+            }
+          }
+        ]
       }
     },
     {
@@ -2955,16 +3195,36 @@
       "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       }
     },
     {
@@ -2996,16 +3256,36 @@
       "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       }
     },
     {
@@ -3037,16 +3317,36 @@
       "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-08-10"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-08-10"
+            }
+          }
+        ]
       }
     },
     {
@@ -3604,16 +3904,36 @@
       "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-03-07"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-03-07"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-03-07"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-03-07"
+            }
+          }
+        ]
       }
     },
     {
@@ -3645,16 +3965,36 @@
       "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-03-07"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-03-07"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-03-07"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-03-07"
+            }
+          }
+        ]
       }
     },
     {
@@ -3686,16 +4026,36 @@
       "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-03-07"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-03-07"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-03-07"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-03-07"
+            }
+          }
+        ]
       }
     },
     {
@@ -4253,16 +4613,36 @@
       "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-11-01"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-11-01"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-11-01"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-11-01"
+            }
+          }
+        ]
       }
     },
     {
@@ -4294,16 +4674,36 @@
       "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-11-01"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-11-01"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-11-01"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-11-01"
+            }
+          }
+        ]
       }
     },
     {
@@ -4335,16 +4735,36 @@
       "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-11-01"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-11-01"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-11-01"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-11-01"
+            }
+          }
+        ]
       }
     },
     {
@@ -4902,16 +5322,36 @@
       "label": "checkDueReviews at 00:06 local (just after the write) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-12-31"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-12-31"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-12-31"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-12-31"
+            }
+          }
+        ]
       }
     },
     {
@@ -4943,16 +5383,36 @@
       "label": "checkDueReviews at 12:00 local (midday) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-12-31"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-12-31"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-12-31"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-12-31"
+            }
+          }
+        ]
       }
     },
     {
@@ -4984,16 +5444,36 @@
       "label": "checkDueReviews at 23:55 local (last alarm of the day) filters on the local today",
       "ok": true,
       "expected": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-12-31"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-12-31"
+            }
+          }
+        ]
       },
       "actual": {
-        "property": "Spaced Repetition",
-        "date": {
-          "on_or_before": "2026-12-31"
-        }
+        "and": [
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "is_not_empty": true
+            }
+          },
+          {
+            "property": "Spaced Repetition",
+            "date": {
+              "on_or_before": "2026-12-31"
+            }
+          }
+        ]
       }
     },
     {

@@ -34,7 +34,19 @@ export function createNotionMock(seed = {}) {
 
   function matchesFilter(page, filter) {
     if (!filter) return true;
+    // #11 made checkDueReviews send a compound `and:` (is_not_empty +
+    // on_or_before) so a cleared review date cannot read as due. Without this
+    // branch the flat-shape logic below matches nothing it understands and
+    // falls through to `return true`, i.e. EVERY page comes back "due" — which
+    // reads as a product regression when it is only the double being blind.
+    if (Array.isArray(filter.and)) {
+      return filter.and.every((f) => matchesFilter(page, f));
+    }
+    if (Array.isArray(filter.or)) {
+      return filter.or.some((f) => matchesFilter(page, f));
+    }
     const prop = page.properties[filter.property];
+    if (filter.date?.is_not_empty) return !!prop?.date?.start;
     if (filter.date) {
       const start = prop?.date?.start;
       if (!start) return false;
