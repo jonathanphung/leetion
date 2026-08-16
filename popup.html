@@ -516,6 +516,49 @@
               >
             </div>
           </article>
+
+          <!--
+            Submissions: a synced, read-only mirror of LeetCode's submission
+            count. Deliberately has no editable control - Attempts (on the
+            "Mark as Done" row) is the hand-editable counter. Shown only for
+            problems that already exist in Notion, and only on leetcode.com.
+          -->
+          <article class="card card-submissions hidden" id="card-submissions">
+            <div class="submissions-row">
+              <div class="submissions-meta">
+                <span class="submissions-label">Submissions</span>
+                <!-- <output> so screen readers announce the value when a sync
+                     replaces it; it is text, never an input. -->
+                <output class="submissions-value" id="submissions-value"
+                  >--</output
+                >
+              </div>
+              <button
+                type="button"
+                id="btn-sync-submissions"
+                class="quick-btn submissions-btn"
+                title="Count your LeetCode submissions for this problem and write it to Notion"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M21 12a9 9 0 01-9 9 9 9 0 01-7.35-3.82" />
+                  <path d="M3 12a9 9 0 019-9 9 9 0 017.35 3.82" />
+                  <polyline points="17 2 19.5 6.5 15 7" />
+                  <polyline points="7 22 4.5 17.5 9 17" />
+                </svg>
+                Sync submissions
+              </button>
+            </div>
+            <p class="submissions-note" id="submissions-note">
+              Not synced yet
+            </p>
+          </article>
             <article class="card card-collapsible expanded" id="card-question">
   <div class="card-header" id="card-question-toggle">
     <span class="form-label">Current Question</span>

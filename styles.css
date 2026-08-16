@@ -892,6 +892,61 @@ body {
   white-space: nowrap;
 }
 
+/* Submissions card — a synced value, not an input. The number is rendered as
+   plain text (no field, no stepper) so it never reads as hand-editable the way
+   the Attempts control does. */
+.card-submissions {
+  padding: 10px 12px;
+}
+
+.submissions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.submissions-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.submissions-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.submissions-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  /* Equal-width digits so the value doesn't twitch across 9 → 10 → 100+. */
+  font-variant-numeric: tabular-nums;
+}
+
+/* Fetched from LeetCode but not yet confirmed written to Notion. */
+.submissions-value.is-pending {
+  color: var(--accent);
+}
+
+.submissions-btn {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.submissions-note {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-tertiary);
+}
+
+.submissions-note.is-error {
+  color: var(--error);
+}
+
 .interval-row {
   display: flex;
   gap: 8px;

@@ -137,6 +137,10 @@ const DATABASE_SCHEMA = {
     },
   },
   Attempts: { type: "number", number: { format: "number" } },
+  // Sync-only counterpart to Attempts: the number of submissions LeetCode has
+  // recorded for the problem. Written exclusively by the "Sync submissions"
+  // action; never by a save, and never hand-edited from the popup.
+  Submissions: { type: "number", number: { format: "number" } },
 };
 
 // MESSAGE HANDLING
@@ -214,6 +218,8 @@ async function handleMessage(request) {
         request.data,
       );
       return await updateSpacedRepetition(request.data);
+    case "updateSubmissions":
+      return await updateSubmissions(request.data);
     default:
       throw new Error(`Unknown action: ${request.action}`);
   }
@@ -424,6 +430,12 @@ async function checkExistingProblem(data) {
       // hydrates its "Spaced Repetition" toggle from this, so an entry the
       // user took out of the rotation still reads as off after a reopen.
       spacedRepetition: props["Spaced Repetition"]?.date?.start || null,
+      // Sync-only value. `null` (not 0) when the column is absent or empty, so
+      // the popup can tell "never synced" apart from "synced, genuinely zero".
+      submissions:
+        typeof props["Submissions"]?.number === "number"
+          ? props["Submissions"].number
+          : null,
       hasQuestion: existingContent.hasQuestion,
     };
   } catch (error) {
@@ -1401,6 +1413,75 @@ async function updateSpacedRepetition(data) {
     return { success: true, date: dateStr, cleared: !!clear };
   } catch (error) {
     console.error("Leetion: Failed to update spaced repetition:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Writes the LeetCode submission count to the "Submissions" property.
+ *
+ * Deliberately narrow: the PATCH body carries "Submissions" and nothing else,
+ * so a sync can never disturb "Attempts" (user-owned), the review date, or any
+ * other column. The count is validated before the request — a failed or
+ * malformed fetch must leave the stored value alone rather than write 0.
+ *
+ * Column creation is NOT done here. "Submissions" lives in DATABASE_SCHEMA, so
+ * the existing inspect/confirm path in saveToNotion is the one and only place
+ * that adds it; a missing column is reported back to the popup as such.
+ */
+async function updateSubmissions(data) {
+  const { apiKey, databaseId, pageId, count } = data;
+
+  if (!pageId) {
+    return {
+      success: false,
+      error: "Save this problem to Notion first, then sync submissions.",
+    };
+  }
+  if (typeof count !== "number" || !Number.isFinite(count) || count < 0) {
+    // Fail closed: never turn a bad fetch into a 0 / null write.
+    return {
+      success: false,
+      error: "Refusing to write an invalid submission count.",
+    };
+  }
+  const value = Math.floor(count);
+
+  try {
+    if (databaseId) {
+      const schema = await inspectDatabaseSchema(apiKey, databaseId);
+      if (schema.ok) {
+        if (schema.missing?.["Submissions"]) {
+          return {
+            success: false,
+            missingColumn: true,
+            error:
+              'Your database has no "Submissions" column yet. Press "Update in Notion" once and confirm the column list, then sync again.',
+          };
+        }
+        const mismatch = (schema.mismatches || []).find(
+          (m) => m.name === "Submissions",
+        );
+        if (mismatch) {
+          return {
+            success: false,
+            error: `"Submissions" is ${mismatch.actual} in Notion but Leetion needs ${mismatch.expected}. Fix the column type in Notion, then sync again.`,
+          };
+        }
+      }
+      // schema.ok === false means the schema could not be read (transient
+      // error). Fall through: the PATCH below surfaces the real failure rather
+      // than blocking a write that would probably have succeeded.
+    }
+
+    await notionRequest(`pages/${pageId}`, apiKey, "PATCH", {
+      properties: { Submissions: { number: value } },
+    });
+
+    console.log("Leetion: Submissions synced to Notion:", value);
+    return { success: true, count: value };
+  } catch (error) {
+    console.error("Leetion: Failed to update Submissions:", error);
     return { success: false, error: error.message };
   }
 }
