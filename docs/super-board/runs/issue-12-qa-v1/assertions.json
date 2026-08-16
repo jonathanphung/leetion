@@ -1,6 +1,6 @@
 {
-  "background": "C:\\Users\\jonat\\repos\\leetion\\.worktrees\\issue-12-qa\\background.js",
-  "total": 648,
+  "background": "C:\\Users\\jonat\\repos\\leetion\\.worktrees\\pr15-test\\background.js",
+  "total": 656,
   "failed": 0,
   "rows": [
     {
@@ -523,6 +523,15 @@
       "scenario": "new-york-evening",
       "section": "S6 · due today",
       "ac": "AC7",
+      "label": "due filter still excludes cleared review dates",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "new-york-evening",
+      "section": "S6 · due today",
+      "ac": "AC7",
       "label": "popup stats count it as due",
       "pass": true,
       "actual": 1,
@@ -1262,6 +1271,15 @@
       "scenario": "tokyo-morning",
       "section": "S6 · due today",
       "ac": "AC7",
+      "label": "due filter still excludes cleared review dates",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "tokyo-morning",
+      "section": "S6 · due today",
+      "ac": "AC7",
       "label": "popup stats count it as due",
       "pass": true,
       "actual": 1,
@@ -2001,6 +2019,15 @@
       "scenario": "midway-late",
       "section": "S6 · due today",
       "ac": "AC7",
+      "label": "due filter still excludes cleared review dates",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "midway-late",
+      "section": "S6 · due today",
+      "ac": "AC7",
       "label": "popup stats count it as due",
       "pass": true,
       "actual": 1,
@@ -2740,6 +2767,15 @@
       "scenario": "kiritimati-early",
       "section": "S6 · due today",
       "ac": "AC7",
+      "label": "due filter still excludes cleared review dates",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "scenario": "kiritimati-early",
+      "section": "S6 · due today",
+      "ac": "AC7",
       "label": "popup stats count it as due",
       "pass": true,
       "actual": 1,
@@ -3474,6 +3510,15 @@
       "pass": true,
       "actual": "2026-08-10",
       "expected": "2026-08-10"
+    },
+    {
+      "scenario": "utc-control",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter still excludes cleared review dates",
+      "pass": true,
+      "actual": true,
+      "expected": true
     },
     {
       "scenario": "utc-control",
@@ -4213,6 +4258,15 @@
       "pass": true,
       "actual": "2026-03-07",
       "expected": "2026-03-07"
+    },
+    {
+      "scenario": "ny-dst-spring",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter still excludes cleared review dates",
+      "pass": true,
+      "actual": true,
+      "expected": true
     },
     {
       "scenario": "ny-dst-spring",
@@ -4952,6 +5006,15 @@
       "pass": true,
       "actual": "2026-11-01",
       "expected": "2026-11-01"
+    },
+    {
+      "scenario": "ny-dst-fall",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter still excludes cleared review dates",
+      "pass": true,
+      "actual": true,
+      "expected": true
     },
     {
       "scenario": "ny-dst-fall",
@@ -5691,6 +5754,15 @@
       "pass": true,
       "actual": "2026-12-31",
       "expected": "2026-12-31"
+    },
+    {
+      "scenario": "ny-year-rollover",
+      "section": "S6 · due today",
+      "ac": "AC7",
+      "label": "due filter still excludes cleared review dates",
+      "pass": true,
+      "actual": true,
+      "expected": true
     },
     {
       "scenario": "ny-year-rollover",

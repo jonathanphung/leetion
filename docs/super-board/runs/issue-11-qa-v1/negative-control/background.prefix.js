@@ -194,6 +194,11 @@ async function handleMessage(request) {
   switch (request.action) {
     case "saveToNotion":
       return await saveToNotion(request.data);
+    // "Mark to-do": queue a problem the user has not attempted yet. Same
+    // create path as a save, but with the unattempted property set and no
+    // solution content — see buildTodoProperties.
+    case "markTodo":
+      return await saveToNotion({ ...request.data, todo: true });
     case "checkExisting":
       return await checkExistingProblem(request.data);
     case "getStats":
@@ -407,7 +412,14 @@ async function checkExistingProblem(data) {
       ),
       timeComplexity: props["Time Complexity"]?.select?.name || "",
       spaceComplexity: props["Space Complexity"]?.select?.name || "",
-      attempts: props["Attempts"]?.number || 1,
+      // `?? 1`, not `|| 1`: a "Mark to-do" row legitimately holds 0, and
+      // `0 || 1` would report it back to the popup as one attempt. The
+      // fallback still covers rows with no Attempts value at all.
+      attempts: props["Attempts"]?.number ?? 1,
+      // A to-do row has no first-attempt date yet. The popup passes this
+      // back on the first real update so the date gets backfilled — see
+      // updatePageContent's backfillFirstAttemptDate.
+      hasFirstAttemptDate: !!props["Date (of first attempt)"]?.date?.start,
       hasQuestion: existingContent.hasQuestion,
     };
   } catch (error) {
@@ -617,6 +629,11 @@ function solutionGroupsToSnapshots(groups, fallbackTimestampMs) {
  * Smart update: preserves solutions in different languages.
  * Missing database columns are only created after the user confirms the
  * list in the popup (data.confirmSchemaChanges) — never silently.
+ *
+ * `data.todo` switches this into the "Mark to-do" create path: an explicitly
+ * unattempted row, with no solution content. It shares the schema
+ * inspection / confirmation / create machinery below so a queued row lands in
+ * exactly the same database, with the same guardrails, as a saved one.
  */
 async function saveToNotion(data) {
   const {
@@ -628,7 +645,27 @@ async function saveToNotion(data) {
     incrementAttempts,
     attempts,
     confirmSchemaChanges,
+    backfillFirstAttemptDate,
+    todo,
   } = data;
+
+  if (todo) {
+    // Duplicate guard. The popup only offers the button when its lookup found
+    // nothing, but that lookup runs at popup-open and swallows transient API
+    // errors into "not found", so the authoritative check happens here,
+    // immediately before the create.
+    if (existingPageId) {
+      return { success: true, alreadyExists: true, pageId: existingPageId };
+    }
+    const existing = await checkExistingProblem({
+      apiKey,
+      databaseId,
+      problemNumber: problem.number,
+    });
+    if (existing.exists) {
+      return { success: true, alreadyExists: true, pageId: existing.pageId };
+    }
+  }
 
   // Inspect the schema first (read-only). Columns are only created after the
   // user has confirmed the exact list in the popup (confirmSchemaChanges).
@@ -648,12 +685,14 @@ async function saveToNotion(data) {
   }
 
   const cleanedCode = cleanCode(problem.code);
-  const properties = buildProperties(
-    problem,
-    existingPageId,
-    spacedRepetitionDays,
-    titlePropertyName,
-  );
+  const properties = todo
+    ? buildTodoProperties(problem, titlePropertyName)
+    : buildProperties(
+        problem,
+        existingPageId,
+        spacedRepetitionDays,
+        titlePropertyName,
+      );
 
   if (schema.ok) {
     // A column that exists under the required name but with the wrong Notion
@@ -726,21 +765,26 @@ async function saveToNotion(data) {
         titlePropertyName,
         incrementAttempts,
         attempts,
+        backfillFirstAttemptDate,
       );
       pageId = updateResult.pageId;
       return { ...updateResult, schemaCreated, schemaWarning };
     } else {
-      // CREATE new page
-      const children = buildPageContent({ ...problem, code: cleanedCode });
+      // CREATE new page. A to-do row carries no solution content at all —
+      // no question, no code, no notes.
+      const children = todo
+        ? []
+        : buildPageContent({ ...problem, code: cleanedCode });
       pageId = await createPage(apiKey, databaseId, properties, children);
     }
 
     return {
       success: true,
       pageId,
-      updated: !!existingPageId,
-      contentUpdated: true, // For new pages, content is always new
-      attempts: 1, // First-time save always starts at 1
+      updated: false,
+      todo: !!todo,
+      contentUpdated: !todo, // For new pages, content is always new
+      attempts: todo ? 0 : 1, // First-time save starts at 1; a to-do row at 0
       schemaCreated,
       schemaWarning,
     };
@@ -759,6 +803,7 @@ async function updatePageContent(
   titlePropertyName,
   incrementAttempts,
   attempts,
+  backfillFirstAttemptDate,
 ) {
   try {
     const cleanedCode = cleanCode(problem.code);
@@ -768,6 +813,18 @@ async function updatePageContent(
       spacedRepetitionDays,
       titlePropertyName,
     );
+
+    // buildProperties only writes "Date (of first attempt)" on create, so a
+    // row that was queued by "Mark to-do" (created deliberately without one)
+    // would otherwise never get a date. The popup sets this flag when its
+    // Notion lookup found the property empty: this update IS the first
+    // recorded attempt, so today's local day is the honest value. Rows that
+    // already have a date are never touched.
+    if (backfillFirstAttemptDate) {
+      properties["Date (of first attempt)"] = {
+        date: { start: localDateString() },
+      };
+    }
 
     // Attempts resolution, in priority order:
     //
@@ -1193,6 +1250,53 @@ function buildProperties(
     properties["Spaced Repetition"] = { date: { start: dateStr } };
   } else {
     console.log("Leetion: Spaced repetition disabled or invalid");
+  }
+
+  return properties;
+}
+
+/**
+ * Properties for a "Mark to-do" row: a problem queued for review that the
+ * user has not attempted yet.
+ *
+ * Deliberately NOT the create branch of buildProperties, which encodes
+ * "I just attempted this": Attempts = 1, first-attempt date = today, plus
+ * whatever the form happens to be showing (Done defaults to checked in the
+ * markup, expertise to "Medium"). None of that is true here.
+ *
+ *   Spaced Repetition      today, local calendar day — the point of the
+ *                          button is to surface the problem in today's queue.
+ *                          Not today + interval: an unattempted problem has
+ *                          no expertise to derive an interval from.
+ *   Attempts               0
+ *   Done                   false, written explicitly rather than left to a
+ *                          Notion default
+ *   Date (of first attempt) omitted — there has been no attempt. Backfilled
+ *                          on the first real "Update in Notion".
+ *   My Expertise           omitted — the user has not judged it yet.
+ *
+ * Only scraped problem metadata is written (title, number, difficulty, URL,
+ * tags). Solution content — code, notes, remark, alternative methods,
+ * complexity, snapshots — is not: a to-do row carries no answer.
+ */
+function buildTodoProperties(problem, titlePropertyName = "Question") {
+  const properties = {
+    [titlePropertyName]: {
+      title: [{ text: { content: problem.title || "Untitled Problem" } }],
+    },
+    Done: { checkbox: false },
+    Attempts: { number: 0 },
+    "Spaced Repetition": { date: { start: localDateString() } },
+  };
+
+  if (problem.number) properties["S No."] = { number: problem.number };
+  if (problem.url) properties["Question Link"] = { url: problem.url };
+  if (problem.difficulty)
+    properties["Level"] = { select: { name: problem.difficulty } };
+  if (problem.tags?.length > 0) {
+    properties["Tag"] = {
+      multi_select: problem.tags.map((t) => ({ name: t })),
+    };
   }
 
   return properties;

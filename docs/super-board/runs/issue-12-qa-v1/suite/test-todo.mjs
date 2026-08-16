@@ -351,11 +351,22 @@ async function runScenario(scenario) {
       notifications[0]?.message,
       "You have 1 problem due for review today.",
     );
+    // #11 (PR #15) replaced the flat `{property, date:{on_or_before}}` filter
+    // with a compound `and:` — once a review date can be cleared, an empty
+    // date must not read as due, so the guard is stated explicitly rather
+    // than left to Notion's filter semantics. Read the new shape, and assert
+    // both legs: this suite now also protects #11's is_not_empty guard.
     const dueQuery = mock
       .requestsFor(/databases\/.*\/query/)
-      .filter((q) => q.body?.filter?.date?.on_or_before)
+      .filter((q) => q.body?.filter?.and?.[1]?.date?.on_or_before)
       .pop();
-    r.is("AC7", "due filter uses the local day", dueQuery?.body?.filter?.date?.on_or_before, localDay);
+    r.is("AC7", "due filter uses the local day", dueQuery?.body?.filter?.and?.[1]?.date?.on_or_before, localDay);
+    r.is(
+      "AC7",
+      "due filter still excludes cleared review dates",
+      dueQuery?.body?.filter?.and?.[0]?.date?.is_not_empty,
+      true,
+    );
 
     const stats = await send({ action: "getStats", data: API });
     r.is("AC7", "popup stats count it as due", stats?.dueForReview, 1);
