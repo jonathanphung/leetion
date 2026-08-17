@@ -372,8 +372,14 @@ async function getPageContent(apiKey, pageId) {
  * Auto-creates missing database columns.
  */
 async function saveToNotion(data) {
-  const { apiKey, databaseId, problem, existingPageId, spacedRepetitionDays } =
-    data;
+  const {
+    apiKey,
+    databaseId,
+    problem,
+    existingPageId,
+    spacedRepetitionDays,
+    incrementAttempts,
+  } = data;
 
   // Ensure all required columns exist (auto-create if missing)
   await ensureDatabaseSchema(apiKey, databaseId);
@@ -398,6 +404,7 @@ async function saveToNotion(data) {
         databaseId,
         problem,
         spacedRepetitionDays,
+        incrementAttempts,
       );
       pageId = updateResult.pageId;
       return updateResult;
@@ -412,6 +419,7 @@ async function saveToNotion(data) {
       pageId,
       updated: !!existingPageId,
       contentUpdated: true, // For new pages, content is always new
+      attempts: 1, // A first-time save always starts at 1
     };
   } catch (error) {
     console.error("Leetion: Save error:", error);
@@ -425,6 +433,7 @@ async function updatePageContent(
   databaseId,
   problem,
   spacedRepetitionDays,
+  incrementAttempts,
 ) {
   try {
     const cleanedCode = cleanCode(problem.code);
@@ -433,6 +442,17 @@ async function updatePageContent(
       existingPageId,
       spacedRepetitionDays,
     );
+
+    // Read the current count from Notion immediately before the PATCH, so a
+    // value edited directly in Notion is preserved +1 rather than overwritten
+    // with a stale one from the popup. When not incrementing, "Attempts" is
+    // left out of the payload entirely and Notion keeps what it has.
+    let newAttempts;
+    if (incrementAttempts) {
+      newAttempts = (await fetchCurrentAttempts(apiKey, existingPageId)) + 1;
+      properties["Attempts"] = { number: newAttempts };
+      console.log("Leetion: Incrementing Attempts to:", newAttempts);
+    }
 
     // Always update properties (Tags, Status, etc.)
     await notionRequest(`pages/${existingPageId}`, apiKey, "PATCH", {
@@ -483,16 +503,30 @@ async function updatePageContent(
       );
     }
 
-    return {
+    const result = {
       success: true,
       pageId,
       updated: true,
       contentUpdated: hasNewContent,
     };
+    if (typeof newAttempts === "number") {
+      result.attempts = newAttempts;
+    }
+    return result;
   } catch (error) {
     console.error("Leetion: Save error:", error);
     throw error;
   }
+}
+
+/**
+ * Reads the current "Attempts" number for a page straight from Notion.
+ * Used immediately before a PATCH so the increment is computed server-fresh.
+ * A missing or cleared value counts as 0.
+ */
+async function fetchCurrentAttempts(apiKey, pageId) {
+  const page = await notionRequest(`pages/${pageId}`, apiKey, "GET");
+  return page?.properties?.["Attempts"]?.number ?? 0;
 }
 
 async function createPage(apiKey, databaseId, properties, children) {
@@ -782,9 +816,11 @@ function buildProperties(problem, existingPageId, spacedRepetitionDays) {
     };
   }
 
-  // Add attempt count
-  if (problem.attempts) {
-    properties["Attempts"] = { number: problem.attempts };
+  // Attempt count. A first-time save always starts at 1; for an existing page
+  // the increment is computed server-fresh in updatePageContent, so a stale
+  // popup value can never overwrite what is in Notion.
+  if (!existingPageId) {
+    properties["Attempts"] = { number: 1 };
   }
 
   // Add spaced repetition date

@@ -94,6 +94,13 @@ let previousView = "not-leetcode";
 /** @type {number} User's attempt count for this problem */
 let userAttemptCount = 0;
 
+/**
+ * @type {boolean} Whether this popup session already incremented Attempts.
+ * "Update in Notion" adds 1 once per popup session, so re-saving to fix a typo
+ * in the notes does not inflate the count.
+ */
+let attemptSessionIncremented = false;
+
 // DOM ELEMENT REFERENCES
 
 const DOM = {
@@ -937,12 +944,18 @@ async function saveToNotion() {
       description = description.substring(0, descEnd).trim();
     }
 
+    // Count one attempt per popup session when updating an entry that already
+    // exists. The value itself is computed server-fresh in the background.
+    const shouldIncrementAttempts =
+      !!existingPageId && !attemptSessionIncremented;
+
     const response = await chrome.runtime.sendMessage({
       action: "saveToNotion",
       data: {
         apiKey: settings.notionApiKey,
         databaseId: settings.notionDatabaseId,
         existingPageId,
+        incrementAttempts: shouldIncrementAttempts,
         spacedRepetitionDays: spacedRepDays,
         problem: {
           number: problemData.number,
@@ -959,7 +972,6 @@ async function saveToNotion() {
           done: DOM.form.done.checked,
           timeComplexity: DOM.complexity.time?.value || "",
           spaceComplexity: DOM.complexity.space?.value || "",
-          attempts: userAttemptCount || 1,
           snapshots: snapshotsToSave,
           saveQuestion: DOM.problem.saveQuestionToggle?.checked || false,
           questionContent: {
@@ -987,10 +999,21 @@ async function saveToNotion() {
 
       await clearPersistedFormState(problemData.number);
 
+      const wasFirstSave = !existingPageId;
       if (!existingPageId && response.pageId) {
         existingPageId = response.pageId;
         updateSaveButton(true);
         DOM.quickActions.card?.classList.remove("hidden");
+      }
+
+      // A first save wrote Attempts = 1; an update incremented server-fresh.
+      // Either way this session has now counted its attempt.
+      if (typeof response.attempts === "number") {
+        userAttemptCount = response.attempts;
+        updateAttemptDisplay();
+      }
+      if (wasFirstSave || shouldIncrementAttempts) {
+        attemptSessionIncremented = true;
       }
     } else {
       showStatus(DOM.save.status, response.error || "Failed", "error");
