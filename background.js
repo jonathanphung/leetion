@@ -808,20 +808,29 @@ function buildProperties(problem, existingPageId, spacedRepetitionDays) {
 
 /**
  * Updates only the spaced repetition date for a page.
+ * `days` of 0 (or less) means reviews are disabled for that expertise level:
+ * no date is written, matching the `> 0` guard in buildProperties.
  */
 async function updateSpacedRepetition(data) {
   const { apiKey, pageId, days, attempts } = data;
 
   try {
     const properties = {};
+    let dateStr = null;
 
     // Set new spaced repetition date
-    const reviewDate = new Date();
-    reviewDate.setDate(reviewDate.getDate() + days);
-    const dateStr = reviewDate.toISOString().split("T")[0];
-    properties["Spaced Repetition"] = { date: { start: dateStr } };
+    if (days && days > 0) {
+      const reviewDate = new Date();
+      reviewDate.setDate(reviewDate.getDate() + days);
+      dateStr = reviewDate.toISOString().split("T")[0];
+      properties["Spaced Repetition"] = { date: { start: dateStr } };
 
-    console.log("Leetion: Updating Spaced Repetition to:", dateStr);
+      console.log("Leetion: Updating Spaced Repetition to:", dateStr);
+    } else {
+      console.log(
+        "Leetion: Spaced repetition disabled for this level - leaving date untouched",
+      );
+    }
 
     // Update attempts if provided
     if (attempts !== undefined) {

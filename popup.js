@@ -56,6 +56,27 @@ const TAG_MAPPING = {
   matrix: "Matrix",
 };
 
+/**
+ * Expertise levels that own their own spaced-repetition interval.
+ * Order matters: it drives the settings inputs and the storage object.
+ */
+const EXPERTISE_LEVELS = ["Low", "Medium", "High"];
+
+/**
+ * Default review interval (in days) per expertise level.
+ * Lower expertise => sooner review.
+ */
+const DEFAULT_REVIEW_INTERVALS = { Low: 1, Medium: 7, High: 21 };
+
+/** Storage key holding the per-expertise intervals object. */
+const INTERVALS_KEY = "spacedRepetitionIntervals";
+
+/** Legacy storage key: a single flat interval used before per-expertise intervals. */
+const LEGACY_INTERVAL_KEY = "spacedRepetitionDays";
+
+/** Upper bound for a stored interval, mirrors the settings inputs' max. */
+const MAX_INTERVAL_DAYS = 365;
+
 // APPLICATION STATE
 
 /** @type {Object} Current problem data from LeetCode */
@@ -105,7 +126,11 @@ const DOM = {
   settings: {
     apiKeyInput: document.getElementById("input-api-key"),
     databaseIdInput: document.getElementById("input-database-id"),
-    spacedRepInput: document.getElementById("input-spaced-rep"),
+    intervalInputs: {
+      Low: document.getElementById("input-interval-low"),
+      Medium: document.getElementById("input-interval-medium"),
+      High: document.getElementById("input-interval-high"),
+    },
     toggleApiKeyBtn: document.getElementById("btn-toggle-api-key"),
     toggleDbIdBtn: document.getElementById("btn-toggle-db-id"),
     saveBtn: document.getElementById("btn-save-settings"),
@@ -221,6 +246,67 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupEventListeners();
 });
 
+// SPACED REPETITION INTERVALS
+
+/**
+ * Coerces a stored or user-entered interval into a whole number of days.
+ * @param {*} value - Raw value from storage or an input element
+ * @returns {number|null} Sanitized day count, or null when unusable
+ */
+function sanitizeInterval(value) {
+  if (value === null || value === undefined || value === "") return null;
+  const days = Math.floor(Number(value));
+  if (!Number.isFinite(days) || days < 0) return null;
+  return Math.min(days, MAX_INTERVAL_DAYS);
+}
+
+/**
+ * Resolves the per-expertise review intervals from a settings object.
+ *
+ * Migration rule: a profile that only carries the legacy flat
+ * `spacedRepetitionDays` scalar seeds ALL THREE levels with that scalar, so an
+ * upgrade never silently changes an existing user's cadence — including the
+ * deliberate "0 = disabled" case. Fresh profiles get the 1/7/21 defaults.
+ *
+ * @param {Object} [settings] - Result of chrome.storage.sync.get
+ * @returns {{Low: number, Medium: number, High: number}} Intervals in days
+ */
+function resolveReviewIntervals(settings = {}) {
+  const stored = settings[INTERVALS_KEY];
+  const legacy = sanitizeInterval(settings[LEGACY_INTERVAL_KEY]);
+  const intervals = {};
+
+  EXPERTISE_LEVELS.forEach((level) => {
+    const storedDays =
+      stored && typeof stored === "object"
+        ? sanitizeInterval(stored[level])
+        : null;
+
+    if (storedDays !== null) {
+      intervals[level] = storedDays;
+    } else if (legacy !== null) {
+      intervals[level] = legacy;
+    } else {
+      intervals[level] = DEFAULT_REVIEW_INTERVALS[level];
+    }
+  });
+
+  return intervals;
+}
+
+/**
+ * Picks the review interval for an expertise level.
+ * Unknown levels fall back to Medium so a save never loses its review date.
+ * @param {Object} intervals - Map returned by resolveReviewIntervals
+ * @param {string} expertise - "Low" | "Medium" | "High"
+ * @returns {number} Days until the next review (0 = disabled for this level)
+ */
+function intervalForExpertise(intervals, expertise) {
+  const days = sanitizeInterval(intervals?.[expertise]);
+  if (days !== null) return days;
+  return sanitizeInterval(intervals?.Medium) ?? DEFAULT_REVIEW_INTERVALS.Medium;
+}
+
 /**
  * Loads saved settings from Chrome storage.
  */
@@ -229,13 +315,19 @@ async function loadSettings() {
     const result = await chrome.storage.sync.get([
       "notionApiKey",
       "notionDatabaseId",
-      "spacedRepetitionDays",
+      INTERVALS_KEY,
+      LEGACY_INTERVAL_KEY,
     ]);
     if (result.notionApiKey)
       DOM.settings.apiKeyInput.value = result.notionApiKey;
     if (result.notionDatabaseId)
       DOM.settings.databaseIdInput.value = result.notionDatabaseId;
-    DOM.settings.spacedRepInput.value = result.spacedRepetitionDays ?? 30;
+
+    const intervals = resolveReviewIntervals(result);
+    EXPERTISE_LEVELS.forEach((level) => {
+      const input = DOM.settings.intervalInputs[level];
+      if (input) input.value = intervals[level];
+    });
   } catch (error) {
     console.error("Error loading settings:", error);
   }
@@ -908,7 +1000,8 @@ async function saveToNotion() {
   const settings = await chrome.storage.sync.get([
     "notionApiKey",
     "notionDatabaseId",
-    "spacedRepetitionDays",
+    INTERVALS_KEY,
+    LEGACY_INTERVAL_KEY,
   ]);
 
   if (!settings.notionApiKey || !settings.notionDatabaseId) {
@@ -926,8 +1019,14 @@ async function saveToNotion() {
 
   try {
     const cleanedCode = cleanCodeString(problemData.code);
-    const spacedRepDays = settings.spacedRepetitionDays ?? 30;
-    console.log("Leetion: Sending spacedRepetitionDays:", spacedRepDays);
+    const spacedRepDays = intervalForExpertise(
+      resolveReviewIntervals(settings),
+      selectedExpertise,
+    );
+    console.log(
+      `Leetion: Sending spacedRepetitionDays for ${selectedExpertise} expertise:`,
+      spacedRepDays,
+    );
 
     const snapshotsToSave = getSnapshotsForSave();
 
@@ -1184,14 +1283,35 @@ function toggleInputVisibility(input, btn) {
 async function saveSettings() {
   const apiKey = DOM.settings.apiKeyInput.value.trim();
   const dbId = DOM.settings.databaseIdInput.value.trim();
-  const spacedRep = parseInt(DOM.settings.spacedRepInput.value) || 0;
 
-  const toSave = { spacedRepetitionDays: spacedRep };
+  const intervals = {};
+  EXPERTISE_LEVELS.forEach((level) => {
+    const input = DOM.settings.intervalInputs[level];
+    intervals[level] =
+      sanitizeInterval(input?.value) ?? DEFAULT_REVIEW_INTERVALS[level];
+  });
+
+  const toSave = { [INTERVALS_KEY]: intervals };
   if (apiKey) toSave.notionApiKey = apiKey;
   if (dbId) toSave.notionDatabaseId = dbId;
 
-  await chrome.storage.sync.set(toSave);
-  showStatus(DOM.settings.status, "Settings saved!", "success");
+  try {
+    await chrome.storage.sync.set(toSave);
+    // The legacy flat interval has been migrated into the object above; drop it
+    // so it can never be re-read as a stale fallback.
+    await chrome.storage.sync.remove(LEGACY_INTERVAL_KEY);
+
+    // Reflect the sanitized values back into the inputs.
+    EXPERTISE_LEVELS.forEach((level) => {
+      const input = DOM.settings.intervalInputs[level];
+      if (input) input.value = intervals[level];
+    });
+
+    showStatus(DOM.settings.status, "Settings saved!", "success");
+  } catch (error) {
+    console.error("Error saving settings:", error);
+    showStatus(DOM.settings.status, "Failed to save settings", "error");
+  }
 }
 
 /**
@@ -1303,21 +1423,25 @@ async function markForReviewTomorrow() {
 }
 
 /**
- * Resets spaced repetition to configured days from now.
+ * Resets spaced repetition using the interval for this entry's expertise.
  */
 async function revisitProblem() {
   if (!existingPageId) return;
 
   const settings = await chrome.storage.sync.get([
     "notionApiKey",
-    "spacedRepetitionDays",
+    INTERVALS_KEY,
+    LEGACY_INTERVAL_KEY,
   ]);
   if (!settings.notionApiKey) {
     showStatus(DOM.save.status, "Configure API key first", "error");
     return;
   }
 
-  const days = settings.spacedRepetitionDays ?? 30;
+  const days = intervalForExpertise(
+    resolveReviewIntervals(settings),
+    selectedExpertise,
+  );
 
   try {
     DOM.quickActions.revisit.disabled = true;
@@ -1341,7 +1465,9 @@ async function revisitProblem() {
       updateAttemptDisplay();
       showStatus(
         DOM.save.status,
-        `Reset! Next review in ${days} days`,
+        days > 0
+          ? `Reset! Next review in ${days} day${days === 1 ? "" : "s"}`
+          : `Attempt logged — reviews are off for ${selectedExpertise} expertise`,
         "success",
       );
     } else {
