@@ -1,0 +1,28 @@
+ok    01-open-scheduled.png  2 checks  — AC8 — a scheduled problem opens with the switch ON and nothing staged
+ok    02-staged-off.png  11 checks  — AC1/AC2 — flipping off writes nothing and shows as unsaved
+ok    03-staged-off-saved.png  17 checks  — AC3/AC7 — "Update in Notion" empties the date and drops the staged flag
+ok    04-staged-on-medium.png  9 checks  — AC4 — staged ON saves today + the Medium interval (3)
+ok    05-staged-on-expertise-changed.png  9 checks  — AC4 — expertise switched to High AFTER staging: the save writes today + 7
+ok    06-interval-zero-falls-back-to-today.png  5 checks  — AC5 — reviews disabled for this level: an explicit ON lands TODAY
+ok    07-interval-zero-unstaged-untouched.png  4 checks  — AC5 — an ordinary save on the same level still leaves the date alone
+ok    08-off-on-unstages.png  7 checks  — AC6 — off → on → save: no no-op clear queued, still scheduled
+ok    09-failed-save-stays-staged.png  5 checks  — AC7 — the save failed: the flip is still staged and the date is untouched
+ok    09b-failed-save-retry-lands.png  7 checks  — AC7 — the same flip retried after the failure clears the date and unstages
+ok    10-review-today-discards-stage.png  8 checks  — AC9 — Review Today writes now, discards the staged off, and survives the save
+ok    11-review-tomorrow-discards-stage.png  4 checks  — AC9 — same for Review Tomorrow (today + 1)
+ok    12-unstaged-off-stays-out.png  6 checks  — AC10 — a cleared problem stays cleared through a plain save (issue #11)
+
+──────────────────────────────────────────────────────────────────────────
+  ok    AC1  —  8 pass, 0 fail
+  ok    AC10  —  4 pass, 0 fail
+  ok    AC11  —  4 pass, 0 fail
+  ok    AC2  —  10 pass, 0 fail
+  ok    AC3  —  4 pass, 0 fail
+  ok    AC4  —  6 pass, 0 fail
+  ok    AC5  —  5 pass, 0 fail
+  ok    AC6  —  5 pass, 0 fail
+  ok    AC7  —  14 pass, 0 fail
+  ok    AC8  —  26 pass, 0 fail
+  ok    AC9  —  8 pass, 0 fail
+──────────────────────────────────────────────────────────────────────────
+PASS — 94/94 browser assertions green across 13 scenarios
