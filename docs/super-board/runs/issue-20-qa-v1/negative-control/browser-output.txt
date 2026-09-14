@@ -1,0 +1,112 @@
+ok    01-open-scheduled.png  2 checks  — AC8 — a scheduled problem opens with the switch ON and nothing staged
+FAIL  02-staged-off.png  11 checks (7 red)  — AC1/AC2 — flipping off writes nothing and shows as unsaved
+        AC1  flipping the switch sends no write message at all
+           expected  0
+           actual    1
+        AC1  specifically: no "updateSpacedRepetition" message
+           expected  0
+           actual    1
+        AC1  …and no Notion PATCH reached the page
+           expected  0
+           actual    1
+        AC1  the stored review date is untouched
+           expected  "2026-09-30"
+           actual    null
+        AC2  the row is flagged .is-staged
+           expected  true
+           actual    false
+        AC2  …and styles.css actually paints that flag (computed outline on the switch)
+           expected  {"style":"solid","width":"2px"}
+           actual    null
+        AC2  the hint says what the next update will do
+           expected  "Will clear on update"
+           actual    "No reviews"
+FAIL  03-staged-off-saved.png  17 checks (7 red)  — AC3/AC7 — "Update in Notion" empties the date and drops the staged flag
+        AC1  flipping the switch sends no write message at all
+           expected  0
+           actual    1
+        AC1  specifically: no "updateSpacedRepetition" message
+           expected  0
+           actual    1
+        AC1  …and no Notion PATCH reached the page
+           expected  0
+           actual    1
+        AC1  the stored review date is untouched
+           expected  "2026-09-30"
+           actual    null
+        AC2  the row is flagged .is-staged
+           expected  true
+           actual    false
+        AC2  …and styles.css actually paints that flag (computed outline on the switch)
+           expected  {"style":"solid","width":"2px"}
+           actual    null
+        AC2  the hint says what the next update will do
+           expected  "Will clear on update"
+           actual    "No reviews"
+FAIL  04-staged-on-medium.png  9 checks (2 red)  — AC4 — staged ON saves today + the Medium interval (3)
+        AC2  staging on flags the row
+           expected  true
+           actual    false
+        AC2  …with the forward-looking hint
+           expected  "Will schedule on update"
+           actual    "Due date set"
+FAIL  05-staged-on-expertise-changed.png  9 checks (2 red)  — AC4 — expertise switched to High AFTER staging: the save writes today + 7
+        AC2  staging on flags the row
+           expected  true
+           actual    false
+        AC2  …with the forward-looking hint
+           expected  "Will schedule on update"
+           actual    "Due date set"
+FAIL  06-interval-zero-falls-back-to-today.png  5 checks (1 red)  — AC5 — reviews disabled for this level: an explicit ON lands TODAY
+        AC5  a staged ON on a reviews-disabled level sets scheduleSpacedRepetitionToday
+           expected  true
+           actual    undefined
+FAIL  07-interval-zero-unstaged-untouched.png  4 checks (1 red)  — AC5 — an ordinary save on the same level still leaves the date alone
+        AC5  an ORDINARY save on a reviews-disabled level does not set the flag
+           expected  false
+           actual    undefined
+FAIL  08-off-on-unstages.png  7 checks (1 red)  — AC6 — off → on → save: no no-op clear queued, still scheduled
+        AC6  first flip stages
+           expected  true
+           actual    false
+FAIL  09-failed-save-stays-staged.png  5 checks (3 red)  — AC7 — the save failed: the flip is still staged and the date is untouched
+        AC7  a failed save leaves the flip staged so it can be retried
+           expected  true
+           actual    false
+        AC7  …with the switch still showing the user's pending choice
+           expected  {"checked":false,"hint":"Will clear on update"}
+           actual    {"checked":false,"hint":"No reviews"}
+        AC7  …and nothing was written to Notion
+           expected  "2026-09-30"
+           actual    null
+FAIL  09b-failed-save-retry-lands.png  7 checks (3 red)  — AC7 — the same flip retried after the failure clears the date and unstages
+        AC7  a failed save leaves the flip staged so it can be retried
+           expected  true
+           actual    false
+        AC7  …with the switch still showing the user's pending choice
+           expected  {"checked":false,"hint":"Will clear on update"}
+           actual    {"checked":false,"hint":"No reviews"}
+        AC7  …and nothing was written to Notion
+           expected  "2026-09-30"
+           actual    null
+FAIL  10-review-today-discards-stage.png  8 checks (1 red)  — AC9 — Review Today writes now, discards the staged off, and survives the save
+        AC9  precondition: an off-flip is staged
+           expected  true
+           actual    false
+ok    11-review-tomorrow-discards-stage.png  4 checks  — AC9 — same for Review Tomorrow (today + 1)
+ok    12-unstaged-off-stays-out.png  6 checks  — AC10 — a cleared problem stays cleared through a plain save (issue #11)
+
+──────────────────────────────────────────────────────────────────────────
+  FAIL  AC1  —  0 pass, 8 fail
+  ok    AC10  —  4 pass, 0 fail
+  ok    AC11  —  4 pass, 0 fail
+  FAIL  AC2  —  0 pass, 10 fail
+  ok    AC3  —  4 pass, 0 fail
+  ok    AC4  —  6 pass, 0 fail
+  FAIL  AC5  —  3 pass, 2 fail
+  FAIL  AC6  —  4 pass, 1 fail
+  FAIL  AC7  —  8 pass, 6 fail
+  ok    AC8  —  26 pass, 0 fail
+  FAIL  AC9  —  7 pass, 1 fail
+──────────────────────────────────────────────────────────────────────────
+FAIL — 28 red (94 assertions, 13 scenarios)

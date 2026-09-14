@@ -892,6 +892,20 @@ body {
   white-space: nowrap;
 }
 
+/* Staged but not yet written: the switch only reaches Notion on "Update in
+   Notion", so the row reads as pending rather than as stored state — the same
+   convention the Attempts field uses. The ring, not a colour swap, because the
+   switch already spends colour on its own on/off state. */
+.quick-actions-toggle.is-staged .toggle-switch {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.quick-actions-toggle.is-staged .toggle-label,
+.quick-actions-toggle.is-staged .toggle-hint {
+  color: var(--accent);
+}
+
 /* Submissions card — a synced value, not an input. The number is rendered as
    plain text (no field, no stepper) so it never reads as hand-editable the way
    the Attempts control does. */

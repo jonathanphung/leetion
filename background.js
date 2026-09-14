@@ -659,6 +659,7 @@ async function saveToNotion(data) {
     existingPageId,
     spacedRepetitionDays,
     clearSpacedRepetition,
+    scheduleSpacedRepetitionToday,
     incrementAttempts,
     attempts,
     confirmSchemaChanges,
@@ -713,6 +714,7 @@ async function saveToNotion(data) {
         spacedRepetitionDays,
         titlePropertyName,
         clearSpacedRepetition,
+        scheduleSpacedRepetitionToday,
       );
 
   if (schema.ok) {
@@ -788,6 +790,7 @@ async function saveToNotion(data) {
         attempts,
         backfillFirstAttemptDate,
         clearSpacedRepetition,
+        scheduleSpacedRepetitionToday,
       );
       pageId = updateResult.pageId;
       return { ...updateResult, schemaCreated, schemaWarning };
@@ -827,6 +830,7 @@ async function updatePageContent(
   attempts,
   backfillFirstAttemptDate,
   clearSpacedRepetition,
+  scheduleSpacedRepetitionToday,
 ) {
   try {
     const cleanedCode = cleanCode(problem.code);
@@ -836,6 +840,7 @@ async function updatePageContent(
       spacedRepetitionDays,
       titlePropertyName,
       clearSpacedRepetition,
+      scheduleSpacedRepetitionToday,
     );
 
     // buildProperties only writes "Date (of first attempt)" on create, so a
@@ -1194,12 +1199,19 @@ function splitRichText(text, maxLength = NOTION_RICH_TEXT_LIMIT) {
 /**
  * Builds the Notion property payload for a save/update.
  *
- * `clearSpacedRepetition` is the popup's "Spaced Repetition" toggle in the off
- * position: this problem is out of the review rotation, so the save writes an
- * explicit empty date instead of silently re-scheduling it from the expertise
- * interval. It is deliberately a separate flag from `spacedRepetitionDays`,
- * whose 0 value already means "reviews are disabled for this expertise level —
- * leave whatever date is there alone" (issue #3).
+ * `clearSpacedRepetition` is the popup's "Spaced Repetition" switch staged in
+ * the off position: this problem is out of the review rotation, so the save
+ * writes an explicit empty date instead of silently re-scheduling it from the
+ * expertise interval. It is deliberately a separate flag from
+ * `spacedRepetitionDays`, whose 0 value already means "reviews are disabled for
+ * this expertise level — leave whatever date is there alone" (issue #3).
+ *
+ * `scheduleSpacedRepetitionToday` is the other end of that switch: staged ON
+ * for a level whose interval is 0, where "today + interval" would resolve to no
+ * write at all and leave the switch claiming a date that does not exist. Today
+ * is the honest floor. It ranks below `clearSpacedRepetition` (an explicit
+ * clear always wins) and above `spacedRepetitionDays`, which by construction is
+ * 0 whenever this flag is set.
  */
 function buildProperties(
   problem,
@@ -1207,6 +1219,7 @@ function buildProperties(
   spacedRepetitionDays,
   titlePropertyName = "Question",
   clearSpacedRepetition = false,
+  scheduleSpacedRepetitionToday = false,
 ) {
   const properties = {
     // The title is written to the database's actual title column, which may
@@ -1282,6 +1295,13 @@ function buildProperties(
   if (clearSpacedRepetition) {
     console.log("Leetion: Spaced Repetition toggled off - writing empty date");
     properties["Spaced Repetition"] = { date: null };
+  } else if (scheduleSpacedRepetitionToday) {
+    const todayStr = localDateString();
+    console.log(
+      "Leetion: Reviews disabled here - switch staged on, scheduling today:",
+      todayStr,
+    );
+    properties["Spaced Repetition"] = { date: { start: todayStr } };
   } else if (spacedRepetitionDays && spacedRepetitionDays > 0) {
     const dateStr = localDateInDays(spacedRepetitionDays);
     console.log("Leetion: Setting Spaced Repetition to:", dateStr);
@@ -1360,6 +1380,12 @@ async function fetchCurrentAttempts(apiKey, pageId) {
  *     rotation"). Highest precedence. Distinct from `days: 0` on purpose:
  *     `days: 0` means "this expertise level has reviews disabled, leave the
  *     stored date alone" (issue #3), which cannot express a deletion.
+ *     Kept deliberately without an in-extension caller since issue #20 turned
+ *     the "Spaced Repetition" switch into a staged form control: the save path
+ *     now expresses the same deletion through `clearSpacedRepetition` in
+ *     buildProperties. This is the only arm of the table that can empty a date,
+ *     and issue #11's background contract suite pins the "a cleared problem
+ *     never appears in the due query or notifies" guarantee through it.
  *   - `setToday: true` — write TODAY's local calendar day ("review this now").
  *     Takes precedence over `days` and never consults the expertise interval.
  *   - `days > 0`       — write today + `days` (Review Tomorrow, save path).

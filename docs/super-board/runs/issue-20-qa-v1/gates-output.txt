@@ -1,0 +1,19 @@
+=== node --check (every touched JS file, AC12) ===
+popup.js         OK
+background.js    OK
+content.js       OK
+onboarding.js    OK
+
+=== bash build.sh (AC12) ===
+Done! Created leetion.zip
+build.sh exit=0
+
+=== zip artifact ===
+-rw-r--r-- 1 jonat 197609 88444 Aug 22 03:53 leetion.zip
+
+=== merged-card regression suites (Node layer) ===
+#1  background.js layer: 27 passed, 0 failed
+#2    79 passed, 0 failed
+#10 ALL CHECKS PASSED
+#11 PASS — 73/73 assertions green
+#12 ALL GREEN: 656/656 assertions passed

@@ -495,11 +495,16 @@
                 Review Today
               </button>
             </div>
-            <!-- Off empties the "Spaced Repetition" date in Notion, taking the
-                 problem out of the review rotation; on re-queues it for today.
-                 Lives here rather than in the "Mark as Done" row because that
-                 row already ends with the Attempts control. -->
-            <div class="toggle-row quick-actions-toggle">
+            <!-- Staged, not immediate: the switch feeds "Update in Notion"
+                 like the rest of the form. Saved off it empties the "Spaced
+                 Repetition" date, taking the problem out of the review
+                 rotation; saved on it schedules today + the expertise
+                 interval. Lives here rather than in the "Mark as Done" row
+                 because that row already ends with the Attempts control. -->
+            <div
+              class="toggle-row quick-actions-toggle"
+              id="spaced-repetition-row"
+            >
               <input
                 type="checkbox"
                 id="input-spaced-repetition"

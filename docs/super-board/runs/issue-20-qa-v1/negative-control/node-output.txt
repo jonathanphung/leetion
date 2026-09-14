@@ -1,0 +1,232 @@
+
+AC5 — buildProperties precedence for scheduleSpacedRepetitionToday
+Leetion: Background service worker loaded
+  PASS  background.js still exports buildProperties
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+  FAIL  staged on + interval 0 writes TODAY (the AC5 fallback)
+        expected  {"date":{"start":"2026-08-15"}}
+        actual    undefined
+  PASS  …and it is the LOCAL day, not UTC's
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+  PASS  interval 0 with nothing staged still writes NO date (issue #3 intact)
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced Repetition toggled off - writing empty date
+  PASS  clear outranks scheduleToday when both are somehow set
+Leetion: spacedRepetitionDays received: 7 number
+Leetion: Setting Spaced Repetition to: 2026-08-22
+  FAIL  scheduleToday outranks days > 0
+        expected  {"date":{"start":"2026-08-15"}}
+        actual    {"date":{"start":"2026-08-22"}}
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+  PASS  a plain interval save is unchanged (today + 3)
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+  PASS  5-argument callers are unaffected (flag defaults to false)
+
+AC3 — a staged-off save empties the date on the Notion page
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Spaced Repetition toggled off - writing empty date
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Spaced Repetition toggled off - writing empty date
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+  PASS  save succeeded
+  PASS  the page now holds an explicit empty date, not a missing property
+  PASS  the PATCH body carries {date: null}
+
+AC4 — a staged-on save writes today + the expertise interval
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 1 number
+Leetion: Setting Spaced Repetition to: 2026-08-16
+Leetion: spacedRepetitionDays received: 1 number
+Leetion: Setting Spaced Repetition to: 2026-08-16
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+  PASS  Low: save succeeded
+  PASS  Low (interval 1) → 2026-08-16
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Setting Spaced Repetition to: 2026-08-18
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+  PASS  Medium: save succeeded
+  PASS  Medium (interval 3) → 2026-08-18
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 7 number
+Leetion: Setting Spaced Repetition to: 2026-08-22
+Leetion: spacedRepetitionDays received: 7 number
+Leetion: Setting Spaced Repetition to: 2026-08-22
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+  PASS  High: save succeeded
+  PASS  High (interval 7) → 2026-08-22
+
+AC5 — the interval-0 fallback survives the whole message path
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+  PASS  save succeeded
+  FAIL  the flag survives saveToNotion → updatePageContent → buildProperties
+        expected  "2026-08-15"
+        actual    null
+
+AC5 (negative) — interval 0 WITHOUT the flag leaves the stored date alone
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+Leetion: spacedRepetitionDays received: 0 number
+Leetion: Spaced repetition disabled or invalid
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+  PASS  save succeeded
+  PASS  the far-future date the page already had is untouched (issue #3)
+
+AC9 — Review Today / Review Tomorrow are untouched by this card
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-test-key', pageId: 'qa-page-1', setToday: true }
+Leetion: Setting Spaced Repetition to today: 2026-08-15
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-15', cleared: false }
+  PASS  Review Today succeeded
+  PASS  Review Today writes the local today
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-test-key', pageId: 'qa-page-1', days: 1 }
+Leetion: Updating Spaced Repetition to: 2026-08-16
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: '2026-08-16', cleared: false }
+  PASS  Review Tomorrow succeeded
+  PASS  Review Tomorrow writes today + 1
+
+REG (#11) — a cleared problem stays out of the due query and never notifies
+Leetion: Background service worker loaded
+Leetion Background: Received action: saveToNotion
+Leetion Background: Handling action: saveToNotion
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Spaced Repetition toggled off - writing empty date
+Leetion: spacedRepetitionDays received: 3 number
+Leetion: Spaced Repetition toggled off - writing empty date
+Leetion: No snapshots/notes, preserved existing page content
+Leetion Background: Sending response: {
+  success: true,
+  pageId: 'qa-page-1',
+  updated: true,
+  contentUpdated: false,
+  schemaCreated: [],
+  schemaWarning: null
+}
+checkDueReviews started
+Settings loaded: { hasApiKey: true, hasDbId: true }
+Querying for date: 2026-08-15
+Notion response: { results: [], has_more: false }
+Due count: 0
+  PASS  the hourly alarm raises no notification for the cleared page
+  PASS  the due query still filters on Spaced Repetition
+
+REG (#11) — the `clear` arm of updateSpacedRepetition still works
+Leetion: Background service worker loaded
+Leetion Background: Received action: updateSpacedRepetition
+Leetion Background: Handling action: updateSpacedRepetition
+Leetion Background: updateSpacedRepetition called with: { apiKey: 'qa-test-key', pageId: 'qa-page-1', clear: true }
+Leetion: Clearing Spaced Repetition
+Leetion: Spaced repetition updated successfully
+Leetion Background: Sending response: { success: true, date: null, cleared: true }
+  PASS  kept-on-purpose callerless arm still answers (PR decision 3)
+  PASS  …and still empties the date
+
+AC1/AC11 — static audit of popup.js
+  FAIL  a stageSpacedRepetition handler exists
+        expected  true
+        actual    false
+  FAIL  …and its body contains no sendMessage call
+        expected  true
+        actual    false
+  FAIL  the old immediate-write toggleSpacedRepetition is gone
+        expected  true
+        actual    false
+  FAIL  popup.js no longer sends action "updateSpacedRepetition" with clear:true
+        expected  true
+        actual    false
+  PASS  persistFormState exists
+  PASS  …and never persists the staged switch (AC11 — session-only)
+  PASS  loadPersistedFormState exists
+  PASS  …and never restores a staged switch either (AC11)
+
+──────────────────────────────────────────────────────────────────────────
+  FAIL  AC5 — buildProperties precedence for scheduleSpacedRepetitionToday  —  6 pass, 2 fail
+  ok    AC3 — a staged-off save empties the date on the Notion page  —  3 pass, 0 fail
+  ok    AC4 — a staged-on save writes today + the expertise interval  —  6 pass, 0 fail
+  FAIL  AC5 — the interval-0 fallback survives the whole message path  —  1 pass, 1 fail
+  ok    AC5 (negative) — interval 0 WITHOUT the flag leaves the stored date alone  —  2 pass, 0 fail
+  ok    AC9 — Review Today / Review Tomorrow are untouched by this card  —  4 pass, 0 fail
+  ok    REG (#11) — a cleared problem stays out of the due query and never notifies  —  2 pass, 0 fail
+  ok    REG (#11) — the `clear` arm of updateSpacedRepetition still works  —  2 pass, 0 fail
+  FAIL  AC1/AC11 — static audit of popup.js  —  4 pass, 4 fail
+──────────────────────────────────────────────────────────────────────────
+FAIL — 7/37 assertions red

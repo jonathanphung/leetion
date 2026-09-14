@@ -133,6 +133,23 @@ let pendingAttempts = null;
 let attemptSessionIncremented = false;
 
 /**
+ * @type {boolean} Whether Notion currently holds a "Spaced Repetition" date.
+ * Hydrated from the page at popup open and re-synced by everything that writes
+ * that date first-hand (the two quick actions, a successful save). Defaults to
+ * on so a popup whose markup has no switch keeps the historic save behaviour.
+ */
+let notionSpacedRepetitionOn = true;
+
+/**
+ * @type {boolean|null} Switch position staged by the user, or null if
+ * untouched. Flipping the switch writes here only — nothing about the review
+ * date reaches Notion until "Update in Notion" is pressed. Session-only, like
+ * `pendingAttempts`: the switch is hydrated from Notion outside the form-draft
+ * freshness gate, so persisting it would mean putting it under that gate too.
+ */
+let pendingSpacedRepetition = null;
+
+/**
  * @type {boolean} Whether the Notion row has no "Date (of first attempt)".
  * True for a row created by "Mark to-do" (queued, never attempted) and for
  * any pre-existing row Notion reports the property empty on. The background
@@ -246,6 +263,7 @@ const DOM = {
     markReview: document.getElementById("btn-mark-review"),
     revisit: document.getElementById("btn-revisit"),
     spacedRepetition: document.getElementById("input-spaced-repetition"),
+    spacedRepetitionRow: document.getElementById("spaced-repetition-row"),
     spacedRepetitionHint: document.getElementById("spaced-repetition-hint"),
   },
   attempts: {
@@ -1335,10 +1353,22 @@ async function saveToNotion(confirmSchemaChanges = false) {
     const shouldIncrementAttempts =
       !!existingPageId && !attemptSessionIncremented && stagedAttempts === null;
 
-    // A problem the user switched out of the review rotation must stay out: an
-    // ordinary "Update in Notion" would otherwise re-schedule it from the
-    // expertise interval and quietly undo the clear.
-    const clearSpacedRepetition = !!existingPageId && !isSpacedRepetitionOn();
+    // The switch as this save reads it: the staged flip if the user touched
+    // it, otherwise what Notion holds. A problem switched out of the review
+    // rotation must stay out — an ordinary "Update in Notion" would otherwise
+    // re-schedule it from the expertise interval and quietly undo the clear.
+    const clearSpacedRepetition =
+      !!existingPageId && !effectiveSpacedRepetitionOn();
+
+    // An explicitly staged "on" has to land a date even when this expertise
+    // level has reviews disabled (interval 0, issue #3). Without this the save
+    // would write nothing and leave the switch claiming a schedule that does
+    // not exist, so today is the floor — the same rule "Review Today" uses:
+    // an explicit request beats the interval.
+    const scheduleSpacedRepetitionToday =
+      !!existingPageId &&
+      pendingSpacedRepetition === true &&
+      spacedRepDays === 0;
 
     const response = await chrome.runtime.sendMessage({
       action: "saveToNotion",
@@ -1354,6 +1384,7 @@ async function saveToNotion(confirmSchemaChanges = false) {
         ...(stagedAttempts !== null ? { attempts: stagedAttempts } : {}),
         spacedRepetitionDays: spacedRepDays,
         clearSpacedRepetition,
+        scheduleSpacedRepetitionToday,
         confirmSchemaChanges: confirmSchemaChanges === true,
         problem: {
           number: problemData.number,
@@ -1436,14 +1467,23 @@ async function saveToNotion(confirmSchemaChanges = false) {
       firstAttemptDateMissing = false;
       setMarkTodoVisible(false);
 
-      // Resync the switch to what this save actually wrote. A first save only
-      // schedules a review when the expertise interval is non-zero; an update
-      // either cleared the date or re-scheduled it.
+      // Resync the switch to what this save actually wrote, which also drops
+      // the staged flag. A first save only schedules a review when the
+      // expertise interval is non-zero; an update either cleared the date,
+      // re-scheduled it, or — on a level with reviews disabled and nothing
+      // staged — left it exactly as it was, in which case the switch already
+      // reads right and must not be touched. A failed save never reaches this
+      // block, so a staged flip stays staged and can be retried.
       if (wasFirstSave) {
         setSpacedRepetitionToggle(spacedRepDays > 0);
       } else if (clearSpacedRepetition) {
         setSpacedRepetitionToggle(false);
-      } else if (spacedRepDays > 0) {
+        // No date is left, so a lingering "review scheduled" highlight on
+        // either quick action would be a lie (issue #11). The clear moved from
+        // the switch to the save path, so this moved with it.
+        DOM.quickActions.revisit?.classList.remove("quick-btn-success");
+        DOM.quickActions.markReview?.classList.remove("quick-btn-success");
+      } else if (spacedRepDays > 0 || scheduleSpacedRepetitionToday) {
         setSpacedRepetitionToggle(true);
       }
 
@@ -1621,7 +1661,7 @@ function setupEventListeners() {
   DOM.quickActions.revisit?.addEventListener("click", revisitProblem);
   DOM.quickActions.spacedRepetition?.addEventListener(
     "change",
-    toggleSpacedRepetition,
+    stageSpacedRepetition,
   );
 
   // Submissions sync (leetcode.com, existing entries only)
@@ -1942,101 +1982,70 @@ async function revisitProblem() {
 }
 
 /**
- * True when the "Spaced Repetition" switch is on. Missing element (older
- * popup markup) reads as on so the save path keeps its historic behaviour.
+ * The switch as the next save will read it: the staged flip if the user has
+ * touched it, otherwise the state last known from Notion. Deliberately never
+ * reads the DOM — a popup whose markup has no switch reads as on, so the save
+ * path keeps its historic behaviour.
  */
-function isSpacedRepetitionOn() {
-  return DOM.quickActions.spacedRepetition?.checked !== false;
+function effectiveSpacedRepetitionOn() {
+  return pendingSpacedRepetition ?? notionSpacedRepetitionOn;
 }
 
 /**
- * Drives the switch from known Notion state (never from a guess) and keeps the
- * hint beside it in sync.
+ * Records what Notion now holds and re-syncs the switch to it, dropping any
+ * staged flip. Called from popup-open hydration, from the two quick actions,
+ * and from a successful save — every path that knows the stored date
+ * first-hand.
+ *
+ * Discarding the staged flip is the point, not a side effect: after "Review
+ * Today" the user has an explicit, just-written date, and a stale staged "off"
+ * surviving would clear that date again on the next save.
  */
 function setSpacedRepetitionToggle(on) {
-  if (DOM.quickActions.spacedRepetition) {
-    DOM.quickActions.spacedRepetition.checked = on;
-  }
-  if (DOM.quickActions.spacedRepetitionHint) {
-    DOM.quickActions.spacedRepetitionHint.textContent = on
-      ? "Due date set"
-      : "No reviews";
-  }
+  notionSpacedRepetitionOn = !!on;
+  pendingSpacedRepetition = null;
+  updateSpacedRepetitionDisplay();
 }
 
 /**
- * Takes the problem out of the review rotation, or puts it back.
- *
- * Off writes an empty date to Notion, which is the only thing that stops the
- * hourly due-review query (and its notification) from matching the page. On
- * re-queues it for TODAY — the same rule "Review Today" uses (issue #10), and
- * for the same reason: turning the switch back on is an explicit "I want to
- * see this again" and should not be silently deferred by an expertise interval
- * that may be days out, or 0 (which writes nothing at all).
- *
- * The switch is optimistic in the DOM only because the browser flips a
- * checkbox before the handler runs; a failed write puts it straight back, so
- * it never shows a clear that did not happen.
+ * Stages the switch. Nothing is sent to Notion here — `saveToNotion` reads the
+ * staged position on the next "Update in Notion", exactly like the Attempts
+ * field. Staging back to the stored state clears the pending flip rather than
+ * queuing a no-op write, so off → on → off leaves a scheduled problem
+ * scheduled and unstaged.
  */
-async function toggleSpacedRepetition() {
+function stageSpacedRepetition() {
   const toggle = DOM.quickActions.spacedRepetition;
   if (!toggle) return;
 
-  const turningOn = toggle.checked;
+  const on = toggle.checked;
+  pendingSpacedRepetition = on === notionSpacedRepetitionOn ? null : on;
+  updateSpacedRepetitionDisplay();
+}
 
-  if (!existingPageId) {
-    // Nothing to write to yet. The card is hidden until the problem exists in
-    // Notion, so this is a defensive revert rather than a reachable path.
-    setSpacedRepetitionToggle(!turningOn);
-    return;
+/**
+ * Paints the switch and its hint, flagging the row as unsaved while a flip is
+ * staged so the deferred write is visible rather than implied (same `is-staged`
+ * convention as the Attempts field). While staged the hint says what the next
+ * update will do; otherwise it describes what Notion holds.
+ */
+function updateSpacedRepetitionDisplay() {
+  const on = effectiveSpacedRepetitionOn();
+  const staged = pendingSpacedRepetition !== null;
+
+  if (DOM.quickActions.spacedRepetition) {
+    DOM.quickActions.spacedRepetition.checked = on;
   }
+  DOM.quickActions.spacedRepetitionRow?.classList.toggle("is-staged", staged);
 
-  const settings = await chrome.storage.sync.get(["notionApiKey"]);
-  if (!settings.notionApiKey) {
-    setSpacedRepetitionToggle(!turningOn);
-    showStatus(DOM.save.status, "Configure API key first", "error");
-    return;
-  }
-
-  try {
-    toggle.disabled = true;
-
-    const response = await chrome.runtime.sendMessage({
-      action: "updateSpacedRepetition",
-      data: {
-        apiKey: settings.notionApiKey,
-        pageId: existingPageId,
-        ...(turningOn ? { setToday: true } : { clear: true }),
-      },
-    });
-
-    if (response?.success) {
-      setSpacedRepetitionToggle(turningOn);
-      if (turningOn) {
-        DOM.quickActions.revisit?.classList.add("quick-btn-success");
-        DOM.quickActions.markReview?.classList.remove("quick-btn-success");
-        showStatus(DOM.save.status, "Review set for today!", "success");
-      } else {
-        // There is no date left, so a lingering "review scheduled" highlight
-        // on either button would be a lie.
-        DOM.quickActions.revisit?.classList.remove("quick-btn-success");
-        DOM.quickActions.markReview?.classList.remove("quick-btn-success");
-        showStatus(DOM.save.status, "Review cleared!", "success");
-      }
+  if (DOM.quickActions.spacedRepetitionHint) {
+    let hint;
+    if (staged) {
+      hint = on ? "Will schedule on update" : "Will clear on update";
     } else {
-      setSpacedRepetitionToggle(!turningOn);
-      showStatus(
-        DOM.save.status,
-        response?.error || "Failed to update",
-        "error",
-      );
+      hint = on ? "Due date set" : "No reviews";
     }
-  } catch (error) {
-    console.error("Leetion: Error in toggleSpacedRepetition:", error);
-    setSpacedRepetitionToggle(!turningOn);
-    showStatus(DOM.save.status, "Failed to update", "error");
-  } finally {
-    toggle.disabled = false;
+    DOM.quickActions.spacedRepetitionHint.textContent = hint;
   }
 }
 

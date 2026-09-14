@@ -1,0 +1,2196 @@
+{
+  "viewport": "420x980",
+  "port": 8221,
+  "total": 94,
+  "failed": 0,
+  "byAc": {
+    "AC8": {
+      "pass": 26,
+      "fail": 0
+    },
+    "AC1": {
+      "pass": 8,
+      "fail": 0
+    },
+    "AC2": {
+      "pass": 10,
+      "fail": 0
+    },
+    "AC11": {
+      "pass": 4,
+      "fail": 0
+    },
+    "AC3": {
+      "pass": 4,
+      "fail": 0
+    },
+    "AC7": {
+      "pass": 14,
+      "fail": 0
+    },
+    "AC4": {
+      "pass": 6,
+      "fail": 0
+    },
+    "AC5": {
+      "pass": 5,
+      "fail": 0
+    },
+    "AC6": {
+      "pass": 5,
+      "fail": 0
+    },
+    "AC9": {
+      "pass": 8,
+      "fail": 0
+    },
+    "AC10": {
+      "pass": 4,
+      "fail": 0
+    }
+  },
+  "scenarios": [
+    {
+      "file": "01-open-scheduled.png",
+      "query": "?demo=open&seed=dated",
+      "why": "AC8 — a scheduled problem opens with the switch ON and nothing staged",
+      "settled": true,
+      "checks": 2,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": true,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "Due date set",
+        "review": "{\"date\":{\"start\":\"2026-09-30\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 0
+      }
+    },
+    {
+      "file": "02-staged-off.png",
+      "query": "?demo=stage-off&seed=dated",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "settled": true,
+      "checks": 11,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          },
+          {
+            "ac": "AC1",
+            "label": "flipping the switch sends no write message at all",
+            "ok": true,
+            "actual": 0,
+            "expected": 0
+          },
+          {
+            "ac": "AC1",
+            "label": "specifically: no \"updateSpacedRepetition\" message",
+            "ok": true,
+            "actual": 0,
+            "expected": 0
+          },
+          {
+            "ac": "AC1",
+            "label": "…and no Notion PATCH reached the page",
+            "ok": true,
+            "actual": 0,
+            "expected": 0
+          },
+          {
+            "ac": "AC1",
+            "label": "the stored review date is untouched",
+            "ok": true,
+            "actual": "2026-09-30",
+            "expected": "2026-09-30"
+          },
+          {
+            "ac": "AC2",
+            "label": "the row is flagged .is-staged",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC2",
+            "label": "…and styles.css actually paints that flag (computed outline on the switch)",
+            "ok": true,
+            "actual": {
+              "style": "solid",
+              "width": "2px"
+            },
+            "expected": {
+              "style": "solid",
+              "width": "2px"
+            }
+          },
+          {
+            "ac": "AC2",
+            "label": "the hint says what the next update will do",
+            "ok": true,
+            "actual": "Will clear on update",
+            "expected": "Will clear on update"
+          },
+          {
+            "ac": "AC11",
+            "label": "a form draft was written (so the check below is real)",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC11",
+            "label": "…and it carries no spaced-repetition key (staging is session-only)",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": false,
+          "disabled": false
+        },
+        "staged": true,
+        "hint": "Will clear on update",
+        "review": "{\"date\":{\"start\":\"2026-09-30\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 0
+      }
+    },
+    {
+      "file": "03-staged-off-saved.png",
+      "query": "?demo=stage-off-save&seed=dated",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "settled": true,
+      "checks": 17,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          },
+          {
+            "ac": "AC1",
+            "label": "flipping the switch sends no write message at all",
+            "ok": true,
+            "actual": 0,
+            "expected": 0
+          },
+          {
+            "ac": "AC1",
+            "label": "specifically: no \"updateSpacedRepetition\" message",
+            "ok": true,
+            "actual": 0,
+            "expected": 0
+          },
+          {
+            "ac": "AC1",
+            "label": "…and no Notion PATCH reached the page",
+            "ok": true,
+            "actual": 0,
+            "expected": 0
+          },
+          {
+            "ac": "AC1",
+            "label": "the stored review date is untouched",
+            "ok": true,
+            "actual": "2026-09-30",
+            "expected": "2026-09-30"
+          },
+          {
+            "ac": "AC2",
+            "label": "the row is flagged .is-staged",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC2",
+            "label": "…and styles.css actually paints that flag (computed outline on the switch)",
+            "ok": true,
+            "actual": {
+              "style": "solid",
+              "width": "2px"
+            },
+            "expected": {
+              "style": "solid",
+              "width": "2px"
+            }
+          },
+          {
+            "ac": "AC2",
+            "label": "the hint says what the next update will do",
+            "ok": true,
+            "actual": "Will clear on update",
+            "expected": "Will clear on update"
+          },
+          {
+            "ac": "AC11",
+            "label": "a form draft was written (so the check below is real)",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC11",
+            "label": "…and it carries no spaced-repetition key (staging is session-only)",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC3",
+            "label": "the save sent clearSpacedRepetition: true",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC3",
+            "label": "the Notion page now holds an explicit empty date, {\"date\": null}",
+            "ok": true,
+            "actual": {
+              "date": null
+            },
+            "expected": {
+              "date": null
+            }
+          },
+          {
+            "ac": "AC7",
+            "label": "a successful save drops the staged flag",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC7",
+            "label": "…and resyncs the switch to what was written",
+            "ok": true,
+            "actual": {
+              "checked": false,
+              "hint": "No reviews"
+            },
+            "expected": {
+              "checked": false,
+              "hint": "No reviews"
+            }
+          },
+          {
+            "ac": "AC3",
+            "label": "no stale 'review scheduled' highlight survives the clear",
+            "ok": true,
+            "actual": {
+              "revisit": false,
+              "tomorrow": false
+            },
+            "expected": {
+              "revisit": false,
+              "tomorrow": false
+            }
+          },
+          {
+            "ac": "AC3",
+            "label": "the hourly alarm raises nothing for the now-cleared problem",
+            "ok": true,
+            "actual": 0,
+            "expected": 0
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": false,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "No reviews",
+        "review": "{\"date\":null}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 1
+      }
+    },
+    {
+      "file": "04-staged-on-medium.png",
+      "query": "?demo=stage-on-save&seed=empty",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "settled": true,
+      "checks": 9,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a cleared problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": false,
+              "staged": false
+            },
+            "expected": {
+              "checked": false,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "No reviews",
+            "expected": "No reviews"
+          },
+          {
+            "ac": "AC2",
+            "label": "staging on flags the row",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC2",
+            "label": "…with the forward-looking hint",
+            "ok": true,
+            "actual": "Will schedule on update",
+            "expected": "Will schedule on update"
+          },
+          {
+            "ac": "AC4",
+            "label": "save with the switch staged on under Medium sends the Medium interval",
+            "ok": true,
+            "actual": 3,
+            "expected": 3
+          },
+          {
+            "ac": "AC4",
+            "label": "…and the page holds today + 3, not today",
+            "ok": true,
+            "actual": "2026-08-18",
+            "expected": "2026-08-18"
+          },
+          {
+            "ac": "AC4",
+            "label": "…which is a LOCAL calendar day, not the UTC one",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC7",
+            "label": "the staged flag is dropped by the successful save",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC7",
+            "label": "…and the switch reads on, in sync with Notion",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "hint": "Due date set"
+            },
+            "expected": {
+              "checked": true,
+              "hint": "Due date set"
+            }
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": true,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "Due date set",
+        "review": "{\"date\":{\"start\":\"2026-08-18\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 1
+      }
+    },
+    {
+      "file": "05-staged-on-expertise-changed.png",
+      "query": "?demo=stage-on-high-save&seed=empty",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "settled": true,
+      "checks": 9,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a cleared problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": false,
+              "staged": false
+            },
+            "expected": {
+              "checked": false,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "No reviews",
+            "expected": "No reviews"
+          },
+          {
+            "ac": "AC2",
+            "label": "staging on flags the row",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC2",
+            "label": "…with the forward-looking hint",
+            "ok": true,
+            "actual": "Will schedule on update",
+            "expected": "Will schedule on update"
+          },
+          {
+            "ac": "AC4",
+            "label": "save with the switch staged on under High sends the High interval",
+            "ok": true,
+            "actual": 7,
+            "expected": 7
+          },
+          {
+            "ac": "AC4",
+            "label": "…and the page holds today + 7, not today",
+            "ok": true,
+            "actual": "2026-08-22",
+            "expected": "2026-08-22"
+          },
+          {
+            "ac": "AC4",
+            "label": "…which is a LOCAL calendar day, not the UTC one",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC7",
+            "label": "the staged flag is dropped by the successful save",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC7",
+            "label": "…and the switch reads on, in sync with Notion",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "hint": "Due date set"
+            },
+            "expected": {
+              "checked": true,
+              "hint": "Due date set"
+            }
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": true,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "Due date set",
+        "review": "{\"date\":{\"start\":\"2026-08-22\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 1
+      }
+    },
+    {
+      "file": "06-interval-zero-falls-back-to-today.png",
+      "query": "?demo=stage-on-zero-save&seed=empty&intervals=0-0-0",
+      "why": "AC5 — reviews disabled for this level: an explicit ON lands TODAY",
+      "settled": true,
+      "checks": 5,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a cleared problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": false,
+              "staged": false
+            },
+            "expected": {
+              "checked": false,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "No reviews",
+            "expected": "No reviews"
+          },
+          {
+            "ac": "AC5",
+            "label": "a staged ON on a reviews-disabled level sets scheduleSpacedRepetitionToday",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC5",
+            "label": "…and the page gets TODAY rather than nothing at all",
+            "ok": true,
+            "actual": "2026-08-15",
+            "expected": "2026-08-15"
+          },
+          {
+            "ac": "AC5",
+            "label": "…so the switch is not left claiming a date that does not exist",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": true,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "Due date set",
+        "review": "{\"date\":{\"start\":\"2026-08-15\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 1
+      }
+    },
+    {
+      "file": "07-interval-zero-unstaged-untouched.png",
+      "query": "?demo=unstaged-zero-save&seed=dated&intervals=0-0-0",
+      "why": "AC5 — an ordinary save on the same level still leaves the date alone",
+      "settled": true,
+      "checks": 4,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          },
+          {
+            "ac": "AC5",
+            "label": "an ORDINARY save on a reviews-disabled level does not set the flag",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC5",
+            "label": "…and leaves the stored date exactly as it was (issue #3 intact)",
+            "ok": true,
+            "actual": "2026-09-30",
+            "expected": "2026-09-30"
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": true,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "Due date set",
+        "review": "{\"date\":{\"start\":\"2026-09-30\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 1
+      }
+    },
+    {
+      "file": "08-off-on-unstages.png",
+      "query": "?demo=off-on-save&seed=dated",
+      "why": "AC6 — off → on → save: no no-op clear queued, still scheduled",
+      "settled": true,
+      "checks": 7,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          },
+          {
+            "ac": "AC6",
+            "label": "first flip stages",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC6",
+            "label": "flipping back to the stored state clears the pending change",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC6",
+            "label": "…and the hint goes back to describing Notion",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          },
+          {
+            "ac": "AC6",
+            "label": "the following save queues no clear (it was a no-op, not a change)",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC6",
+            "label": "a scheduled problem is left scheduled — re-scheduled, never emptied",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": true,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "Due date set",
+        "review": "{\"date\":{\"start\":\"2026-08-18\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 1
+      }
+    },
+    {
+      "file": "09-failed-save-stays-staged.png",
+      "query": "?demo=fail-save-only&seed=dated",
+      "why": "AC7 — the save failed: the flip is still staged and the date is untouched",
+      "settled": true,
+      "checks": 5,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          },
+          {
+            "ac": "AC7",
+            "label": "a failed save leaves the flip staged so it can be retried",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC7",
+            "label": "…with the switch still showing the user's pending choice",
+            "ok": true,
+            "actual": {
+              "checked": false,
+              "hint": "Will clear on update"
+            },
+            "expected": {
+              "checked": false,
+              "hint": "Will clear on update"
+            }
+          },
+          {
+            "ac": "AC7",
+            "label": "…and nothing was written to Notion",
+            "ok": true,
+            "actual": "2026-09-30",
+            "expected": "2026-09-30"
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": false,
+          "disabled": false
+        },
+        "staged": true,
+        "hint": "Will clear on update",
+        "review": "{\"date\":{\"start\":\"2026-09-30\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 1
+      }
+    },
+    {
+      "file": "09b-failed-save-retry-lands.png",
+      "query": "?demo=fail-then-retry&seed=dated",
+      "why": "AC7 — the same flip retried after the failure clears the date and unstages",
+      "settled": true,
+      "checks": 7,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          },
+          {
+            "ac": "AC7",
+            "label": "a failed save leaves the flip staged so it can be retried",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC7",
+            "label": "…with the switch still showing the user's pending choice",
+            "ok": true,
+            "actual": {
+              "checked": false,
+              "hint": "Will clear on update"
+            },
+            "expected": {
+              "checked": false,
+              "hint": "Will clear on update"
+            }
+          },
+          {
+            "ac": "AC7",
+            "label": "…and nothing was written to Notion",
+            "ok": true,
+            "actual": "2026-09-30",
+            "expected": "2026-09-30"
+          },
+          {
+            "ac": "AC7",
+            "label": "the retry goes through and clears the date",
+            "ok": true,
+            "actual": {
+              "date": null
+            },
+            "expected": {
+              "date": null
+            }
+          },
+          {
+            "ac": "AC7",
+            "label": "…and now the staged flag drops",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": false,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "No reviews",
+        "review": "{\"date\":null}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 2
+      }
+    },
+    {
+      "file": "10-review-today-discards-stage.png",
+      "query": "?demo=review-today-discards-stage&seed=dated",
+      "why": "AC9 — Review Today writes now, discards the staged off, and survives the save",
+      "settled": true,
+      "checks": 8,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          },
+          {
+            "ac": "AC9",
+            "label": "precondition: an off-flip is staged",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC9",
+            "label": "Review Today still writes immediately",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC9",
+            "label": "…landing today's local date on the page",
+            "ok": true,
+            "actual": "2026-08-15",
+            "expected": "2026-08-15"
+          },
+          {
+            "ac": "AC9",
+            "label": "the switch reflects the date just written, with nothing staged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC9",
+            "label": "the discarded staged off does NOT clear on the next save",
+            "ok": true,
+            "actual": false,
+            "expected": false
+          },
+          {
+            "ac": "AC9",
+            "label": "…so the problem is still scheduled after the save",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": true,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "Due date set",
+        "review": "{\"date\":{\"start\":\"2026-08-18\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 2
+      }
+    },
+    {
+      "file": "11-review-tomorrow-discards-stage.png",
+      "query": "?demo=review-tomorrow-discards-stage&seed=dated",
+      "why": "AC9 — same for Review Tomorrow (today + 1)",
+      "settled": true,
+      "checks": 4,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "Due date set",
+            "expected": "Due date set"
+          },
+          {
+            "ac": "AC9",
+            "label": "Review Tomorrow still writes immediately (today + 1)",
+            "ok": true,
+            "actual": "2026-08-16",
+            "expected": "2026-08-16"
+          },
+          {
+            "ac": "AC9",
+            "label": "…and discards the staged flip too",
+            "ok": true,
+            "actual": {
+              "checked": true,
+              "staged": false
+            },
+            "expected": {
+              "checked": true,
+              "staged": false
+            }
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": true,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "Due date set",
+        "review": "{\"date\":{\"start\":\"2026-08-16\"}}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 1
+      }
+    },
+    {
+      "file": "12-unstaged-off-stays-out.png",
+      "query": "?demo=unstaged-off-save&seed=empty",
+      "why": "AC10 — a cleared problem stays cleared through a plain save (issue #11)",
+      "settled": true,
+      "checks": 6,
+      "red": 0,
+      "state": {
+        "settled": true,
+        "checks": [
+          {
+            "ac": "AC8",
+            "label": "popup open on a cleared problem hydrates the switch from Notion, unstaged",
+            "ok": true,
+            "actual": {
+              "checked": false,
+              "staged": false
+            },
+            "expected": {
+              "checked": false,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC8",
+            "label": "…and the hint describes stored state, not a pending change",
+            "ok": true,
+            "actual": "No reviews",
+            "expected": "No reviews"
+          },
+          {
+            "ac": "AC10",
+            "label": "precondition: the switch reads off from Notion, with nothing staged",
+            "ok": true,
+            "actual": {
+              "checked": false,
+              "staged": false
+            },
+            "expected": {
+              "checked": false,
+              "staged": false
+            }
+          },
+          {
+            "ac": "AC10",
+            "label": "a plain Update in Notion still sends the clear",
+            "ok": true,
+            "actual": true,
+            "expected": true
+          },
+          {
+            "ac": "AC10",
+            "label": "…so the problem stays out of the rotation (issue #11 guarantee)",
+            "ok": true,
+            "actual": {
+              "date": null
+            },
+            "expected": {
+              "date": null
+            }
+          },
+          {
+            "ac": "AC10",
+            "label": "…and the hourly alarm still never notifies for it",
+            "ok": true,
+            "actual": 0,
+            "expected": 0
+          }
+        ],
+        "toggle": {
+          "present": true,
+          "checked": false,
+          "disabled": false
+        },
+        "staged": false,
+        "hint": "No reviews",
+        "review": "{\"date\":null}",
+        "localDay": "2026-08-15",
+        "utcDay": "2026-08-16",
+        "writes": 1
+      }
+    }
+  ],
+  "checks": [
+    {
+      "shot": "01-open-scheduled.png",
+      "why": "AC8 — a scheduled problem opens with the switch ON and nothing staged",
+      "ac": "AC8",
+      "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "01-open-scheduled.png",
+      "why": "AC8 — a scheduled problem opens with the switch ON and nothing staged",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC8",
+      "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC1",
+      "label": "flipping the switch sends no write message at all",
+      "ok": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC1",
+      "label": "specifically: no \"updateSpacedRepetition\" message",
+      "ok": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC1",
+      "label": "…and no Notion PATCH reached the page",
+      "ok": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC1",
+      "label": "the stored review date is untouched",
+      "ok": true,
+      "actual": "2026-09-30",
+      "expected": "2026-09-30"
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC2",
+      "label": "the row is flagged .is-staged",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC2",
+      "label": "…and styles.css actually paints that flag (computed outline on the switch)",
+      "ok": true,
+      "actual": {
+        "style": "solid",
+        "width": "2px"
+      },
+      "expected": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC2",
+      "label": "the hint says what the next update will do",
+      "ok": true,
+      "actual": "Will clear on update",
+      "expected": "Will clear on update"
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC11",
+      "label": "a form draft was written (so the check below is real)",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "02-staged-off.png",
+      "why": "AC1/AC2 — flipping off writes nothing and shows as unsaved",
+      "ac": "AC11",
+      "label": "…and it carries no spaced-repetition key (staging is session-only)",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC8",
+      "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC1",
+      "label": "flipping the switch sends no write message at all",
+      "ok": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC1",
+      "label": "specifically: no \"updateSpacedRepetition\" message",
+      "ok": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC1",
+      "label": "…and no Notion PATCH reached the page",
+      "ok": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC1",
+      "label": "the stored review date is untouched",
+      "ok": true,
+      "actual": "2026-09-30",
+      "expected": "2026-09-30"
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC2",
+      "label": "the row is flagged .is-staged",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC2",
+      "label": "…and styles.css actually paints that flag (computed outline on the switch)",
+      "ok": true,
+      "actual": {
+        "style": "solid",
+        "width": "2px"
+      },
+      "expected": {
+        "style": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC2",
+      "label": "the hint says what the next update will do",
+      "ok": true,
+      "actual": "Will clear on update",
+      "expected": "Will clear on update"
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC11",
+      "label": "a form draft was written (so the check below is real)",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC11",
+      "label": "…and it carries no spaced-repetition key (staging is session-only)",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC3",
+      "label": "the save sent clearSpacedRepetition: true",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC3",
+      "label": "the Notion page now holds an explicit empty date, {\"date\": null}",
+      "ok": true,
+      "actual": {
+        "date": null
+      },
+      "expected": {
+        "date": null
+      }
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC7",
+      "label": "a successful save drops the staged flag",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC7",
+      "label": "…and resyncs the switch to what was written",
+      "ok": true,
+      "actual": {
+        "checked": false,
+        "hint": "No reviews"
+      },
+      "expected": {
+        "checked": false,
+        "hint": "No reviews"
+      }
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC3",
+      "label": "no stale 'review scheduled' highlight survives the clear",
+      "ok": true,
+      "actual": {
+        "revisit": false,
+        "tomorrow": false
+      },
+      "expected": {
+        "revisit": false,
+        "tomorrow": false
+      }
+    },
+    {
+      "shot": "03-staged-off-saved.png",
+      "why": "AC3/AC7 — \"Update in Notion\" empties the date and drops the staged flag",
+      "ac": "AC3",
+      "label": "the hourly alarm raises nothing for the now-cleared problem",
+      "ok": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "shot": "04-staged-on-medium.png",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "ac": "AC8",
+      "label": "popup open on a cleared problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": false,
+        "staged": false
+      },
+      "expected": {
+        "checked": false,
+        "staged": false
+      }
+    },
+    {
+      "shot": "04-staged-on-medium.png",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "No reviews",
+      "expected": "No reviews"
+    },
+    {
+      "shot": "04-staged-on-medium.png",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "ac": "AC2",
+      "label": "staging on flags the row",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "04-staged-on-medium.png",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "ac": "AC2",
+      "label": "…with the forward-looking hint",
+      "ok": true,
+      "actual": "Will schedule on update",
+      "expected": "Will schedule on update"
+    },
+    {
+      "shot": "04-staged-on-medium.png",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "ac": "AC4",
+      "label": "save with the switch staged on under Medium sends the Medium interval",
+      "ok": true,
+      "actual": 3,
+      "expected": 3
+    },
+    {
+      "shot": "04-staged-on-medium.png",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "ac": "AC4",
+      "label": "…and the page holds today + 3, not today",
+      "ok": true,
+      "actual": "2026-08-18",
+      "expected": "2026-08-18"
+    },
+    {
+      "shot": "04-staged-on-medium.png",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "ac": "AC4",
+      "label": "…which is a LOCAL calendar day, not the UTC one",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "04-staged-on-medium.png",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "ac": "AC7",
+      "label": "the staged flag is dropped by the successful save",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "04-staged-on-medium.png",
+      "why": "AC4 — staged ON saves today + the Medium interval (3)",
+      "ac": "AC7",
+      "label": "…and the switch reads on, in sync with Notion",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "hint": "Due date set"
+      },
+      "expected": {
+        "checked": true,
+        "hint": "Due date set"
+      }
+    },
+    {
+      "shot": "05-staged-on-expertise-changed.png",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "ac": "AC8",
+      "label": "popup open on a cleared problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": false,
+        "staged": false
+      },
+      "expected": {
+        "checked": false,
+        "staged": false
+      }
+    },
+    {
+      "shot": "05-staged-on-expertise-changed.png",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "No reviews",
+      "expected": "No reviews"
+    },
+    {
+      "shot": "05-staged-on-expertise-changed.png",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "ac": "AC2",
+      "label": "staging on flags the row",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "05-staged-on-expertise-changed.png",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "ac": "AC2",
+      "label": "…with the forward-looking hint",
+      "ok": true,
+      "actual": "Will schedule on update",
+      "expected": "Will schedule on update"
+    },
+    {
+      "shot": "05-staged-on-expertise-changed.png",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "ac": "AC4",
+      "label": "save with the switch staged on under High sends the High interval",
+      "ok": true,
+      "actual": 7,
+      "expected": 7
+    },
+    {
+      "shot": "05-staged-on-expertise-changed.png",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "ac": "AC4",
+      "label": "…and the page holds today + 7, not today",
+      "ok": true,
+      "actual": "2026-08-22",
+      "expected": "2026-08-22"
+    },
+    {
+      "shot": "05-staged-on-expertise-changed.png",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "ac": "AC4",
+      "label": "…which is a LOCAL calendar day, not the UTC one",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "05-staged-on-expertise-changed.png",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "ac": "AC7",
+      "label": "the staged flag is dropped by the successful save",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "05-staged-on-expertise-changed.png",
+      "why": "AC4 — expertise switched to High AFTER staging: the save writes today + 7",
+      "ac": "AC7",
+      "label": "…and the switch reads on, in sync with Notion",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "hint": "Due date set"
+      },
+      "expected": {
+        "checked": true,
+        "hint": "Due date set"
+      }
+    },
+    {
+      "shot": "06-interval-zero-falls-back-to-today.png",
+      "why": "AC5 — reviews disabled for this level: an explicit ON lands TODAY",
+      "ac": "AC8",
+      "label": "popup open on a cleared problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": false,
+        "staged": false
+      },
+      "expected": {
+        "checked": false,
+        "staged": false
+      }
+    },
+    {
+      "shot": "06-interval-zero-falls-back-to-today.png",
+      "why": "AC5 — reviews disabled for this level: an explicit ON lands TODAY",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "No reviews",
+      "expected": "No reviews"
+    },
+    {
+      "shot": "06-interval-zero-falls-back-to-today.png",
+      "why": "AC5 — reviews disabled for this level: an explicit ON lands TODAY",
+      "ac": "AC5",
+      "label": "a staged ON on a reviews-disabled level sets scheduleSpacedRepetitionToday",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "06-interval-zero-falls-back-to-today.png",
+      "why": "AC5 — reviews disabled for this level: an explicit ON lands TODAY",
+      "ac": "AC5",
+      "label": "…and the page gets TODAY rather than nothing at all",
+      "ok": true,
+      "actual": "2026-08-15",
+      "expected": "2026-08-15"
+    },
+    {
+      "shot": "06-interval-zero-falls-back-to-today.png",
+      "why": "AC5 — reviews disabled for this level: an explicit ON lands TODAY",
+      "ac": "AC5",
+      "label": "…so the switch is not left claiming a date that does not exist",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "07-interval-zero-unstaged-untouched.png",
+      "why": "AC5 — an ordinary save on the same level still leaves the date alone",
+      "ac": "AC8",
+      "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "07-interval-zero-unstaged-untouched.png",
+      "why": "AC5 — an ordinary save on the same level still leaves the date alone",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "07-interval-zero-unstaged-untouched.png",
+      "why": "AC5 — an ordinary save on the same level still leaves the date alone",
+      "ac": "AC5",
+      "label": "an ORDINARY save on a reviews-disabled level does not set the flag",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "07-interval-zero-unstaged-untouched.png",
+      "why": "AC5 — an ordinary save on the same level still leaves the date alone",
+      "ac": "AC5",
+      "label": "…and leaves the stored date exactly as it was (issue #3 intact)",
+      "ok": true,
+      "actual": "2026-09-30",
+      "expected": "2026-09-30"
+    },
+    {
+      "shot": "08-off-on-unstages.png",
+      "why": "AC6 — off → on → save: no no-op clear queued, still scheduled",
+      "ac": "AC8",
+      "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "08-off-on-unstages.png",
+      "why": "AC6 — off → on → save: no no-op clear queued, still scheduled",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "08-off-on-unstages.png",
+      "why": "AC6 — off → on → save: no no-op clear queued, still scheduled",
+      "ac": "AC6",
+      "label": "first flip stages",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "08-off-on-unstages.png",
+      "why": "AC6 — off → on → save: no no-op clear queued, still scheduled",
+      "ac": "AC6",
+      "label": "flipping back to the stored state clears the pending change",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "08-off-on-unstages.png",
+      "why": "AC6 — off → on → save: no no-op clear queued, still scheduled",
+      "ac": "AC6",
+      "label": "…and the hint goes back to describing Notion",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "08-off-on-unstages.png",
+      "why": "AC6 — off → on → save: no no-op clear queued, still scheduled",
+      "ac": "AC6",
+      "label": "the following save queues no clear (it was a no-op, not a change)",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "08-off-on-unstages.png",
+      "why": "AC6 — off → on → save: no no-op clear queued, still scheduled",
+      "ac": "AC6",
+      "label": "a scheduled problem is left scheduled — re-scheduled, never emptied",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "09-failed-save-stays-staged.png",
+      "why": "AC7 — the save failed: the flip is still staged and the date is untouched",
+      "ac": "AC8",
+      "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "09-failed-save-stays-staged.png",
+      "why": "AC7 — the save failed: the flip is still staged and the date is untouched",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "09-failed-save-stays-staged.png",
+      "why": "AC7 — the save failed: the flip is still staged and the date is untouched",
+      "ac": "AC7",
+      "label": "a failed save leaves the flip staged so it can be retried",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "09-failed-save-stays-staged.png",
+      "why": "AC7 — the save failed: the flip is still staged and the date is untouched",
+      "ac": "AC7",
+      "label": "…with the switch still showing the user's pending choice",
+      "ok": true,
+      "actual": {
+        "checked": false,
+        "hint": "Will clear on update"
+      },
+      "expected": {
+        "checked": false,
+        "hint": "Will clear on update"
+      }
+    },
+    {
+      "shot": "09-failed-save-stays-staged.png",
+      "why": "AC7 — the save failed: the flip is still staged and the date is untouched",
+      "ac": "AC7",
+      "label": "…and nothing was written to Notion",
+      "ok": true,
+      "actual": "2026-09-30",
+      "expected": "2026-09-30"
+    },
+    {
+      "shot": "09b-failed-save-retry-lands.png",
+      "why": "AC7 — the same flip retried after the failure clears the date and unstages",
+      "ac": "AC8",
+      "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "09b-failed-save-retry-lands.png",
+      "why": "AC7 — the same flip retried after the failure clears the date and unstages",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "09b-failed-save-retry-lands.png",
+      "why": "AC7 — the same flip retried after the failure clears the date and unstages",
+      "ac": "AC7",
+      "label": "a failed save leaves the flip staged so it can be retried",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "09b-failed-save-retry-lands.png",
+      "why": "AC7 — the same flip retried after the failure clears the date and unstages",
+      "ac": "AC7",
+      "label": "…with the switch still showing the user's pending choice",
+      "ok": true,
+      "actual": {
+        "checked": false,
+        "hint": "Will clear on update"
+      },
+      "expected": {
+        "checked": false,
+        "hint": "Will clear on update"
+      }
+    },
+    {
+      "shot": "09b-failed-save-retry-lands.png",
+      "why": "AC7 — the same flip retried after the failure clears the date and unstages",
+      "ac": "AC7",
+      "label": "…and nothing was written to Notion",
+      "ok": true,
+      "actual": "2026-09-30",
+      "expected": "2026-09-30"
+    },
+    {
+      "shot": "09b-failed-save-retry-lands.png",
+      "why": "AC7 — the same flip retried after the failure clears the date and unstages",
+      "ac": "AC7",
+      "label": "the retry goes through and clears the date",
+      "ok": true,
+      "actual": {
+        "date": null
+      },
+      "expected": {
+        "date": null
+      }
+    },
+    {
+      "shot": "09b-failed-save-retry-lands.png",
+      "why": "AC7 — the same flip retried after the failure clears the date and unstages",
+      "ac": "AC7",
+      "label": "…and now the staged flag drops",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "10-review-today-discards-stage.png",
+      "why": "AC9 — Review Today writes now, discards the staged off, and survives the save",
+      "ac": "AC8",
+      "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "10-review-today-discards-stage.png",
+      "why": "AC9 — Review Today writes now, discards the staged off, and survives the save",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "10-review-today-discards-stage.png",
+      "why": "AC9 — Review Today writes now, discards the staged off, and survives the save",
+      "ac": "AC9",
+      "label": "precondition: an off-flip is staged",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "10-review-today-discards-stage.png",
+      "why": "AC9 — Review Today writes now, discards the staged off, and survives the save",
+      "ac": "AC9",
+      "label": "Review Today still writes immediately",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "10-review-today-discards-stage.png",
+      "why": "AC9 — Review Today writes now, discards the staged off, and survives the save",
+      "ac": "AC9",
+      "label": "…landing today's local date on the page",
+      "ok": true,
+      "actual": "2026-08-15",
+      "expected": "2026-08-15"
+    },
+    {
+      "shot": "10-review-today-discards-stage.png",
+      "why": "AC9 — Review Today writes now, discards the staged off, and survives the save",
+      "ac": "AC9",
+      "label": "the switch reflects the date just written, with nothing staged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "10-review-today-discards-stage.png",
+      "why": "AC9 — Review Today writes now, discards the staged off, and survives the save",
+      "ac": "AC9",
+      "label": "the discarded staged off does NOT clear on the next save",
+      "ok": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "shot": "10-review-today-discards-stage.png",
+      "why": "AC9 — Review Today writes now, discards the staged off, and survives the save",
+      "ac": "AC9",
+      "label": "…so the problem is still scheduled after the save",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "11-review-tomorrow-discards-stage.png",
+      "why": "AC9 — same for Review Tomorrow (today + 1)",
+      "ac": "AC8",
+      "label": "popup open on a scheduled problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "11-review-tomorrow-discards-stage.png",
+      "why": "AC9 — same for Review Tomorrow (today + 1)",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "Due date set",
+      "expected": "Due date set"
+    },
+    {
+      "shot": "11-review-tomorrow-discards-stage.png",
+      "why": "AC9 — same for Review Tomorrow (today + 1)",
+      "ac": "AC9",
+      "label": "Review Tomorrow still writes immediately (today + 1)",
+      "ok": true,
+      "actual": "2026-08-16",
+      "expected": "2026-08-16"
+    },
+    {
+      "shot": "11-review-tomorrow-discards-stage.png",
+      "why": "AC9 — same for Review Tomorrow (today + 1)",
+      "ac": "AC9",
+      "label": "…and discards the staged flip too",
+      "ok": true,
+      "actual": {
+        "checked": true,
+        "staged": false
+      },
+      "expected": {
+        "checked": true,
+        "staged": false
+      }
+    },
+    {
+      "shot": "12-unstaged-off-stays-out.png",
+      "why": "AC10 — a cleared problem stays cleared through a plain save (issue #11)",
+      "ac": "AC8",
+      "label": "popup open on a cleared problem hydrates the switch from Notion, unstaged",
+      "ok": true,
+      "actual": {
+        "checked": false,
+        "staged": false
+      },
+      "expected": {
+        "checked": false,
+        "staged": false
+      }
+    },
+    {
+      "shot": "12-unstaged-off-stays-out.png",
+      "why": "AC10 — a cleared problem stays cleared through a plain save (issue #11)",
+      "ac": "AC8",
+      "label": "…and the hint describes stored state, not a pending change",
+      "ok": true,
+      "actual": "No reviews",
+      "expected": "No reviews"
+    },
+    {
+      "shot": "12-unstaged-off-stays-out.png",
+      "why": "AC10 — a cleared problem stays cleared through a plain save (issue #11)",
+      "ac": "AC10",
+      "label": "precondition: the switch reads off from Notion, with nothing staged",
+      "ok": true,
+      "actual": {
+        "checked": false,
+        "staged": false
+      },
+      "expected": {
+        "checked": false,
+        "staged": false
+      }
+    },
+    {
+      "shot": "12-unstaged-off-stays-out.png",
+      "why": "AC10 — a cleared problem stays cleared through a plain save (issue #11)",
+      "ac": "AC10",
+      "label": "a plain Update in Notion still sends the clear",
+      "ok": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "shot": "12-unstaged-off-stays-out.png",
+      "why": "AC10 — a cleared problem stays cleared through a plain save (issue #11)",
+      "ac": "AC10",
+      "label": "…so the problem stays out of the rotation (issue #11 guarantee)",
+      "ok": true,
+      "actual": {
+        "date": null
+      },
+      "expected": {
+        "date": null
+      }
+    },
+    {
+      "shot": "12-unstaged-off-stays-out.png",
+      "why": "AC10 — a cleared problem stays cleared through a plain save (issue #11)",
+      "ac": "AC10",
+      "label": "…and the hourly alarm still never notifies for it",
+      "ok": true,
+      "actual": 0,
+      "expected": 0
+    }
+  ]
+}

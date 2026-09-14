@@ -1,0 +1,309 @@
+{
+  "background": "C:/Users/jonat/repos/leetion/background.js",
+  "now": "2026-08-16T02:00:00Z",
+  "total": 37,
+  "failed": 7,
+  "results": [
+    {
+      "ac": "AC5 — buildProperties precedence for scheduleSpacedRepetitionToday",
+      "label": "background.js still exports buildProperties",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC5 — buildProperties precedence for scheduleSpacedRepetitionToday",
+      "label": "staged on + interval 0 writes TODAY (the AC5 fallback)",
+      "ok": false,
+      "expected": {
+        "date": {
+          "start": "2026-08-15"
+        }
+      }
+    },
+    {
+      "ac": "AC5 — buildProperties precedence for scheduleSpacedRepetitionToday",
+      "label": "…and it is the LOCAL day, not UTC's",
+      "ok": true,
+      "expected": "!= 2026-08-16"
+    },
+    {
+      "ac": "AC5 — buildProperties precedence for scheduleSpacedRepetitionToday",
+      "label": "interval 0 with nothing staged still writes NO date (issue #3 intact)",
+      "ok": true,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "ac": "AC5 — buildProperties precedence for scheduleSpacedRepetitionToday",
+      "label": "clear outranks scheduleToday when both are somehow set",
+      "ok": true,
+      "expected": {
+        "date": null
+      },
+      "actual": {
+        "date": null
+      }
+    },
+    {
+      "ac": "AC5 — buildProperties precedence for scheduleSpacedRepetitionToday",
+      "label": "scheduleToday outranks days > 0",
+      "ok": false,
+      "expected": {
+        "date": {
+          "start": "2026-08-15"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-22"
+        }
+      }
+    },
+    {
+      "ac": "AC5 — buildProperties precedence for scheduleSpacedRepetitionToday",
+      "label": "a plain interval save is unchanged (today + 3)",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-18"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-18"
+        }
+      }
+    },
+    {
+      "ac": "AC5 — buildProperties precedence for scheduleSpacedRepetitionToday",
+      "label": "5-argument callers are unaffected (flag defaults to false)",
+      "ok": true,
+      "expected": {
+        "date": {
+          "start": "2026-08-18"
+        }
+      },
+      "actual": {
+        "date": {
+          "start": "2026-08-18"
+        }
+      }
+    },
+    {
+      "ac": "AC3 — a staged-off save empties the date on the Notion page",
+      "label": "save succeeded",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC3 — a staged-off save empties the date on the Notion page",
+      "label": "the page now holds an explicit empty date, not a missing property",
+      "ok": true,
+      "expected": {
+        "date": null
+      },
+      "actual": {
+        "date": null
+      }
+    },
+    {
+      "ac": "AC3 — a staged-off save empties the date on the Notion page",
+      "label": "the PATCH body carries {date: null}",
+      "ok": true,
+      "expected": {
+        "date": null
+      },
+      "actual": {
+        "date": null
+      }
+    },
+    {
+      "ac": "AC4 — a staged-on save writes today + the expertise interval",
+      "label": "Low: save succeeded",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC4 — a staged-on save writes today + the expertise interval",
+      "label": "Low (interval 1) → 2026-08-16",
+      "ok": true,
+      "expected": "2026-08-16",
+      "actual": "2026-08-16"
+    },
+    {
+      "ac": "AC4 — a staged-on save writes today + the expertise interval",
+      "label": "Medium: save succeeded",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC4 — a staged-on save writes today + the expertise interval",
+      "label": "Medium (interval 3) → 2026-08-18",
+      "ok": true,
+      "expected": "2026-08-18",
+      "actual": "2026-08-18"
+    },
+    {
+      "ac": "AC4 — a staged-on save writes today + the expertise interval",
+      "label": "High: save succeeded",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC4 — a staged-on save writes today + the expertise interval",
+      "label": "High (interval 7) → 2026-08-22",
+      "ok": true,
+      "expected": "2026-08-22",
+      "actual": "2026-08-22"
+    },
+    {
+      "ac": "AC5 — the interval-0 fallback survives the whole message path",
+      "label": "save succeeded",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC5 — the interval-0 fallback survives the whole message path",
+      "label": "the flag survives saveToNotion → updatePageContent → buildProperties",
+      "ok": false,
+      "expected": "2026-08-15",
+      "actual": null
+    },
+    {
+      "ac": "AC5 (negative) — interval 0 WITHOUT the flag leaves the stored date alone",
+      "label": "save succeeded",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC5 (negative) — interval 0 WITHOUT the flag leaves the stored date alone",
+      "label": "the far-future date the page already had is untouched (issue #3)",
+      "ok": true,
+      "expected": "2026-09-30",
+      "actual": "2026-09-30"
+    },
+    {
+      "ac": "AC9 — Review Today / Review Tomorrow are untouched by this card",
+      "label": "Review Today succeeded",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC9 — Review Today / Review Tomorrow are untouched by this card",
+      "label": "Review Today writes the local today",
+      "ok": true,
+      "expected": "2026-08-15",
+      "actual": "2026-08-15"
+    },
+    {
+      "ac": "AC9 — Review Today / Review Tomorrow are untouched by this card",
+      "label": "Review Tomorrow succeeded",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC9 — Review Today / Review Tomorrow are untouched by this card",
+      "label": "Review Tomorrow writes today + 1",
+      "ok": true,
+      "expected": "2026-08-16",
+      "actual": "2026-08-16"
+    },
+    {
+      "ac": "REG (#11) — a cleared problem stays out of the due query and never notifies",
+      "label": "the hourly alarm raises no notification for the cleared page",
+      "ok": true,
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "ac": "REG (#11) — a cleared problem stays out of the due query and never notifies",
+      "label": "the due query still filters on Spaced Repetition",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "REG (#11) — the `clear` arm of updateSpacedRepetition still works",
+      "label": "kept-on-purpose callerless arm still answers (PR decision 3)",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "REG (#11) — the `clear` arm of updateSpacedRepetition still works",
+      "label": "…and still empties the date",
+      "ok": true,
+      "expected": {
+        "date": null
+      },
+      "actual": {
+        "date": null
+      }
+    },
+    {
+      "ac": "AC1/AC11 — static audit of popup.js",
+      "label": "a stageSpacedRepetition handler exists",
+      "ok": false,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "ac": "AC1/AC11 — static audit of popup.js",
+      "label": "…and its body contains no sendMessage call",
+      "ok": false,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "ac": "AC1/AC11 — static audit of popup.js",
+      "label": "the old immediate-write toggleSpacedRepetition is gone",
+      "ok": false,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "ac": "AC1/AC11 — static audit of popup.js",
+      "label": "popup.js no longer sends action \"updateSpacedRepetition\" with clear:true",
+      "ok": false,
+      "expected": true,
+      "actual": false
+    },
+    {
+      "ac": "AC1/AC11 — static audit of popup.js",
+      "label": "persistFormState exists",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC1/AC11 — static audit of popup.js",
+      "label": "…and never persists the staged switch (AC11 — session-only)",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC1/AC11 — static audit of popup.js",
+      "label": "loadPersistedFormState exists",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "ac": "AC1/AC11 — static audit of popup.js",
+      "label": "…and never restores a staged switch either (AC11)",
+      "ok": true,
+      "expected": true,
+      "actual": true
+    }
+  ]
+}
